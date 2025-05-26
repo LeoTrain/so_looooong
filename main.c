@@ -6,12 +6,13 @@
 /*   By: leberton <leberton@42vienna.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/26 16:33:03 by leberton          #+#    #+#             */
-/*   Updated: 2025/05/26 16:52:50 by leberton         ###   ########.fr       */
+/*   Updated: 2025/05/26 16:59:31 by leberton         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minilibx-linux/mlx.h"
 #include "so_long.h"
+#include <sys/time.h>
 
 typedef struct s_data
 {
@@ -20,6 +21,13 @@ typedef struct s_data
 	int		x;
 	int		y;
 }			t_data;
+
+long	get_time_in_ms(void)
+{
+	struct	timeval	timev;
+	gettimeofday(&timev, NULL);
+	return (timev.tv_sec * 1000 + timev.tv_usec / 1000);
+}
 
 void	draw_red_cube(t_data *data)
 {
@@ -71,7 +79,18 @@ int	key_hook(int keycode, t_data *data)
 
 int	loop_hook(t_data *data)
 {
-	draw_red_cube(data);
+	static long	last_time;
+	long		current_time;
+
+	if (last_time == 0)
+		last_time = get_time_in_ms();
+	current_time = get_time_in_ms();
+
+	if (current_time - last_time >= 16)
+	{
+		last_time = current_time;
+		draw_red_cube(data);
+	}
 	return (0);
 }
 
