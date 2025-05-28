@@ -46,6 +46,9 @@ typedef struct s_data
 	int		map_width;
 	char	map_x;
 	int		map_height;
+	int		left_limit;
+	int		right_limit;
+	int		last_move_dir;
 }			t_data;
 
 void	get_map_measurements(t_data *data)
@@ -71,8 +74,8 @@ void	get_map_measurements(t_data *data)
 	}
 	free(line);
 	close(fd);
-	printf("%d %d\n", data->win_size, player_pos_x);
-	printf("%d %d\n", data->win_size, player_pos_y);
+	// printf("%d %d\n", data->win_size, player_pos_x);
+	// printf("%d %d\n", data->win_size, player_pos_y);
 	data->x_offset = (data->win_size / 2) - player_pos_x;
 	data->y_offset = (data->win_size / 2) - player_pos_y;
 }
@@ -89,14 +92,36 @@ int	key_hook(int keycode, t_data *data)
 	if (keycode == 65307)
 		exit(0);
 	else if (keycode == 119)
-		data->y_offset -= data->wall_height;
-	else if (keycode == 115)
+	{
+		data->last_move_dir = 2;
 		data->y_offset += data->wall_height;
-	else if (keycode == 100)
-		data->x_offset += data->wall_width;
+	}
+	else if (keycode == 115)
+	{
+		data->last_move_dir = -2;
+		data->y_offset -= data->wall_height;
+	}
 	else if (keycode == 97)
+	{
+		data->last_move_dir = 1;
+		data->x_offset += data->wall_width;
+	}
+	else if (keycode == 100)
+	{
+		data->last_move_dir = -1;
 		data->x_offset -= data->wall_width;
+	}
 	return (0);
+}
+
+static int	check_border(t_data *data, int pos_x, char tile)
+{
+	if (((pos_x >= 0 && pos_x <= 16) || data->last_move_dir == 1) && tile == '1')
+	{
+		data->x_offset -= 16;
+		data->last_move_dir = 0;
+	}
+	return (1);
 }
 
 void	draw(t_data *data)
@@ -114,7 +139,10 @@ void	draw(t_data *data)
 			int pos_x = (data->wall_width * i) + data->x_offset;
 			int pos_y = row + data->y_offset;
 			if (line[i] == '1')
+		    {
+				check_border(data, pos_x, line[i]);
 				mlx_put_image_to_window(data->mlx, data->win, data->wall_img, pos_x, pos_y);
+		    }
 			else if (line[i] == '0')
 				mlx_put_image_to_window(data->mlx, data->win, data->grass_img, pos_x, pos_y);
 			else if (line[i] == 'C')
@@ -164,7 +192,7 @@ int main(int argc, char **argv)
 	data.mlx = mlx_init();
 	if (!data.mlx)
 		return (ft_puterror("Error: creating the mlx variable.", 2));
-	data.win_size = 16 * 10;
+	data.win_size = 16 * 20;
 	data.win = mlx_new_window(data.mlx, data.win_size, data.win_size, "Test1");
 	if (!data.win)
 		return (ft_puterror("Error: creating the window.", 2));
