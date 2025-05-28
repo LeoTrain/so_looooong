@@ -4,11 +4,12 @@ LDFLAGS = -lX11 -lXext -lm
 NAME = test
 MLX_DIR = minilibx-linux
 MLX_LIB = minilibx-linux/libmlx.a
+MAP ?= map.ber
 
 all: $(NAME)
 
 $(NAME): $(MLX_LIB)
-	$(CC) $(CFLAGS) main.c $(MLX_LIB) -o $(NAME) $(LDFLAGS)
+	$(CC) $(CFLAGS) main.c get_next_line/*.c $(MLX_LIB) -o $(NAME) $(LDFLAGS)
 
 $(MLX_LIB):
 	@make -C $(MLX_DIR)
@@ -21,5 +22,5 @@ fclean:
 
 re: fclean all
 
-t: re
-	./$(NAME)
+play: re
+	./$(NAME) $(MAP)
