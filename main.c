@@ -16,6 +16,7 @@ typedef struct s_data
 {
 	void	*mlx;
 	void	*win;
+	int		win_size;
 	int		x;
 	int		y;
 	int		x_offset;
@@ -42,6 +43,7 @@ typedef struct s_data
 	int		mapexit_width;
 	char	*map_path;
 	int		map_width;
+	char	map_x;
 	int		map_height;
 }			t_data;
 
@@ -92,10 +94,10 @@ int	key_hook(int keycode, t_data *data)
 void	draw(t_data *data)
 {
 	mlx_clear_window(data->mlx, data->win);
-	for (int i = 0; i <= data->map_width; i++)
-		for (int j = 0; j <= data->map_height; j++)
-			mlx_put_image_to_window(data->mlx, data->win, data->grass_img, (data->grass_width*i)-data->x_offset, (data->grass_height*j)-data->y_offset);
-	mlx_put_image_to_window(data->mlx, data->win, data->character_img, 250-8, 250-8);
+	for (int y = 0; y <= data->map_width; y++)
+		for (int x = 0; x <= data->map_height; x++)
+			mlx_put_image_to_window(data->mlx, data->win, data->grass_img, data->grass_width*(x-data->x_offset), data->grass_height*(y-data->y_offset));
+	mlx_put_image_to_window(data->mlx, data->win, data->character_img, (data->win_size / 2)-(data->character_width/2), (data->win_size/2)-(data->character_height/2));
 }
 
 int	loop_hook(t_data *data)
@@ -131,11 +133,12 @@ int main(int argc, char **argv)
 	data.mlx = mlx_init();
 	if (!data.mlx)
 		return (ft_puterror("Error: creating the mlx variable.", 2));
-	data.win = mlx_new_window(data.mlx, 500, 500, "Test1");
+	data.win_size = 1000;
+	data.win = mlx_new_window(data.mlx, data.win_size, data.win_size, "Test1");
 	if (!data.win)
 		return (ft_puterror("Error: creating the window.", 2));
-	data.x = 200;
-	data.y = 200;
+	data.x = 0;
+	data.y = 0;
 	data.character_xpm_path = "assets/xpm/normal_amazed.xpm";
 	data.grass_xpm_path = "assets/xpm/grass_block.xpm";
 	data.wall_xpm_path = "assets/xpm/dirt.xpm";
