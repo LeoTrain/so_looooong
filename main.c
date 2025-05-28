@@ -11,6 +11,7 @@
 /* ************************************************************************** */
 
 #include "so_long.h"
+#include <fcntl.h>
 
 typedef struct s_data
 {
@@ -54,19 +55,26 @@ void	get_map_measurements(t_data *data)
 	char	*e;
 
 	fd = open(data->map_path, O_RDONLY);
+	data->map_height = 0;
+	int player_pos_x;
+	int player_pos_y;
 	while ((line = get_next_line(fd)) != NULL)
 	{
-		data->map_width = strlen(line) + 1;
-		data->map_height++;
+		data->map_width = strlen(line) * data->wall_width;
 		if ((e = strchr(line, 'P')))
 		{
-			data->y = data->map_height - 1;
-			data->x = (int)(e - line);
+			player_pos_y = data->map_height + 16;
+			player_pos_x = ((int)(e - line) * 16) + 16;
 		}
+		data->map_height += data->wall_height;
 		free(line);
 	}
 	free(line);
 	close(fd);
+	printf("%d %d\n", data->win_size, player_pos_x);
+	printf("%d %d\n", data->win_size, player_pos_y);
+	data->x_offset = (data->win_size / 2) - player_pos_x;
+	data->y_offset = (data->win_size / 2) - player_pos_y;
 }
 
 long	get_time_in_ms(void)
@@ -81,23 +89,46 @@ int	key_hook(int keycode, t_data *data)
 	if (keycode == 65307)
 		exit(0);
 	else if (keycode == 119)
-		data->y_offset -= 1;
+		data->y_offset -= data->wall_height;
 	else if (keycode == 115)
-		data->y_offset += 1;
+		data->y_offset += data->wall_height;
 	else if (keycode == 100)
-		data->x_offset += 1;
+		data->x_offset += data->wall_width;
 	else if (keycode == 97)
-		data->x_offset -= 1;
+		data->x_offset -= data->wall_width;
 	return (0);
 }
 
 void	draw(t_data *data)
 {
+	char	*line;
+	int		fd;
+
+	fd = open(data->map_path, O_RDONLY);
 	mlx_clear_window(data->mlx, data->win);
-	for (int y = 0; y <= data->map_width; y++)
-		for (int x = 0; x <= data->map_height; x++)
-			mlx_put_image_to_window(data->mlx, data->win, data->grass_img, data->grass_width*(x-data->x_offset), data->grass_height*(y-data->y_offset));
-	mlx_put_image_to_window(data->mlx, data->win, data->character_img, (data->win_size / 2)-(data->character_width/2), (data->win_size/2)-(data->character_height/2));
+	int row = 0;
+	while ((line = get_next_line(fd)) != NULL)
+	{
+		for (int i = 0; i < data->map_width; i++)
+		{
+			int pos_x = (data->wall_width * i) + data->x_offset;
+			int pos_y = row + data->y_offset;
+			if (line[i] == '1')
+				mlx_put_image_to_window(data->mlx, data->win, data->wall_img, pos_x, pos_y);
+			else if (line[i] == '0')
+				mlx_put_image_to_window(data->mlx, data->win, data->grass_img, pos_x, pos_y);
+			else if (line[i] == 'C')
+				mlx_put_image_to_window(data->mlx, data->win, data->collectible_img, pos_x, pos_y);
+		}
+		row += data->wall_height;
+		free(line);
+	}
+	int player_pos_y = (data->win_size / 2) - 16;
+	int player_pos_x = (data->win_size / 2) - 16;
+	mlx_put_image_to_window(data->mlx, data->win, data->character_img, player_pos_x, player_pos_y);
+	free(line);
+	close(fd);
+	// mlx_put_image_to_window(data->mlx, data->win, data->character_img, (data->win_size / 2)-(data->character_width/2), (data->win_size/2)-(data->character_height/2));
 }
 
 int	loop_hook(t_data *data)
@@ -133,12 +164,10 @@ int main(int argc, char **argv)
 	data.mlx = mlx_init();
 	if (!data.mlx)
 		return (ft_puterror("Error: creating the mlx variable.", 2));
-	data.win_size = 1000;
+	data.win_size = 16 * 10;
 	data.win = mlx_new_window(data.mlx, data.win_size, data.win_size, "Test1");
 	if (!data.win)
 		return (ft_puterror("Error: creating the window.", 2));
-	data.x = 0;
-	data.y = 0;
 	data.character_xpm_path = "assets/xpm/normal_amazed.xpm";
 	data.grass_xpm_path = "assets/xpm/grass_block.xpm";
 	data.wall_xpm_path = "assets/xpm/dirt.xpm";
@@ -150,6 +179,8 @@ int main(int argc, char **argv)
 	data.collectible_img = mlx_xpm_file_to_image(data.mlx, data.collectible_xpm_path, &data.collectible_width, &data.collectible_height);
 	data.mapexit_img = mlx_xpm_file_to_image(data.mlx, data.mapexit_xpm_path, &data.mapexit_width, &data.mapexit_height);
 	data.map_path = argv[1];
+	data.x = 0;
+	data.y = 0;
 	get_map_measurements(&data);
 	
 	mlx_key_hook(data.win, (int (*)(int, void *))key_hook, &data);
