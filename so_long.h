@@ -12,4 +12,10 @@
 #include <sys/time.h>
 #include <fcntl.h>
 
+typedef struct s_position
+{
+	int x;
+	int y;
+} t_position;
+
 #endif

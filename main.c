@@ -99,6 +99,7 @@ int	get_map_measurements(t_data *data)
 			char *pos = line;
 			while ((pos = strchr(pos, 'C')) != NULL)
 			{
+				printf("Collectible found at (%d, %ld)\n", i, pos - line);
 				t_list *new_collectible = ft_lstnew(NULL);
 				new_collectible->content = malloc(sizeof(int) * 2);
 				((int *)new_collectible->content)[0] = i;
@@ -145,6 +146,35 @@ void	remove_collectible(t_data *data, t_list *target, t_list *previous)
 	   data->collectibles = target->next;
 	free(target->content);
 	free(target);
+}
+
+void	sort_collectibles(t_data *data)
+{
+	t_list	*current;
+	t_list	*next;
+	int		temp[2];
+
+	current = data->collectibles;
+	while (current && current->next)
+	{
+		next = current->next;
+		while (next)
+		{
+			if (((int *)current->content)[0] > ((int *)next->content)[0] ||
+				(((int *)current->content)[0] == ((int *)next->content)[0] &&
+				((int *)current->content)[1] > ((int *)next->content)[1]))
+			{
+				temp[0] = ((int *)current->content)[0];
+				temp[1] = ((int *)current->content)[1];
+				((int *)current->content)[0] = ((int *)next->content)[0];
+				((int *)current->content)[1] = ((int *)next->content)[1];
+				((int *)next->content)[0] = temp[0];
+				((int *)next->content)[1] = temp[1];
+			}
+			next = next->next;
+		}
+		current = current->next;
+	}
 }
 
 int	is_next_tile_wall(t_data *data, int x, int y)
@@ -232,6 +262,33 @@ void	free_all(t_data *data)
 	}
 }
 
+void	move_to_collectible(t_data *data, t_list *collectible)
+{
+	int *pos = (int *)collectible->content;
+	int *player_pos = data->player_pos;
+
+	printf("Moving to collectible at (%d, %d)\n", pos[0], pos[1]);
+	printf("Player position is (%d, %d)\n", player_pos[0], player_pos[1]);
+
+	if (pos[1] < player_pos[1] && !is_next_tile_wall(data, -1, 0))
+		data->x_offset += TILE_SIZE;
+	else if (pos[1] > player_pos[1] && !is_next_tile_wall(data, 1, 0))
+		data->x_offset -= TILE_SIZE;
+	else if (pos[0] < player_pos[0] && !is_next_tile_wall(data, 0, -1))
+		data->y_offset += TILE_SIZE;
+	else if (pos[0] > player_pos[0] && !is_next_tile_wall(data, 0, 1))
+		data->y_offset -= TILE_SIZE;
+	else
+	{
+		printf("Cannot move to collectible at (%d, %d) due to walls.\n", pos[0], pos[1]);
+		printf("Collectibles size: %d\n", ft_lstsize(data->collectibles));
+
+	}
+
+	if (is_on_collectible(data))
+		printf("You collected %d collectibles!\n", data->collected_collectibles);
+}
+
 
 int	key_hook(int keycode, t_data *data)
 {
@@ -302,6 +359,7 @@ int	loop_hook(t_data *data)
 	{
 		last_time = current_time;
 		draw(data);
+		move_to_collectible(data, data->collectibles);
 	}
 	return (0);
 }
@@ -310,6 +368,22 @@ int	ft_puterror(char *message, int error_code)
 {
 	printf("%s\n", message);
 	return (error_code);
+}
+
+int ft_pcoll(t_list *data)
+{
+	t_list *curr = data;
+	int i = 1;
+	while (curr)
+	{
+		printf("Collectible %d: (%d, %d)\n", i,
+			((int *)curr->content)[0],
+			((int *)curr->content)[1]);
+		curr = curr->next;
+		i++;
+	}
+	printf("\n\n\n");
+	return (0);
 }
 
 int main(int argc, char **argv)
@@ -345,6 +419,9 @@ int main(int argc, char **argv)
 	if (!get_map_measurements(&data))
 		return (ft_puterror("Error: reading the map file.", 3));
 	get_player_pos(&data);
+	ft_pcoll(data.collectibles);
+	sort_collectibles(&data);
+	ft_pcoll(data.collectibles);
 	
 	mlx_key_hook(data.win, (int (*)(int, void *))key_hook, &data);
 	mlx_loop_hook(data.mlx, (int (*)(void *))loop_hook, &data);
