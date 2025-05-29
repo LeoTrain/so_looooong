@@ -137,6 +137,16 @@ long	get_time_in_ms(void)
 	return (timev.tv_sec * 1000 + timev.tv_usec / 1000);
 }
 
+void	remove_collectible(t_data *data, t_list *target, t_list *previous)
+{
+	if (previous)
+	   previous->next = target->next;
+	else
+	   data->collectibles = target->next;
+	free(target->content);
+	free(target);
+}
+
 int	is_next_tile_wall(t_data *data, int x, int y)
 {
 	get_player_pos(data);
@@ -169,17 +179,24 @@ int	is_on_exit(t_data *data)
 
 int	is_on_collectible(t_data *data)
 {
-	t_list *copy = data->collectibles;
-	while (copy)
+	t_list	*previous;
+	t_list	*current;
+
+	previous = NULL;
+	current = data->collectibles;
+
+	while (current)
 	{
-		int *pos = (int *)copy->content;
+		int *pos = (int *)current->content;
 		if (pos[0] == data->player_pos[1] && pos[1] == data->player_pos[0])
 		{
 			data->map[pos[0]][pos[1]] = '0';
 			data->collected_collectibles++;
+			remove_collectible(data, current, previous);
 			return (1);
 		}
-		copy = copy->next;
+		previous = current;
+		current = current->next;
 	}
 	return (0);
 }
@@ -294,7 +311,6 @@ int	ft_puterror(char *message, int error_code)
 	printf("%s\n", message);
 	return (error_code);
 }
-
 
 int main(int argc, char **argv)
 {
