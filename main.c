@@ -114,16 +114,6 @@ int	key_hook(int keycode, t_data *data)
 	return (0);
 }
 
-static int	check_border(t_data *data, int pos_x, char tile)
-{
-	if (((pos_x >= 0 && pos_x <= 16) || data->last_move_dir == 1) && tile == '1')
-	{
-		data->x_offset -= 16;
-		data->last_move_dir = 0;
-	}
-	return (1);
-}
-
 void	draw(t_data *data)
 {
 	char	*line;
@@ -139,10 +129,15 @@ void	draw(t_data *data)
 			int pos_x = (data->wall_width * i) + data->x_offset;
 			int pos_y = row + data->y_offset;
 			if (line[i] == '1')
-		    {
-				check_border(data, pos_x, line[i]);
+			{
 				mlx_put_image_to_window(data->mlx, data->win, data->wall_img, pos_x, pos_y);
-		    }
+				if (data->last_move_dir == 1 && pos_x == 0)
+				{
+					data->x_offset -= 16;
+					draw(data);
+					break;
+				}
+			}
 			else if (line[i] == '0')
 				mlx_put_image_to_window(data->mlx, data->win, data->grass_img, pos_x, pos_y);
 			else if (line[i] == 'C')
@@ -168,7 +163,7 @@ int	loop_hook(t_data *data)
 		last_time = get_time_in_ms();
 	current_time = get_time_in_ms();
 
-	if (current_time - last_time >= 16)
+	if (current_time - last_time >= 500)
 	{
 		last_time = current_time;
 		draw(data);
