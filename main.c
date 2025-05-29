@@ -27,24 +27,14 @@ typedef struct s_data
 	int		y_offset;
 	char	*character_xpm_path;
 	void	*character_img;
-	int		character_height;
-	int		character_width;
 	char	*grass_xpm_path;
 	void	*grass_img;
-	int		grass_height;
-	int		grass_width;
 	char	*wall_xpm_path;
 	void	*wall_img;
-	int		wall_height;
-	int		wall_width;
 	char	*collectible_xpm_path;
 	void	*collectible_img;
-	int		collectible_height;
-	int		collectible_width;
 	char	*mapexit_xpm_path;
 	void	*mapexit_img;
-	int		mapexit_height;
-	int		mapexit_width;
 	char	*map_path;
 	int		map_width;
 	char	map_x;
@@ -54,7 +44,18 @@ typedef struct s_data
 	int		last_move_dir;
 	char	**map;
 	int		*player_pos;
+	int		*exit_pos;
+	t_list	*collectibles;
+	int		collected_collectibles;
+	int		collectibles_total;
+	int		tile_size;
 }			t_data;
+
+void	load_image(void *mlx, void **img, char *path, int *w, int *h)
+{
+	*img = mlx_xpm_file_to_image(mlx, path, w, h);
+}
+
 
 int	get_map_measurements(t_data *data)
 {
@@ -74,12 +75,12 @@ int	get_map_measurements(t_data *data)
 	}
 	close(fd);
 	data->map = malloc(sizeof(char *) * (data->map_height + 1));
+	if (!data->map)
+		return (0);
 	fd = open(data->map_path, O_RDONLY);
 	while ((line = get_next_line(fd)) != NULL)
 	{
-		data->map[i] = line;
-		if (i == 0)
-			data->map_width = strlen(line) * TILE_SIZE;
+		data->map[i] = ft_strdup(line);
 		if ((e = strchr(line, 'P')))
 		{
 			int player_pos_y = i * TILE_SIZE + 16;
@@ -87,13 +88,37 @@ int	get_map_measurements(t_data *data)
 			data->x_offset = (data->win_size / 2) - player_pos_x;
 			data->y_offset = (data->win_size / 2) - player_pos_y;
 		}
+		if ((e = strchr(line, 'E')) && !data->exit_pos)
+		{
+			data->exit_pos = (int *)calloc(2, sizeof(int));
+			data->exit_pos[0] = i;
+			data->exit_pos[1] = (int)(e - line);
+		}
+		if ((e = strchr(line, 'C')))
+		{
+			char *pos = line;
+			while ((pos = strchr(pos, 'C')) != NULL)
+			{
+				t_list *new_collectible = ft_lstnew(NULL);
+				new_collectible->content = malloc(sizeof(int) * 2);
+				((int *)new_collectible->content)[0] = i;
+				((int *)new_collectible->content)[1] = (int)(pos - line);
+				ft_lstadd_front(&data->collectibles, new_collectible);
+				pos++;
+				data->collectibles_total++;
+			}
+		}
 		i++;
+		data->map_width = strlen(line) * TILE_SIZE;
+		free(line);
 	}
 	data->map[i] = NULL;
 	data->map_height *= TILE_SIZE;
 	close(fd);
 	return (1);
 }
+
+
 
 void	get_player_pos(t_data *data)
 {
@@ -117,12 +142,79 @@ int	is_next_tile_wall(t_data *data, int x, int y)
 	get_player_pos(data);
 	int next_x = data->player_pos[0] + x;
 	int next_y = data->player_pos[1] + y;
+	if (next_x < 0 || next_x >= data->map_width / TILE_SIZE ||
+		next_y < 0 || next_y >= data->map_height / TILE_SIZE)
+	{
+		return (1);
+	}
 	if (data->map[next_y][next_x] == '1')
 	{
 		return (1);
 	}
 	return (0);
 }
+
+int is_all_collectibles_collected(t_data *data)
+{
+	return (data->collected_collectibles == data->collectibles_total);
+}
+
+int	is_on_exit(t_data *data)
+{
+	get_player_pos(data);
+	if (data->exit_pos && data->player_pos[0] == data->exit_pos[1] && data->player_pos[1] == data->exit_pos[0])
+		return (1);
+	return (0);
+}
+
+int	is_on_collectible(t_data *data)
+{
+	t_list *copy = data->collectibles;
+	while (copy)
+	{
+		int *pos = (int *)copy->content;
+		if (pos[0] == data->player_pos[1] && pos[1] == data->player_pos[0])
+		{
+			data->map[pos[0]][pos[1]] = '0';
+			data->collected_collectibles++;
+			return (1);
+		}
+		copy = copy->next;
+	}
+	return (0);
+}
+
+void	free_all(t_data *data)
+{
+	if (data->character_img)
+		mlx_destroy_image(data->mlx, data->character_img);
+	if (data->grass_img)
+		mlx_destroy_image(data->mlx, data->grass_img);
+	if (data->wall_img)
+		mlx_destroy_image(data->mlx, data->wall_img);
+	if (data->collectible_img)
+		mlx_destroy_image(data->mlx, data->collectible_img);
+	if (data->mapexit_img)
+		mlx_destroy_image(data->mlx, data->mapexit_img);
+	if (data->win)
+		mlx_destroy_window(data->mlx, data->win);
+	if (data->mlx)
+	{
+		mlx_destroy_display(data->mlx);
+		free(data->mlx);
+	}
+	if (data->player_pos)
+		free(data->player_pos);
+	if (data->exit_pos)
+		free(data->exit_pos);
+	if (data->map)
+	{
+		for (int i = 0; data->map[i]; i++)
+			free(data->map[i]);
+		free(data->map);
+	}
+}
+
 
 int	key_hook(int keycode, t_data *data)
 {
@@ -136,39 +228,47 @@ int	key_hook(int keycode, t_data *data)
 		data->x_offset += TILE_SIZE;
 	else if (keycode == 100 && !is_next_tile_wall(data, 1, 0))
 		data->x_offset -= TILE_SIZE;
-
+	if (is_on_exit(data))
+	{
+		if (!is_all_collectibles_collected(data))
+		{
+			printf("You need to collect all collectibles before exiting!\n");
+			return (0);
+		}
+		printf("You reached the exit!\n");
+		exit(0);
+	}
+	if (is_on_collectible(data))
+	{
+		printf("You collected %d collectibles!\n", data->collected_collectibles);
+	}
 	return (0);
 }
 
 void	draw(t_data *data)
 {
-	char	*line;
-	int		fd;
 
-	fd = open(data->map_path, O_RDONLY);
 	mlx_clear_window(data->mlx, data->win);
+	int i = 0;
 	int row = 0;
-	while ((line = get_next_line(fd)) != NULL)
+	while (data->map[row])
 	{
-		for (int i = 0; i < data->map_width; i++)
+		for (i = 0; i < data->map_width; i++)
 		{
-			int pos_x = (data->wall_width * i) + data->x_offset;
-			int pos_y = row + data->y_offset;
-			if (line[i] == '1')
+			int pos_x = (TILE_SIZE * i) + data->x_offset;
+			int pos_y = (row * TILE_SIZE) + data->y_offset;
+			if (data->map[row][i] == '1')
 				mlx_put_image_to_window(data->mlx, data->win, data->wall_img, pos_x, pos_y);
-			else if (line[i] == '0')
+			else if (data->map[row][i] == '0')
 				mlx_put_image_to_window(data->mlx, data->win, data->grass_img, pos_x, pos_y);
-			else if (line[i] == 'C')
+			else if (data->map[row][i] == 'C')
 				mlx_put_image_to_window(data->mlx, data->win, data->collectible_img, pos_x, pos_y);
 		}
-		row += data->wall_height;
-		free(line);
+		row++;
 	}
 	int player_pos_y = (data->win_size / 2) - 16;
 	int player_pos_x = (data->win_size / 2) - 16;
 	mlx_put_image_to_window(data->mlx, data->win, data->character_img, player_pos_x, player_pos_y);
-	free(line);
-	close(fd);
 	// mlx_put_image_to_window(data->mlx, data->win, data->character_img, (data->win_size / 2)-(data->character_width/2), (data->win_size/2)-(data->character_height/2));
 }
 
@@ -214,14 +314,18 @@ int main(int argc, char **argv)
 	data.wall_xpm_path = "assets/wall.xpm";
 	data.collectible_xpm_path = "assets/collectible.xpm";
 	data.mapexit_xpm_path = "assets/exit.xpm";
-	data.character_img = mlx_xpm_file_to_image(data.mlx, data.character_xpm_path, &data.character_width, &data.character_height);
-	data.grass_img = mlx_xpm_file_to_image(data.mlx, data.grass_xpm_path, &data.grass_width, &data.grass_height);
-	data.wall_img = mlx_xpm_file_to_image(data.mlx, data.wall_xpm_path, &data.wall_width, &data.wall_height);
-	data.collectible_img = mlx_xpm_file_to_image(data.mlx, data.collectible_xpm_path, &data.collectible_width, &data.collectible_height);
-	data.mapexit_img = mlx_xpm_file_to_image(data.mlx, data.mapexit_xpm_path, &data.mapexit_width, &data.mapexit_height);
+	load_image(data.mlx, (void **)&data.character_img, data.character_xpm_path, &data.tile_size, &data.tile_size);
+	load_image(data.mlx, (void **)&data.grass_img, data.grass_xpm_path, &data.tile_size, &data.tile_size);
+	load_image(data.mlx, (void **)&data.wall_img, data.wall_xpm_path, &data.tile_size, &data.tile_size);
+	load_image(data.mlx, (void **)&data.collectible_img, data.collectible_xpm_path, &data.tile_size, &data.tile_size);
+	data.map = NULL;
 	data.map_path = argv[1];
 	data.x = 0;
 	data.y = 0;
+	data.exit_pos = NULL;
+	data.collectibles = NULL;
+	data.collected_collectibles = 0;
+	data.collectibles_total = 0;
 	if (!get_map_measurements(&data))
 		return (ft_puterror("Error: reading the map file.", 3));
 	get_player_pos(&data);
@@ -229,6 +333,8 @@ int main(int argc, char **argv)
 	mlx_key_hook(data.win, (int (*)(int, void *))key_hook, &data);
 	mlx_loop_hook(data.mlx, (int (*)(void *))loop_hook, &data);
 	mlx_loop(data.mlx);
+
+	free_all(&data);
 
 	return (0);
 }
