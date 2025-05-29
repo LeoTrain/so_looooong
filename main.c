@@ -163,7 +163,7 @@ int	loop_hook(t_data *data)
 		last_time = get_time_in_ms();
 	current_time = get_time_in_ms();
 
-	if (current_time - last_time >= 500)
+	if (current_time - last_time >= 100)
 	{
 		last_time = current_time;
 		draw(data);
@@ -192,10 +192,10 @@ int main(int argc, char **argv)
 	if (!data.win)
 		return (ft_puterror("Error: creating the window.", 2));
 	data.character_xpm_path = "assets/xpm/normal_amazed.xpm";
-	data.grass_xpm_path = "assets/xpm/grass_block.xpm";
-	data.wall_xpm_path = "assets/xpm/dirt.xpm";
-	data.collectible_xpm_path = "assets/xpm/grass.xpm";
-	data.mapexit_xpm_path = "assets/xpm/grass.xpm";
+	data.grass_xpm_path = "assets/empty_space.xpm";
+	data.wall_xpm_path = "assets/wall.xpm";
+	data.collectible_xpm_path = "assets/collectible.xpm";
+	data.mapexit_xpm_path = "assets/exit.xpm";
 	data.character_img = mlx_xpm_file_to_image(data.mlx, data.character_xpm_path, &data.character_width, &data.character_height);
 	data.grass_img = mlx_xpm_file_to_image(data.mlx, data.grass_xpm_path, &data.grass_width, &data.grass_height);
 	data.wall_img = mlx_xpm_file_to_image(data.mlx, data.wall_xpm_path, &data.wall_width, &data.wall_height);
