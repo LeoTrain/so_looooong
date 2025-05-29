@@ -12,6 +12,9 @@
 
 #include "so_long.h"
 #include <fcntl.h>
+#include <stdio.h>
+
+#define TILE_SIZE 16
 
 typedef struct s_data
 {
@@ -49,35 +52,57 @@ typedef struct s_data
 	int		left_limit;
 	int		right_limit;
 	int		last_move_dir;
+	char	**map;
+	int		*player_pos;
 }			t_data;
 
-void	get_map_measurements(t_data *data)
+int	get_map_measurements(t_data *data)
 {
 	int		fd;
 	char	*line;
 	char	*e;
+	int		i = 0;
 
 	fd = open(data->map_path, O_RDONLY);
+	if (fd < 0)
+		return (0);
 	data->map_height = 0;
-	int player_pos_x;
-	int player_pos_y;
 	while ((line = get_next_line(fd)) != NULL)
 	{
-		data->map_width = strlen(line) * data->wall_width;
-		if ((e = strchr(line, 'P')))
-		{
-			player_pos_y = data->map_height + 16;
-			player_pos_x = ((int)(e - line) * 16) + 16;
-		}
-		data->map_height += data->wall_height;
+		data->map_height++;
 		free(line);
 	}
-	free(line);
 	close(fd);
-	// printf("%d %d\n", data->win_size, player_pos_x);
-	// printf("%d %d\n", data->win_size, player_pos_y);
-	data->x_offset = (data->win_size / 2) - player_pos_x;
-	data->y_offset = (data->win_size / 2) - player_pos_y;
+	data->map = malloc(sizeof(char *) * (data->map_height + 1));
+	fd = open(data->map_path, O_RDONLY);
+	while ((line = get_next_line(fd)) != NULL)
+	{
+		data->map[i] = line;
+		if (i == 0)
+			data->map_width = strlen(line) * TILE_SIZE;
+		if ((e = strchr(line, 'P')))
+		{
+			int player_pos_y = i * TILE_SIZE + 16;
+			int player_pos_x = ((int)(e - line) * TILE_SIZE) + 16;
+			data->x_offset = (data->win_size / 2) - player_pos_x;
+			data->y_offset = (data->win_size / 2) - player_pos_y;
+		}
+		i++;
+	}
+	data->map[i] = NULL;
+	data->map_height *= TILE_SIZE;
+	close(fd);
+	return (1);
+}
+
+void	get_player_pos(t_data *data)
+{
+	if (!data->player_pos)
+		data->player_pos = malloc(sizeof(int) * 2);
+	int center_x = data->win_size / 2;
+	int center_y = data->win_size / 2;
+	data->player_pos[0] = ((center_x - data->x_offset) / TILE_SIZE) - 1;
+	data->player_pos[1] = ((center_y - data->y_offset) / TILE_SIZE) - 1;
 }
 
 long	get_time_in_ms(void)
@@ -87,30 +112,31 @@ long	get_time_in_ms(void)
 	return (timev.tv_sec * 1000 + timev.tv_usec / 1000);
 }
 
+int	is_next_tile_wall(t_data *data, int x, int y)
+{
+	get_player_pos(data);
+	int next_x = data->player_pos[0] + x;
+	int next_y = data->player_pos[1] + y;
+	if (data->map[next_y][next_x] == '1')
+	{
+		return (1);
+	}
+	return (0);
+}
+
 int	key_hook(int keycode, t_data *data)
 {
 	if (keycode == 65307)
 		exit(0);
-	else if (keycode == 119)
-	{
-		data->last_move_dir = 2;
-		data->y_offset += data->wall_height;
-	}
-	else if (keycode == 115)
-	{
-		data->last_move_dir = -2;
-		data->y_offset -= data->wall_height;
-	}
-	else if (keycode == 97)
-	{
-		data->last_move_dir = 1;
-		data->x_offset += data->wall_width;
-	}
-	else if (keycode == 100)
-	{
-		data->last_move_dir = -1;
-		data->x_offset -= data->wall_width;
-	}
+	if (keycode == 119 && !is_next_tile_wall(data, 0, -1))
+		data->y_offset += TILE_SIZE;
+	else if (keycode == 115 && !is_next_tile_wall(data, 0, 1))
+		data->y_offset -= TILE_SIZE;
+	else if (keycode == 97 && !is_next_tile_wall(data, -1, 0))
+		data->x_offset += TILE_SIZE;
+	else if (keycode == 100 && !is_next_tile_wall(data, 1, 0))
+		data->x_offset -= TILE_SIZE;
+
 	return (0);
 }
 
@@ -129,15 +155,7 @@ void	draw(t_data *data)
 			int pos_x = (data->wall_width * i) + data->x_offset;
 			int pos_y = row + data->y_offset;
 			if (line[i] == '1')
-			{
 				mlx_put_image_to_window(data->mlx, data->win, data->wall_img, pos_x, pos_y);
-				if (data->last_move_dir == 1 && pos_x == 0)
-				{
-					data->x_offset -= 16;
-					draw(data);
-					break;
-				}
-			}
 			else if (line[i] == '0')
 				mlx_put_image_to_window(data->mlx, data->win, data->grass_img, pos_x, pos_y);
 			else if (line[i] == 'C')
@@ -187,7 +205,7 @@ int main(int argc, char **argv)
 	data.mlx = mlx_init();
 	if (!data.mlx)
 		return (ft_puterror("Error: creating the mlx variable.", 2));
-	data.win_size = 16 * 20;
+	data.win_size = 20 * TILE_SIZE;
 	data.win = mlx_new_window(data.mlx, data.win_size, data.win_size, "Test1");
 	if (!data.win)
 		return (ft_puterror("Error: creating the window.", 2));
@@ -204,7 +222,9 @@ int main(int argc, char **argv)
 	data.map_path = argv[1];
 	data.x = 0;
 	data.y = 0;
-	get_map_measurements(&data);
+	if (!get_map_measurements(&data))
+		return (ft_puterror("Error: reading the map file.", 3));
+	get_player_pos(&data);
 	
 	mlx_key_hook(data.win, (int (*)(int, void *))key_hook, &data);
 	mlx_loop_hook(data.mlx, (int (*)(void *))loop_hook, &data);
