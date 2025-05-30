@@ -6,105 +6,20 @@
 /*   By: leberton <leberton@42vienna.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/30 14:36:46 by leberton          #+#    #+#             */
-/*   Updated: 2025/05/30 14:43:13 by leberton         ###   ########.fr       */
+/*   Updated: 2025/05/30 17:14:21 by leberton         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "so_long.h"
 
-void	remove_collectible(t_data *data, t_list *target, t_list *previous)
+
+void add_collectible(t_data *data, t_position pos)
 {
-	if (previous)
-	   previous->next = target->next;
-	else
-	   data->collectibles = target->next;
-	free(target->content);
-	free(target);
-}
-
-void	sort_collectibles(t_data *data)
-{
-	t_list	*current;
-	t_list	*next;
-	int		temp[2];
-
-	current = data->collectibles;
-	while (current && current->next)
-	{
-		next = current->next;
-		while (next)
-		{
-			if (((int *)current->content)[0] > ((int *)next->content)[0] ||
-				(((int *)current->content)[0] == ((int *)next->content)[0] &&
-				((int *)current->content)[1] > ((int *)next->content)[1]))
-			{
-				temp[0] = ((int *)current->content)[0];
-				temp[1] = ((int *)current->content)[1];
-				((int *)current->content)[0] = ((int *)next->content)[0];
-				((int *)current->content)[1] = ((int *)next->content)[1];
-				((int *)next->content)[0] = temp[0];
-				((int *)next->content)[1] = temp[1];
-			}
-			next = next->next;
-		}
-		current = current->next;
-	}
-}
-
-int is_all_collectibles_collected(t_data *data)
-{
-	return (data->collected_collectibles == data->collectibles_total);
-}
-
-int	is_on_collectible(t_data *data)
-{
-	t_list	*previous;
-	t_list	*current;
-
-	previous = NULL;
-	current = data->collectibles;
-
-	while (current)
-	{
-		int *pos = (int *)current->content;
-		if (pos[0] == data->player_pos[1] && pos[1] == data->player_pos[0])
-		{
-			data->map[pos[0]][pos[1]] = '0';
-			data->collected_collectibles++;
-			remove_collectible(data, current, previous);
-			return (1);
-		}
-		previous = current;
-		current = current->next;
-	}
-	return (0);
-}
-
-void	move_to_collectible(t_data *data, t_list *collectible)
-{
-	int *pos = (int *)collectible->content;
-	int *player_pos = data->player_pos;
-
-	printf("Moving to collectible at (%d, %d)\n", pos[0], pos[1]);
-	printf("Player position is (%d, %d)\n", player_pos[0], player_pos[1]);
-
-	if (pos[1] < player_pos[1] && !is_next_tile_wall(data, -1, 0))
-		data->x_offset += TILE_SIZE;
-	else if (pos[1] > player_pos[1] && !is_next_tile_wall(data, 1, 0))
-		data->x_offset -= TILE_SIZE;
-	else if (pos[0] < player_pos[0] && !is_next_tile_wall(data, 0, -1))
-		data->y_offset += TILE_SIZE;
-	else if (pos[0] > player_pos[0] && !is_next_tile_wall(data, 0, 1))
-		data->y_offset -= TILE_SIZE;
-	else
-	{
-		printf("Cannot move to collectible at (%d, %d) due to walls.\n", pos[0], pos[1]);
-		printf("Collectibles size: %d\n", ft_lstsize(data->collectibles));
-
-	}
-
-	if (is_on_collectible(data))
-		printf("You collected %d collectibles!\n", data->collected_collectibles);
+	t_collectible new_collectible;
+	new_collectible.position = pos;
+	new_collectible.collected = false;
+	data->collectible_list.collectibles[data->collectible_list.count] = new_collectible;
+	data->collectible_list.count++;
 }
 
 int ft_pcoll(t_list *data)
@@ -122,4 +37,132 @@ int ft_pcoll(t_list *data)
 	printf("\n\n\n");
 	return (0);
 }
+
+void	sort_collectibles(t_data *data)
+{
+	t_collectible	current;
+	t_collectible	next;
+	t_collectible	temp;
+
+	current = data->collectible_list.collectibles[0];
+	while (1)
+	{
+		int swapped = 0;
+		for (int i = 0; i < data->collectible_list.count - 1; i++)
+		{
+			current = data->collectible_list.collectibles[i];
+			next = data->collectible_list.collectibles[i + 1];
+			if (current.position.y > next.position.y ||
+				(current.position.y == next.position.y && current.position.x > next.position.x))
+			{
+				temp = current;
+				data->collectible_list.collectibles[i] = next;
+				data->collectible_list.collectibles[i + 1] = temp;
+				swapped = 1;
+			}
+		}
+		if (!swapped)
+			break;
+	}
+}
+
+int is_all_collectibles_collected(t_data *data)
+{
+	for (int i = 0; i < data->map.size.y / TILE_SIZE; i++)
+	{
+		for (int j = 0; j < data->map.size.x / TILE_SIZE; j++)
+		{
+			if (data->map.map[i][j] == 'C')
+				return (0);
+		}
+	}
+	return (1);
+}
+
+int	is_on_collectible(t_data *data)
+{
+	if (data->map.map[data->player_position.y][data->player_position.x] == 'C')
+	{
+		data->map.map[data->player_position.y][data->player_position.x] = '0';
+		return (1);
+	}
+	return (0);
+}
+
+int	is_wall_at(t_data *data, int x, int y)
+{
+	if (x < 0 || x >= data->map.size.y / TILE_SIZE ||
+		y < 0 || y >= data->map.size.x / TILE_SIZE)
+		return (1);
+	if (data->map.map[x][y] == '1')
+		return (1);
+	return (0);
+}
+
+static t_position get_next_step(t_data *data, t_position target)
+{
+    int real_y = data->player_position.y - (data->offset.y / TILE_SIZE);
+    int real_x = data->player_position.x - (data->offset.x / TILE_SIZE);
+    int cols = data->map.size.x / TILE_SIZE;
+    int rows = data->map.size.y / TILE_SIZE;
+    t_bool visited[cols][rows];
+    t_position parent[rows][cols];
+    memset(visited, 0, sizeof(visited));
+    t_queue *q = queue_new();
+    t_position start = { real_x, real_y };
+
+    visited[start.y][start.x] = true;
+    queue_push(q, start);
+    const t_position dirs[4] = {{-1,0},{1,0},{0,-1},{0,1}};
+    while (!queue_empty(q))
+    {
+        t_position cur = queue_pop(q);
+        if (cur.x == target.x && cur.y == target.y)
+            break;
+        for (int i = 0; i < 4; ++i)
+        {
+            t_position nxt = { cur.x + dirs[i].x, cur.y + dirs[i].y };
+            if (nxt.y < 0 || nxt.y >= rows || nxt.x < 0 || nxt.x >= cols)
+                continue;
+            if (visited[nxt.y][nxt.x] || is_wall_at(data, nxt.x, nxt.y))
+                continue;
+            visited[nxt.y][nxt.x] = true;
+            parent[nxt.y][nxt.x] = cur;
+            queue_push(q, nxt);
+        }
+    }
+    t_position step = target;
+    if (!visited[target.y][target.x])
+    {
+        queue_free(q);
+        return (t_position){0, 0};
+    }
+    while (parent[step.y][step.x].x != start.x || parent[step.y][step.x].y != start.y)
+        step = parent[step.y][step.x];
+    queue_free(q);
+    return (t_position){ step.x - start.x, step.y - start.y };
+}
+
+void move_to_collectible(t_data *data, t_collectible *collectible)
+{
+    t_position pos = collectible->position;
+    t_position delta = get_next_step(data, pos);
+
+    if (delta.x != 0 || delta.y != 0)
+    {
+        if (delta.y == -1)
+            data->offset.y += TILE_SIZE;
+        else if (delta.y == 1)
+            data->offset.y -= TILE_SIZE;
+        if (delta.x == -1)
+            data->offset.x += TILE_SIZE;
+        else if (delta.x == 1)
+            data->offset.x -= TILE_SIZE;
+    }
+    else
+        printf("Blocked: no path to collectible (%d, %d)\n", pos.x, pos.y);
+}
+
+
+
 

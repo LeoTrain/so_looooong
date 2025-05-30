@@ -6,7 +6,7 @@
 /*   By: leberton <leberton@42vienna.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/30 14:34:31 by leberton          #+#    #+#             */
-/*   Updated: 2025/05/30 14:34:50 by leberton         ###   ########.fr       */
+/*   Updated: 2025/05/30 17:08:40 by leberton         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,36 +19,33 @@ int	get_map_measurements(t_data *data)
 	char	*e;
 	int		i = 0;
 
-	fd = open(data->map_path, O_RDONLY);
+	fd = open(data->map.path, O_RDONLY);
 	if (fd < 0)
 		return (0);
-	data->map_height = 0;
+	data->map.size.x = 0;
+	data->map.size.y = 0;
 	while ((line = get_next_line(fd)) != NULL)
 	{
-		data->map_height++;
+		data->map.size.y++;
 		free(line);
 	}
 	close(fd);
-	data->map = malloc(sizeof(char *) * (data->map_height + 1));
-	if (!data->map)
+	data->map.map = malloc(sizeof(char *) * (data->map.size.y + 1));
+	if (!data->map.map)
 		return (0);
-	fd = open(data->map_path, O_RDONLY);
+	fd = open(data->map.path, O_RDONLY);
 	while ((line = get_next_line(fd)) != NULL)
 	{
-		data->map[i] = ft_strdup(line);
+		data->map.map[i] = ft_strdup(line);
 		if ((e = strchr(line, 'P')))
 		{
 			int player_pos_y = i * TILE_SIZE + 16;
 			int player_pos_x = ((int)(e - line) * TILE_SIZE) + 16;
-			data->x_offset = (data->win_size / 2) - player_pos_x;
-			data->y_offset = (data->win_size / 2) - player_pos_y;
+			data->offset.x = (data->win_size / 2) - player_pos_x;
+			data->offset.y = (data->win_size / 2) - player_pos_y;
 		}
-		if ((e = strchr(line, 'E')) && !data->exit_pos)
-		{
-			data->exit_pos = (int *)calloc(2, sizeof(int));
-			data->exit_pos[0] = i;
-			data->exit_pos[1] = (int)(e - line);
-		}
+		if ((e = strchr(line, 'E')) && !data->exit_position.x && !data->exit_position.y)
+			data->exit_position = (t_position){i, (int)(e - line)};
 		if ((e = strchr(line, 'C')))
 		{
 			char *pos = line;
@@ -59,18 +56,17 @@ int	get_map_measurements(t_data *data)
 					return (0);
 				col->x = i;
 				col->y = (int)(pos - line);
-				t_list *new_collectible = ft_lstnew(col);
-				ft_lstadd_front(&data->collectibles, new_collectible);
+				add_collectible(data, *col);
 				pos++;
-				data->collectibles_total++;
+				data->collectible_list.count++;
 			}
 		}
 		i++;
-		data->map_width = strlen(line) * TILE_SIZE;
+		data->map.size.x = strlen(line) * TILE_SIZE;
 		free(line);
 	}
-	data->map[i] = NULL;
-	data->map_height *= TILE_SIZE;
+	data->map.map[i] = NULL;
+	data->map.size.y *= TILE_SIZE;
 	close(fd);
 	return (1);
 }
