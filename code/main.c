@@ -6,13 +6,11 @@
 /*   By: leberton <leberton@42vienna.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/26 16:33:03 by leberton          #+#    #+#             */
-/*   Updated: 2025/05/26 16:59:31 by leberton         ###   ########.fr       */
+/*   Updated: 2025/05/30 14:30:28 by leberton         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "so_long.h"
-#include <fcntl.h>
-#include <stdio.h>
 
 #define TILE_SIZE 16
 
@@ -99,11 +97,12 @@ int	get_map_measurements(t_data *data)
 			char *pos = line;
 			while ((pos = strchr(pos, 'C')) != NULL)
 			{
-				printf("Collectible found at (%d, %ld)\n", i, pos - line);
-				t_list *new_collectible = ft_lstnew(NULL);
-				new_collectible->content = malloc(sizeof(int) * 2);
-				((int *)new_collectible->content)[0] = i;
-				((int *)new_collectible->content)[1] = (int)(pos - line);
+				t_position *col = malloc(sizeof(t_position));
+				if (!col)
+					return (0);
+				col->x = i;
+				col->y = (int)(pos - line);
+				t_list *new_collectible = ft_lstnew(col);
 				ft_lstadd_front(&data->collectibles, new_collectible);
 				pos++;
 				data->collectibles_total++;

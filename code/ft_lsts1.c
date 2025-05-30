@@ -1,31 +1,38 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_memchr.c                                        :+:      :+:    :+:   */
+/*   ft_lsts1.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: leberton <leberton@42vienna.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/04/23 08:06:10 by leberton          #+#    #+#             */
-/*   Updated: 2025/04/27 21:39:07 by leberton         ###   ########.fr       */
+/*   Created: 2025/05/30 14:21:00 by leberton          #+#    #+#             */
+/*   Updated: 2025/05/30 14:22:26 by leberton         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "so_long.h"
 
-void	*ft_memchr(const void *s, int c, size_t n)
+int	ft_lstsize(t_list *lst)
 {
-	size_t			i;
-	unsigned char	*ptr_s;
+	int	count;
 
-	if (!s)
-		return (NULL);
-	i = 0;
-	ptr_s = (unsigned char *)s;
-	while (i < n)
+	count = 0;
+	while (lst)
 	{
-		if (*(ptr_s + i) == (unsigned char)c)
-			return (ptr_s + i);
-		i++;
+		count++;
+		lst = lst->next;
 	}
-	return (NULL);
+	return (count);
+}
+
+t_list	*ft_lstnew(void	*content)
+{
+	t_list	*lst;
+
+	lst = (t_list *)malloc(sizeof(t_list));
+	if (!lst)
+		return (NULL);
+	lst->content = content;
+	lst->next = NULL;
+	return (lst);
 }

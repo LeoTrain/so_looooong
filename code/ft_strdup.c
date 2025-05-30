@@ -1,36 +1,31 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_substr.c                                        :+:      :+:    :+:   */
+/*   ft_strdup.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: leberton <leberton@42vienna.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/04/23 10:06:45 by leberton          #+#    #+#             */
-/*   Updated: 2025/04/28 06:21:39 by leberton         ###   ########.fr       */
+/*   Created: 2025/04/22 19:12:09 by leberton          #+#    #+#             */
+/*   Updated: 2025/04/28 06:29:34 by leberton         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "so_long.h"
 
-char	*ft_substr(const char *s, unsigned int start, size_t len)
+char	*ft_strdup(const char *s)
 {
-	char	*substr;
-	size_t	i;
-	if (!s)
-		return (NULL);
-	if (start >= ft_strlen(s))
-		return (ft_strdup(""));
-	if (len > ft_strlen(s) - start)
-		len = ft_strlen(s) - start;
-	substr = (char *)ft_calloc(len + 1, sizeof(char));
-	if (!substr)
-		return (NULL);
+	size_t		i;
+	char		*dest;
+
 	i = 0;
-	while (i < len)
+	dest = (char *)malloc(ft_strlen(s)+1);
+	if (dest == NULL)
+		return (NULL);
+	while (s[i])
 	{
-		substr[i] = s[start + i];
+		dest[i] = s[i];
 		i++;
 	}
-	substr[i] = '\0';
-	return (substr);
+	dest[i] = 0;
+	return (dest);
 }
