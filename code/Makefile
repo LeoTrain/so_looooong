@@ -10,7 +10,7 @@ MAP ?= map.ber
 all: $(NAME)
 
 $(NAME): $(MLX_LIB)
-	$(CC) $(CFLAGS) main.c ft_*.c get_next_line/*.c $(MLX_LIB) -o $(NAME) $(LDFLAGS)
+	$(CC) $(CFLAGS) main.c ft_*.c get_next_line/*.c *_utils.c $(MLX_LIB) -o $(NAME) $(LDFLAGS)
 
 $(MLX_LIB):
 	@make -C $(MLX_DIR)
