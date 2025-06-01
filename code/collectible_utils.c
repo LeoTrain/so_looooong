@@ -126,6 +126,7 @@ int	is_on_collectible(t_data *data)
 {
 	int	i;
 
+	get_player_pos(data);
 	i = 0;
 	if (data->map.map[data->player_position.y][data->player_position.x] == 'C')
 	{
@@ -146,78 +147,134 @@ int	is_on_collectible(t_data *data)
 
 int	is_wall_at(t_data *data, int x, int y)
 {
-	if (x < 0 || x >= data->map.size.y / TILE_SIZE ||
-		y < 0 || y >= data->map.size.x / TILE_SIZE)
-		return (1);
-	if (data->map.map[x][y] == '1')
-		return (1);
-	return (0);
+	printf("if (%d < 0 || %d >= %d || %d < 0 || %d >= %d\n)", x, x, data->map.size.x / TILE_SIZE, y, y, data->map.size.y / TILE_SIZE);
+	p_position((t_position){data->map.size.x / TILE_SIZE, data->map.size.y / TILE_SIZE}, "Map size");
+	printf("Map: %d\n", data->map.map[y][x]);
+    if (x < 0 || x >= data->map.size.x / TILE_SIZE || y < 0 || y >= data->map.size.y / TILE_SIZE) 
+        return (1);
+    if (data->map.map[y][x] == '1')
+        return (1);
+    return (0);
 }
 
-static t_position get_next_step(t_data *data, t_position target)
-{
-    int real_y = data->player_position.y - (data->offset.y / TILE_SIZE);
-    int real_x = data->player_position.x - (data->offset.x / TILE_SIZE);
-    int cols = data->map.size.x / TILE_SIZE;
-    int rows = data->map.size.y / TILE_SIZE;
-    t_bool visited[cols][rows];
-    t_position parent[rows][cols];
-    memset(visited, 0, sizeof(visited));
-    t_queue *q = queue_new();
-    t_position start = { real_x, real_y };
 
-    visited[start.y][start.x] = true;
-    queue_push(q, start);
-    const t_position dirs[4] = {{-1,0},{1,0},{0,-1},{0,1}};
-    while (!queue_empty(q))
-    {
-        t_position cur = queue_pop(q);
-        if (cur.x == target.x && cur.y == target.y)
-            break;
-        for (int i = 0; i < 4; ++i)
-        {
-            t_position nxt = { cur.x + dirs[i].x, cur.y + dirs[i].y };
-            if (nxt.y < 0 || nxt.y >= rows || nxt.x < 0 || nxt.x >= cols)
-                continue;
-            if (visited[nxt.y][nxt.x] || is_wall_at(data, nxt.x, nxt.y))
-                continue;
-            visited[nxt.y][nxt.x] = true;
-            parent[nxt.y][nxt.x] = cur;
-            queue_push(q, nxt);
-        }
-    }
-    t_position step = target;
-    if (!visited[target.y][target.x])
-    {
-        queue_free(q);
-        return (t_position){0, 0};
-    }
-    while (parent[step.y][step.x].x != start.x || parent[step.y][step.x].y != start.y)
-        step = parent[step.y][step.x];
-    queue_free(q);
-    return (t_position){ step.x - start.x, step.y - start.y };
+// static t_position get_next_step(t_data *data, t_position target)
+// {
+//
+// 	// p_position(data->player_position, "Player_position");
+// 	// p_position(target, "Target");
+// 	if (target.y < data->player_position.y && !is_next_tile_wall(data, 0, -1))
+// 	{
+// 		return ((t_position){0, -1});
+// 	}
+// 	else if (target.y > data->player_position.y && !is_next_tile_wall(data, 0, 1))
+// 	{
+// 		return ((t_position){0, 1});
+// 	}
+// 	else if (target.y == data->player_position.y)
+// 	{
+// 		if (target.x < data->player_position.x && !is_next_tile_wall(data, -1, 0))
+// 			return ((t_position){-1, 0});
+// 		else if (target.x > data->player_position.x && !is_next_tile_wall(data, 1, 0))
+// 			return ((t_position){1, 0});
+// 		return ((t_position){0, 0});
+// 	}
+// 	return ((t_position){0, 0});
+// }
+
+void	init_directions(t_position *directions)
+{
+	directions[0] = (t_position){-1, 0};
+	directions[1] = (t_position){1, 0};
+	directions[2] = (t_position){0, -1};
+	directions[3] = (t_position){0, 1};
+}
+
+t_bool	is_valid(t_position position, int width, int height)
+{
+	return (position.x > 0 && position.x < width && position.y > 0 && position.y < height);
+}
+
+t_bool	is_same(t_position a, t_position b)
+{
+	return (a.x == b.x && a.y == b.y);
+}
+
+
+t_bool	get_path(t_position start, t_position end, char **map, t_bool **visited, int width, int height, t_position *path, int *path_length)
+{
+	t_position directions[4];
+	t_position	next;
+	init_directions(directions);
+	if (!is_valid(start, width, height) || visited[start.y][start.x] || map[start.y][start.x] == '1')
+		return (false);
+	if (is_same(start, end))
+	{
+		path[*path_length] = start;
+		(*path_length)++;
+		return (true);
+	}
+	visited[start.y][start.x] = true;
+	path[*path_length] = start;
+	(*path_length)++;
+	int i = 0;
+	while (i < 4)
+	{
+		next = (t_position){start.x + directions[i].x, start.y + directions[i].y};
+		if (get_path(next, end, map, visited, width, height, path, path_length))
+			return (true);
+		i++;
+	}
+	(*path_length)--;
+	return (false);
+}
+
+void	move_player_path(t_data *data, t_position *path, int path_length)
+{
+	int i = 1;
+	while (i < path_length)
+	{
+		int diff_x = data->player_position.x - path[i].x;
+		int diff_y = data->player_position.y - path[i].y;
+		if (diff_x <= 1 && diff_x >= -1)
+		{
+			if (diff_x == 1)
+				data->offset.x += TILE_SIZE;
+			else if (diff_x == -1)
+				data->offset.x -= TILE_SIZE;
+		}
+		if (diff_y <= 1 && diff_y >= -1)
+		{
+			if (diff_y == 1)
+				data->offset.y += TILE_SIZE;
+			else if (diff_y == -1)
+				data->offset.y -= TILE_SIZE;
+		}
+		get_player_pos(data);
+		i++;
+	}
+	get_player_pos(data);
 }
 
 void move_to_collectible(t_data *data, t_collectible *collectible)
 {
-    t_position pos = collectible->position;
-    t_position delta = get_next_step(data, pos);
+	int width = data->map.size.x / TILE_SIZE;
+	int height = data->map.size.y / TILE_SIZE;
+	t_bool	**visited = malloc(height * sizeof(t_bool *));
+	int i = 0;
 
-    if (delta.x != 0 || delta.y != 0)
-    {
-        if (delta.y == -1)
-            data->offset.y += TILE_SIZE;
-        else if (delta.y == 1)
-            data->offset.y -= TILE_SIZE;
-        if (delta.x == -1)
-            data->offset.x += TILE_SIZE;
-        else if (delta.x == 1)
-            data->offset.x -= TILE_SIZE;
-    }
-    else
-        printf("Blocked: no path to collectible (%d, %d)\n", pos.x, pos.y);
+	while (i < height)
+	{
+		visited[i] = calloc(width, sizeof(t_bool));
+		i++;
+	}
+	t_position path[1000];
+	int path_length = 0;
+	while (collectible->collected == true)
+		collectible++;
+	if (is_all_collectibles_collected(data))
+		if (get_path(data->player_position, data->exit_position, data->map.map, visited, width, height, path, &path_length))
+			move_player_path(data, path, path_length);
+	if (get_path(data->player_position, collectible->position, data->map.map, visited, width, height, path, &path_length))
+		move_player_path(data, path, path_length);
 }
-
-
-
-

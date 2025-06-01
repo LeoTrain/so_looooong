@@ -12,6 +12,11 @@
 
 #include "so_long.h"
 
+void	p_position(t_position position, char *name)
+{
+	printf("Position for %s:\n	-x: %d\n	-y: %d\n", name, position.x, position.y);
+}
+
 int	ft_puterror(char *message, int error_code)
 {
 	printf("%s\n", message);

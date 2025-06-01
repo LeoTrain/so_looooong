@@ -47,6 +47,7 @@ int	get_map_measurements(t_data *data)
 		if ((e = strchr(line, 'E')))
 		{
 			data->exit_position = (t_position){(int)(e - line), i};
+			printf("In fdhudfd %d %d\n", data->exit_position.x, data->exit_position.y);
 		}
 		if ((e = strchr(line, 'C')))
 		{

@@ -89,6 +89,8 @@ typedef struct s_data
 	int		           *exit_pos;
 }			t_data;
 
+
+void	p_position(t_position position, char *name);
 int count_coullectible(t_data *data);
 t_queue	*queue_new(void);
 void		queue_push(t_queue *q, t_position pos);
