@@ -1,5 +1,5 @@
 CC = cc
-CFLAGS = -Wall -Wextra -Werror
+CFLAGS = -Wall -Wextra -Werror -g
 LDFLAGS = -lX11 -lXext -lm
 NAME = test
 MLX_DIR = minilibx-linux

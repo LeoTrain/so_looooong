@@ -18,6 +18,11 @@ int	ft_puterror(char *message, int error_code)
 	return (error_code);
 }
 
+void	ft_debug(char *message)
+{
+	printf("Debug: %s\n", message);
+}
+
 void	free_all(t_data *data)
 {
 	if (data->win)
@@ -63,14 +68,16 @@ int main(int argc, char **argv)
 	load_image(data.mlx, (void **)&data.assets.collectible.img, data.assets.collectible.path, &data.map.tile_size.x, &data.map.tile_size.y);
 	data.map.path = argv[1];
 	data.exit_position = (t_position){-1, -1};
-	data.collectible_list.collectibles = NULL;
-	data.collectible_list.count = 0;
-	data.collectible_list.count = 0;
+	data.collectibles.count = 0;
+	int collectible_coount = count_coullectible(&data);
+	data.collectibles.collectibles = calloc(collectible_coount, sizeof(t_collectible));
+	if (!data.collectibles.collectibles)
+		return (ft_puterror("Error: allocating data.collectibles.collectibles in main.", 2));
 	if (!get_map_measurements(&data))
 		return (ft_puterror("Error: reading the map file.", 3));
 	get_player_pos(&data);
 	sort_collectibles(&data);
-	
+
 	mlx_key_hook(data.win, (int (*)(int, void *))key_hook, &data);
 	mlx_loop_hook(data.mlx, (int (*)(void *))loop_hook, &data);
 	mlx_loop(data.mlx);

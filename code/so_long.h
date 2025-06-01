@@ -84,14 +84,12 @@ typedef struct s_data
 	t_position	       player_position;
 	t_assets	       assets;
 	t_map	           map;
-	t_collectible_list collectible_list;
+	t_collectible_list collectibles;
 	int		           *player_pos;
 	int		           *exit_pos;
-	// t_list	*collectibles;
-	// int		collected_collectibles;
-	// int		collectibles_total;
 }			t_data;
 
+int count_coullectible(t_data *data);
 t_queue	*queue_new(void);
 void		queue_push(t_queue *q, t_position pos);
 t_position	queue_pop(t_queue *q);

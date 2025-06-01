@@ -78,7 +78,7 @@ int	loop_hook(t_data *data)
 	{
 		last_time = current_time;
 		draw(data);
-		move_to_collectible(data, data->collectible_list.collectibles);
+		move_to_collectible(data, data->collectibles.collectibles);
 		if (is_on_collectible(data))
 			printf("You collected collectibles!\n");
 	}

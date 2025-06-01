@@ -44,8 +44,10 @@ int	get_map_measurements(t_data *data)
 			data->offset.x = (data->win_size / 2) - player_pos_x;
 			data->offset.y = (data->win_size / 2) - player_pos_y;
 		}
-		if ((e = strchr(line, 'E')) && !data->exit_position.x && !data->exit_position.y)
-			data->exit_position = (t_position){i, (int)(e - line)};
+		if ((e = strchr(line, 'E')))
+		{
+			data->exit_position = (t_position){(int)(e - line), i};
+		}
 		if ((e = strchr(line, 'C')))
 		{
 			char *pos = line;
@@ -54,11 +56,10 @@ int	get_map_measurements(t_data *data)
 				t_position *col = malloc(sizeof(t_position));
 				if (!col)
 					return (0);
-				col->x = i;
-				col->y = (int)(pos - line);
+				col->x = (int)(pos - line);
+				col->y = i;
 				add_collectible(data, *col);
 				pos++;
-				data->collectible_list.count++;
 			}
 		}
 		i++;

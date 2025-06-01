@@ -10,16 +10,59 @@
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "get_next_line/get_next_line.h"
 #include "so_long.h"
+#include <fcntl.h>
 
+int count_coullectible(t_data *data)
+{
+	int		count;
+	int		fd;
+	char	*line;
+	int		i;
+
+	count = 0;
+	fd = open(data->map.path, O_RDONLY);
+	if (fd < 0)
+		return (0);
+	while ((line = get_next_line(fd)) != NULL)
+	{
+		i = 0;
+		while (line[i])
+		{
+			if (line[i] == 'C')
+				count++;
+			i++;
+		}
+		free(line);
+	}
+	close(fd);
+	return (count);
+}
+
+int	get_total_collected(t_data *data)
+{
+	int i;
+	int count;
+
+	i = 0;
+	count = 0;
+	while (i < data->collectibles.count)
+	{
+		if (data->collectibles.collectibles[i].collected)
+			count++;
+		i++;
+	}
+	return (count);
+}
 
 void add_collectible(t_data *data, t_position pos)
 {
 	t_collectible new_collectible;
 	new_collectible.position = pos;
 	new_collectible.collected = false;
-	data->collectible_list.collectibles[data->collectible_list.count] = new_collectible;
-	data->collectible_list.count++;
+	data->collectibles.collectibles[data->collectibles.count] = new_collectible;
+	data->collectibles.count++;
 }
 
 int ft_pcoll(t_list *data)
@@ -44,20 +87,20 @@ void	sort_collectibles(t_data *data)
 	t_collectible	next;
 	t_collectible	temp;
 
-	current = data->collectible_list.collectibles[0];
+	current = data->collectibles.collectibles[0];
 	while (1)
 	{
 		int swapped = 0;
-		for (int i = 0; i < data->collectible_list.count - 1; i++)
+		for (int i = 0; i < data->collectibles.count - 1; i++)
 		{
-			current = data->collectible_list.collectibles[i];
-			next = data->collectible_list.collectibles[i + 1];
+			current = data->collectibles.collectibles[i];
+			next = data->collectibles.collectibles[i + 1];
 			if (current.position.y > next.position.y ||
 				(current.position.y == next.position.y && current.position.x > next.position.x))
 			{
 				temp = current;
-				data->collectible_list.collectibles[i] = next;
-				data->collectible_list.collectibles[i + 1] = temp;
+				data->collectibles.collectibles[i] = next;
+				data->collectibles.collectibles[i + 1] = temp;
 				swapped = 1;
 			}
 		}
@@ -81,9 +124,21 @@ int is_all_collectibles_collected(t_data *data)
 
 int	is_on_collectible(t_data *data)
 {
+	int	i;
+
+	i = 0;
 	if (data->map.map[data->player_position.y][data->player_position.x] == 'C')
 	{
-		data->map.map[data->player_position.y][data->player_position.x] = '0';
+		while (i < data->collectibles.count)
+		{
+			if (data->collectibles.collectibles[i].position.x == data->player_position.x &&
+				data->collectibles.collectibles[i].position.y == data->player_position.y)
+			{
+				data->map.map[data->player_position.y][data->player_position.x] = '0';
+				data->collectibles.collectibles[i].collected = true;
+			}
+			i++;
+		}
 		return (1);
 	}
 	return (0);
