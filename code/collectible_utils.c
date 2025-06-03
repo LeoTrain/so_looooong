@@ -128,6 +128,8 @@ int	is_on_collectible(t_data *data)
 
 	get_player_pos(data);
 	i = 0;
+	// printf("HERE\n");
+	// printf("Map at x:%d y:%d = %c\n", data->player_position.x, data->player_position.y, data->map.map[data->player_position.y][data->player_position.x]);
 	if (data->map.map[data->player_position.y][data->player_position.x] == 'C')
 	{
 		while (i < data->collectibles.count)
@@ -137,6 +139,7 @@ int	is_on_collectible(t_data *data)
 			{
 				data->map.map[data->player_position.y][data->player_position.x] = '0';
 				data->collectibles.collectibles[i].collected = true;
+				printf("You've collected a coin baby.\n");
 			}
 			i++;
 		}
@@ -229,31 +232,35 @@ t_bool	get_path(t_position start, t_position end, char **map, t_bool **visited, 
 	return (false);
 }
 
-void	move_player_path(t_data *data, t_position *path, int path_length)
+void	move_player_path(t_data *data)
 {
-	int i = 1;
-	while (i < path_length)
+	t_position	next;
+	int			x;
+	int			y;
+
+	if (!data->moving || data->path_index >= data->path_length)
 	{
-		int diff_x = data->player_position.x - path[i].x;
-		int diff_y = data->player_position.y - path[i].y;
-		if (diff_x <= 1 && diff_x >= -1)
+		data->moving = false;
+		return ;
+	}
+	next = data->path[data->path_index];
+	x = next.x - data->player_position.x;
+	y = next.y - data->player_position.y;
+
+	if (x == 1)
+		data->offset.x += TILE_SIZE;
+	else if (x == -1)
+		data->offset.x -= TILE_SIZE;
+	else
+		if (y <= 1 && y >= -1)
 		{
-			if (diff_x == 1)
-				data->offset.x += TILE_SIZE;
-			else if (diff_x == -1)
-				data->offset.x -= TILE_SIZE;
-		}
-		if (diff_y <= 1 && diff_y >= -1)
-		{
-			if (diff_y == 1)
+			if (y == 1)
 				data->offset.y += TILE_SIZE;
-			else if (diff_y == -1)
+			else if (y == -1)
 				data->offset.y -= TILE_SIZE;
 		}
-		get_player_pos(data);
-		i++;
-	}
 	get_player_pos(data);
+	data->path_index++;
 }
 
 void move_to_collectible(t_data *data, t_collectible *collectible)
@@ -264,17 +271,14 @@ void move_to_collectible(t_data *data, t_collectible *collectible)
 	int i = 0;
 
 	while (i < height)
-	{
-		visited[i] = calloc(width, sizeof(t_bool));
-		i++;
-	}
-	t_position path[1000];
-	int path_length = 0;
+		visited[i++] = calloc(width, sizeof(t_bool));
 	while (collectible->collected == true)
 		collectible++;
 	if (is_all_collectibles_collected(data))
-		if (get_path(data->player_position, data->exit_position, data->map.map, visited, width, height, path, &path_length))
-			move_player_path(data, path, path_length);
-	if (get_path(data->player_position, collectible->position, data->map.map, visited, width, height, path, &path_length))
-		move_player_path(data, path, path_length);
+		get_path(data->player_position, data->map.exit_position, data->map.map, visited, width, height, data->path, &data->path_length);
+	else
+		get_path(data->player_position, collectible->position, data->map.map, visited, width, height, data->path, &data->path_length);
+	data->path_index = 1;
+	data->moving = true;
+
 }

@@ -20,7 +20,7 @@ static void	draw(t_data *data)
 	int y = 0;
 	while (data->map.map[y])
 	{
-		for (i = 0; i < data->map.size.x; i++)
+		for (i = 0; i < (int)strlen(data->map.map[y]); i++)
 		{
 			int pos_x = (TILE_SIZE * i) + data->offset.x;
 			int pos_y = (y * TILE_SIZE) + data->offset.y;
@@ -40,16 +40,18 @@ static void	draw(t_data *data)
 
 int	key_hook(int keycode, t_data *data)
 {
-	if (keycode == 65307)
+	if (keycode == 65307 || keycode == 53)
 		exit(0);
-	if (keycode == 119 && !is_next_tile_wall(data, 0, -1))
+	if ((keycode == 119 || keycode == 13) && !is_next_tile_wall(data, 0, -1))
 		data->offset.y += TILE_SIZE;
-	else if (keycode == 115 && !is_next_tile_wall(data, 0, 1))
+	else if ((keycode == 115 || keycode == 1) && !is_next_tile_wall(data, 0, 1))
 		data->offset.y -= TILE_SIZE;
-	else if (keycode == 97 && !is_next_tile_wall(data, -1, 0))
+	else if ((keycode == 97 || keycode == 0) && !is_next_tile_wall(data, -1, 0))
 		data->offset.x += TILE_SIZE;
-	else if (keycode == 100 && !is_next_tile_wall(data, 1, 0))
+	else if ((keycode == 100 || keycode == 2) && !is_next_tile_wall(data, 1, 0))
 		data->offset.x -= TILE_SIZE;
+	else
+		printf("Keycode unkown: [%d]\n", keycode);
 	if (is_on_exit(data))
 	{
 		if (!is_all_collectibles_collected(data))
@@ -78,7 +80,10 @@ int	loop_hook(t_data *data)
 	{
 		last_time = current_time;
 		draw(data);
-		move_to_collectible(data, data->collectibles.collectibles);
+		// if (!data->moving)
+		// 	move_to_collectible(data, data->collectibles.collectibles);
+		// else
+		// 	move_player_path(data);
 		if (is_on_exit(data))
 		{
 			if (!is_all_collectibles_collected(data))

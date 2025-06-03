@@ -12,30 +12,38 @@
 
 #include "so_long.h"
 
-int	get_map_measurements(t_data *data)
+int get_map_measurements(t_data *data)
 {
-	int		fd;
-	char	*line;
-	char	*e;
-	int		i = 0;
+	int fd;
+	char *line;
+	char *e;
+	int i = 0;
+	size_t max_len = 0;
 
 	fd = open(data->map.path, O_RDONLY);
 	if (fd < 0)
 		return (0);
-	data->map.size.x = 0;
+
 	data->map.size.y = 0;
 	while ((line = get_next_line(fd)) != NULL)
 	{
+		size_t len = strlen(line);
+		if (len > max_len)
+			max_len = len;
 		data->map.size.y++;
 		free(line);
 	}
+	data->map.size.x = max_len * TILE_SIZE;
 	close(fd);
+
 	data->map.map = malloc(sizeof(char *) * (data->map.size.y + 1));
 	if (!data->map.map)
 		return (0);
 	fd = open(data->map.path, O_RDONLY);
 	while ((line = get_next_line(fd)) != NULL)
 	{
+		if (!line)
+			return (0);
 		data->map.map[i] = ft_strdup(line);
 		if ((e = strchr(line, 'P')))
 		{
@@ -64,7 +72,6 @@ int	get_map_measurements(t_data *data)
 			}
 		}
 		i++;
-		data->map.size.x = strlen(line) * TILE_SIZE;
 		free(line);
 	}
 	data->map.map[i] = NULL;

@@ -34,7 +34,6 @@ void	free_all(t_data *data)
 		mlx_destroy_window(data->mlx, data->win);
 	if (data->mlx)
 	{
-		mlx_destroy_display(data->mlx);
 		free(data->mlx);
 	}
 	if (data->player_position.x >= 0 && data->player_position.y >= 0)
@@ -82,6 +81,7 @@ int main(int argc, char **argv)
 		return (ft_puterror("Error: reading the map file.", 3));
 	get_player_pos(&data);
 	sort_collectibles(&data);
+	data.path_length = 0;
 
 	mlx_key_hook(data.win, (int (*)(int, void *))key_hook, &data);
 	mlx_loop_hook(data.mlx, (int (*)(void *))loop_hook, &data);

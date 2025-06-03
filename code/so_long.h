@@ -70,8 +70,6 @@ typedef struct s_collectible_list
 	int           count;
 }	t_collectible_list;
 
-
-
 typedef struct s_data
 {
 	void	           *mlx;
@@ -87,6 +85,10 @@ typedef struct s_data
 	t_collectible_list collectibles;
 	int		           *player_pos;
 	int		           *exit_pos;
+	t_position			path[100];
+	int					path_length;
+	int					path_index;
+	t_bool				moving;
 }			t_data;
 
 
@@ -113,6 +115,7 @@ void	load_image(void *mlx, void **img, char *path, int *w, int *h);
 int is_all_collectibles_collected(t_data *data);
 int	is_on_collectible(t_data *data);
 void	move_to_collectible(t_data *data, t_collectible *collectible);
+void	move_player_path(t_data *data);
 void	get_player_pos(t_data *data);
 int	is_next_tile_wall(t_data *data, int x, int y);
 int	is_on_exit(t_data *data);
