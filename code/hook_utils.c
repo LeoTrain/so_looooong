@@ -80,22 +80,25 @@ int	loop_hook(t_data *data)
 	{
 		last_time = current_time;
 		draw(data);
-		// if (!data->moving)
-		// 	move_to_collectible(data, data->collectibles.collectibles);
-		// else
-		// 	move_player_path(data);
-		if (is_on_exit(data))
+		if (!data->moving)
+			move_to_collectible(data, data->collectibles.collectibles);
+		else
 		{
-			if (!is_all_collectibles_collected(data))
+			if (is_on_exit(data))
 			{
-				printf("You need to collect all collectibles before exiting!\n");
-				return (0);
+				if (!is_all_collectibles_collected(data))
+				{
+					printf("You need to collect all collectibles before exiting!\n");
+					return (0);
+				}
+				printf("You reached the exit!\n");
+				exit(0);
 			}
-			printf("You reached the exit!\n");
-			exit(0);
+			else if (is_on_collectible(data))
+				printf("You collected a collectible: %d/%d\n", count_coullectible(data), data->collectibles.count);
+			else
+				move_player_path(data);
 		}
-		if (is_on_collectible(data))
-			printf("You collected a collectible: %d/%d\n", count_coullectible(data), data->collectibles.count);
 	}
 	return (0);
 }

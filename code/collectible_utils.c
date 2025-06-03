@@ -244,8 +244,9 @@ void	move_player_path(t_data *data)
 		return ;
 	}
 	next = data->path[data->path_index];
-	x = next.x - data->player_position.x;
-	y = next.y - data->player_position.y;
+	x = data->player_position.x - next.x;
+	y = data->player_position.y - next.y;
+	printf("Next x: %d | y: %d\n", x, y);
 
 	if (x == 1)
 		data->offset.x += TILE_SIZE;
@@ -275,7 +276,11 @@ void move_to_collectible(t_data *data, t_collectible *collectible)
 	while (collectible->collected == true)
 		collectible++;
 	if (is_all_collectibles_collected(data))
+	{
+		printf("All collectibles are collected! Checking for exit.\n");
 		get_path(data->player_position, data->map.exit_position, data->map.map, visited, width, height, data->path, &data->path_length);
+
+	}
 	else
 		get_path(data->player_position, collectible->position, data->map.map, visited, width, height, data->path, &data->path_length);
 	data->path_index = 1;
