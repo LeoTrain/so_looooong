@@ -83,22 +83,7 @@ int	loop_hook(t_data *data)
 		if (!data->moving)
 			move_to_collectible(data, data->collectibles.collectibles);
 		else
-		{
-			if (is_on_exit(data))
-			{
-				if (!is_all_collectibles_collected(data))
-				{
-					printf("You need to collect all collectibles before exiting!\n");
-					return (0);
-				}
-				printf("You reached the exit!\n");
-				exit(0);
-			}
-			else if (is_on_collectible(data))
-				printf("You collected a collectible: %d/%d\n", count_coullectible(data), data->collectibles.count);
-			else
-				move_player_path(data);
-		}
+			move_player_path(data);
 	}
 	return (0);
 }

@@ -28,5 +28,6 @@ int	is_next_tile_wall(t_data *data, int x, int y)
 int	is_on_exit(t_data *data)
 {
 	get_player_pos(data);
-	return (data->player_position.x == data->exit_position.x && data->player_position.y == data->exit_position.y);
+	return (data->player_position.x == data->exit_position.x &&
+			data->player_position.y == data->exit_position.y);
 }

@@ -128,8 +128,6 @@ int	is_on_collectible(t_data *data)
 
 	get_player_pos(data);
 	i = 0;
-	// printf("HERE\n");
-	// printf("Map at x:%d y:%d = %c\n", data->player_position.x, data->player_position.y, data->map.map[data->player_position.y][data->player_position.x]);
 	if (data->map.map[data->player_position.y][data->player_position.x] == 'C')
 	{
 		while (i < data->collectibles.count)
@@ -139,7 +137,6 @@ int	is_on_collectible(t_data *data)
 			{
 				data->map.map[data->player_position.y][data->player_position.x] = '0';
 				data->collectibles.collectibles[i].collected = true;
-				printf("You've collected a coin baby.\n");
 			}
 			i++;
 		}
@@ -246,8 +243,6 @@ void	move_player_path(t_data *data)
 	next = data->path[data->path_index];
 	x = data->player_position.x - next.x;
 	y = data->player_position.y - next.y;
-	printf("Next x: %d | y: %d\n", x, y);
-
 	if (x == 1)
 		data->offset.x += TILE_SIZE;
 	else if (x == -1)
@@ -260,8 +255,33 @@ void	move_player_path(t_data *data)
 			else if (y == -1)
 				data->offset.y -= TILE_SIZE;
 		}
-	get_player_pos(data);
+	if (is_on_collectible(data))
+		printf("You are on a collectible.\n");
+	else if (is_on_exit(data))
+	{
+		printf("You are on the exit.\n");
+		exit(0);
+
+	}
 	data->path_index++;
+}
+
+void	reset_visited(t_bool **visited, int width, int height)
+{
+	int	i;
+	int	j;
+
+	i = 0;
+	while (i < height)
+	{
+		j = 0;
+		while (j < width)
+		{
+			visited[i][j] = false;
+			j++;
+		}
+		i++;
+	}
 }
 
 void move_to_collectible(t_data *data, t_collectible *collectible)
@@ -273,12 +293,11 @@ void move_to_collectible(t_data *data, t_collectible *collectible)
 
 	while (i < height)
 		visited[i++] = calloc(width, sizeof(t_bool));
-	while (collectible->collected == true)
-		collectible++;
 	if (is_all_collectibles_collected(data))
 	{
 		printf("All collectibles are collected! Checking for exit.\n");
-		get_path(data->player_position, data->map.exit_position, data->map.map, visited, width, height, data->path, &data->path_length);
+		reset_visited(visited, width, height);
+		get_path(data->player_position, data->exit_position, data->map.map, visited, width, height, data->path, &data->path_length);
 
 	}
 	else
