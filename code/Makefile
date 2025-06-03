@@ -20,7 +20,7 @@ LDFLAGS += -fsanitize=address
 NAME = test
 MAP_DIR = maps
 MAP ?= map.ber
-SRCS = main.c ft_*.c get_next_line/*.c *_utils.c
+SRCS = errors.c ft_strdup.c image_loader.c init_game.c collectible*.c render.c event_loops.c get_next_line/*.c *_utils.c main.c
 
 all: $(NAME)
 

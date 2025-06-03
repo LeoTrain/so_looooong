@@ -91,35 +91,29 @@ typedef struct s_data
 	t_bool				moving;
 }			t_data;
 
-
-void	p_position(t_position position, char *name);
-int count_coullectible(t_data *data);
-t_queue	*queue_new(void);
-void		queue_push(t_queue *q, t_position pos);
-t_position	queue_pop(t_queue *q);
-int			queue_empty(t_queue *q);
-void		queue_free(t_queue *q);
+int		ft_puterror(char *message, int error_code);
 char	*ft_strdup(const char *s);
-void	ft_lstadd_back(t_list **lst, t_list *n);
-void	ft_lstadd_front(t_list **lst, t_list *n);
-void	ft_lstclear(t_list **lst, void (*del)(void *));
-void	ft_lstdelone(t_list *lst, void (*del)(void *));
-t_list	*ft_lstlast(t_list *lst);
-t_list	*ft_lstnew(void	*content);
-int     ft_lstsize(t_list *lst);
+int		count_coullectible(t_data *data);
+int		get_map_measurements(t_data *data);
+t_bool	init_game(t_data *data, char *map_path);
 long	get_time_in_ms(void);
-int	get_map_measurements(t_data *data);
-void	remove_collectible(t_data *data, t_list *target, t_list *previous);
 void	sort_collectibles(t_data *data);
-void	load_image(void *mlx, void **img, char *path, int *w, int *h);
+t_bool	load_image(void *mlx, void **img, char *path, int *w, int *h);
 int is_all_collectibles_collected(t_data *data);
 int	is_on_collectible(t_data *data);
+
+void	init_directions(t_position *directions);
+t_bool	is_valid(t_position position, int width, int height);
+t_bool	is_same(t_position a, t_position b);
+t_bool	get_path(t_position start, t_position end, char **map, t_bool **visited, int width, int height, t_position *path, int *path_length);
+void	reset_visited(t_bool **visited, int width, int height);
 void	move_to_collectible(t_data *data, t_collectible *collectible);
 void	move_player_path(t_data *data);
 void	get_player_pos(t_data *data);
+
+void	draw(t_data *data);
 int	is_next_tile_wall(t_data *data, int x, int y);
 int	is_on_exit(t_data *data);
-int ft_pcoll(t_list *data);
 int	key_hook(int keycode, t_data *data);
 int	loop_hook(t_data *data);
 void add_collectible(t_data *data, t_position pos);

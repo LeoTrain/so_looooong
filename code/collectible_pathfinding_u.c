@@ -1,38 +1,32 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_lsts1.c                                         :+:      :+:    :+:   */
+/*   collectible_pathfinding_utils.c                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: leberton <leberton@42vienna.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/05/30 14:21:00 by leberton          #+#    #+#             */
-/*   Updated: 2025/05/30 14:22:26 by leberton         ###   ########.fr       */
+/*   Created: 2025/06/03 21:49:44 by leberton          #+#    #+#             */
+/*   Updated: 2025/06/03 21:51:15 by leberton         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "so_long.h"
 
-int	ft_lstsize(t_list *lst)
+void	init_directions(t_position *directions)
 {
-	int	count;
-
-	count = 0;
-	while (lst)
-	{
-		count++;
-		lst = lst->next;
-	}
-	return (count);
+	directions[0] = (t_position){-1, 0};
+	directions[1] = (t_position){1, 0};
+	directions[2] = (t_position){0, -1};
+	directions[3] = (t_position){0, 1};
 }
 
-t_list	*ft_lstnew(void	*content)
+t_bool	is_valid(t_position position, int width, int height)
 {
-	t_list	*lst;
-
-	lst = (t_list *)malloc(sizeof(t_list));
-	if (!lst)
-		return (NULL);
-	lst->content = content;
-	lst->next = NULL;
-	return (lst);
+	return (position.x > 0 && position.x < width && position.y > 0 && position.y < height);
 }
+
+t_bool	is_same(t_position a, t_position b)
+{
+	return (a.x == b.x && a.y == b.y);
+}
+

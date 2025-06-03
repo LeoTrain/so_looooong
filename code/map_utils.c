@@ -6,7 +6,7 @@
 /*   By: leberton <leberton@42vienna.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/30 14:34:31 by leberton          #+#    #+#             */
-/*   Updated: 2025/05/30 17:08:40 by leberton         ###   ########.fr       */
+/*   Updated: 2025/06/03 21:59:21 by leberton         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,10 +53,7 @@ int get_map_measurements(t_data *data)
 			data->offset.y = (data->win_size / 2) - player_pos_y;
 		}
 		if ((e = strchr(line, 'E')))
-		{
 			data->exit_position = (t_position){(int)(e - line), i};
-			printf("In fdhudfd %d %d\n", data->exit_position.x, data->exit_position.y);
-		}
 		if ((e = strchr(line, 'C')))
 		{
 			char *pos = line;
