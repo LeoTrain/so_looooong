@@ -42,6 +42,7 @@ int count_coullectible(t_data *data)
 void add_collectible(t_data *data, t_position pos)
 {
 	t_collectible new_collectible;
+
 	new_collectible.position = pos;
 	new_collectible.collected = false;
 	data->collectibles.collectibles[data->collectibles.count] = new_collectible;

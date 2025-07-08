@@ -13,8 +13,6 @@
 
 #define TILE_SIZE 16
 
-typedef struct s_queue t_queue;
-
 typedef enum e_bool
 {
 	false = 0,

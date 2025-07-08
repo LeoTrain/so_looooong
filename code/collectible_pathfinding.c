@@ -18,7 +18,6 @@ t_bool	get_path(t_position start, t_position end, char **map, t_bool **visited, 
 	t_position directions[4];
 	t_position	next;
 	init_directions(directions);
-	printf("%d %d\n", width, height);
 	if (!is_valid(start, width, height) || visited[start.y][start.x] || map[start.y][start.x] == '1')
 		return (false);
 	if (is_same(start, end))

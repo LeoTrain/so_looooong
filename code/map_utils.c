@@ -36,6 +36,8 @@ static void	get_map_size(t_data *data)
 	close(fd);
 }
 
+
+
 static	void	set_player(t_data *data, int y, char *line, char *e)
 {
 	t_position	player_pos;
@@ -56,44 +58,56 @@ static void	set_exit(t_data *data, int y, char *line, char *e)
 	data->exit_position = exit_pos;
 }
 
-int get_map_measurements(t_data *data)
+static void	set_collectible(t_data *data, int y, char *line)
 {
-	int		fd;
-	int		i;
-	char	*line;
+	t_position	*col;
+	char		*e;
+
+	e = line;
+	while ((e = strchr(e, 'C')) != NULL)
+	{
+		col = malloc(sizeof(t_position));
+		col->x = (int)(e - line);
+		col->y = y;
+		add_collectible(data, *col);
+		e++;
+		free(col);
+	}
+}
+
+static void	parse_map_line(t_data *data, char *line, int i)
+{
 	char	*e;
 
+	data->map.map[i] = ft_strdup(line);
+	if (!data->map.map[i])
+		ft_puterror("Error duplicating map line.", data);
+	if ((e = ft_strchr(line, 'P')))
+		set_player(data, i, line, e);
+	if ((e = ft_strchr(line, 'E')))
+		set_exit(data, i, line, e);
+	if ((e = ft_strchr(line, 'C')))
+		set_collectible(data, i, line);
+}
+
+
+int	get_map_measurements(t_data *data)
+{
+	int		i;
+	int		fd;
+	char	*line;
+
 	get_map_size(data);
-	i = 0;
 	data->map.map = malloc(sizeof(char *) * (data->map.size.y + 1));
 	if (!data->map.map)
-		ft_puterror("Error allocating the map.", data);
+		ft_puterror("Error allocating map.", data);
 	fd = open(data->map.path, O_RDONLY);
+	if (fd < 0)
+		ft_puterror("Error opening map file.", data);
+	i = 0;
 	while ((line = get_next_line(fd)) != NULL)
 	{
-		if (!line)
-			return (0);
-		data->map.map[i] = ft_strdup(line);
-		if ((e = strchr(line, 'P')))
-			set_player(data, i, line, e);
-		if ((e = strchr(line, 'E')))
-			set_exit(data, i, line, e);
-		if ((e = strchr(line, 'C')))
-		{
-			e = line;
-			while ((e = strchr(e, 'C')) != NULL)
-			{
-				t_position *col = malloc(sizeof(t_position));
-				if (!col)
-					return (0);
-				col->x = (int)(e - line);
-				col->y = i;
-				add_collectible(data, *col);
-				e++;
-				free(col);
-			}
-		}
-		i++;
+		parse_map_line(data, line, i++);
 		free(line);
 	}
 	data->map.map[i] = NULL;
