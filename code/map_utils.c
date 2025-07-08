@@ -6,7 +6,7 @@
 /*   By: leberton <leberton@42vienna.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/30 14:34:31 by leberton          #+#    #+#             */
-/*   Updated: 2025/06/03 21:59:21 by leberton         ###   ########.fr       */
+/*   Updated: 2025/07/08 19:56:21 by leberton         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,6 +66,7 @@ int get_map_measurements(t_data *data)
 				col->y = i;
 				add_collectible(data, *col);
 				pos++;
+				free(col);
 			}
 		}
 		i++;

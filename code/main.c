@@ -6,7 +6,7 @@
 /*   By: leberton <leberton@42vienna.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/26 16:33:03 by leberton          #+#    #+#             */
-/*   Updated: 2025/06/03 22:38:09 by leberton         ###   ########.fr       */
+/*   Updated: 2025/07/08 19:43:22 by leberton         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,5 +23,6 @@ int main(int argc, char **argv)
 	mlx_key_hook(data.win, (int (*)(int, void *))key_hook, &data);
 	mlx_loop_hook(data.mlx, (int (*)(void *))loop_hook, &data);
 	mlx_loop(data.mlx);
+	free_all(&data);
 	return (0);
 }

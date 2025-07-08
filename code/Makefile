@@ -1,26 +1,18 @@
-# Détection de l'OS
-UNAME := $(shell uname -s)
 
-ifeq ($(UNAME), Linux)
-	MLX_DIR = minilibx-linux
-	MLX_LIB = $(MLX_DIR)/libmlx.a
-	MLX_INC = -I$(MLX_DIR)
-	MLX_FLAGS = -lX11 -lXext -lm
-else
-	MLX_DIR = minilibx-macos-opengl
-	MLX_LIB = $(MLX_DIR)/libmlx.a
-	MLX_INC = -I$(MLX_DIR)
-	MLX_FLAGS = -framework OpenGL -framework AppKit
-endif
+MLX_DIR = minilibx-linux
+MLX_LIB = $(MLX_DIR)/libmlx.a
+MLX_INC = -I$(MLX_DIR)
+MLX_FLAGS = -lX11 -lXext -lm
 
 CC = cc
 CFLAGS = -Wall -Wextra -Werror -g -fsanitize=address $(MLX_INC)
 LDFLAGS = $(MLX_FLAGS)
 LDFLAGS += -fsanitize=address
+SRCS = errors.c ft_strdup.c image_loader.c init_game.c collectible*.c render.c event_loops.c get_next_line/*.c *_utils.c free.c main.c
+
 NAME = test
 MAP_DIR = maps
 MAP ?= map.ber
-SRCS = errors.c ft_strdup.c image_loader.c init_game.c collectible*.c render.c event_loops.c get_next_line/*.c *_utils.c main.c
 
 all: $(NAME)
 

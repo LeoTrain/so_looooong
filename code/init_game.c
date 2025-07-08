@@ -5,12 +5,11 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: leberton <leberton@42vienna.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/06/03 22:05:51 by leberton          #+#    #+#             */
-/*   Updated: 2025/06/03 22:40:14 by leberton         ###   ########.fr       */
+/*   Created: 2025/07/08 19:29:10 by leberton          #+#    #+#             */
+/*   Updated: 2025/07/08 19:37:33 by leberton         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "get_next_line/get_next_line.h"
 #include "so_long.h"
 
 static t_bool	init_mlx(t_data *data)

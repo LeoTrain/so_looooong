@@ -43,6 +43,7 @@ void	move_player_path(t_data *data)
 	else if (is_on_exit(data))
 	{
 		printf("You are on the exit.\n");
+		free_all(data);
 		exit(0);
 	}
 	data->path_index++;

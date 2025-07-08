@@ -6,7 +6,7 @@
 /*   By: leberton <leberton@42vienna.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/03 21:44:40 by leberton          #+#    #+#             */
-/*   Updated: 2025/06/03 21:49:15 by leberton         ###   ########.fr       */
+/*   Updated: 2025/07/08 20:31:15 by leberton         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@ t_bool	get_path(t_position start, t_position end, char **map, t_bool **visited, 
 	t_position directions[4];
 	t_position	next;
 	init_directions(directions);
+	printf("%d %d\n", width, height);
 	if (!is_valid(start, width, height) || visited[start.y][start.x] || map[start.y][start.x] == '1')
 		return (false);
 	if (is_same(start, end))
@@ -41,7 +42,7 @@ t_bool	get_path(t_position start, t_position end, char **map, t_bool **visited, 
 	return (false);
 }
 
-void	reset_visited(t_bool **visited, int width, int height)
+static void	reset_visited(t_bool **visited, int width, int height)
 {
 	int	i;
 	int	j;
@@ -64,10 +65,21 @@ void move_to_collectible(t_data *data, t_collectible *collectible)
 	int width = data->map.size.x / TILE_SIZE;
 	int height = data->map.size.y / TILE_SIZE;
 	t_bool	**visited = malloc(height * sizeof(t_bool *));
+	if (!visited)
+		return ;
 	int i = 0;
-
 	while (i < height)
-		visited[i++] = calloc(width, sizeof(t_bool));
+	{
+		visited[i] = calloc(width, sizeof(t_bool));
+		if (!visited[i])
+		{
+			while (--i >= 0)
+				free(visited[i]);
+			free(visited);
+			return ;
+		}
+		i++;
+	}
 	if (is_all_collectibles_collected(data))
 	{
 		printf("All collectibles are collected! Checking for exit.\n");
@@ -78,5 +90,8 @@ void move_to_collectible(t_data *data, t_collectible *collectible)
 		get_path(data->player_position, collectible->position, data->map.map, visited, width, height, data->path, &data->path_length);
 	data->path_index = 1;
 	data->moving = true;
-
+	i = 0;
+	while (i < height)
+		free(visited[i++]);
+	free(visited);
 }

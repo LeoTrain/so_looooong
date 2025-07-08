@@ -79,13 +79,11 @@ typedef struct s_data
 	int		           y;
 	t_position	       offset;
 	t_position	       exit_position;
-	t_position	       player_position;
-	t_assets	       assets;
-	t_map	           map;
+	t_position	       player_position; t_assets	       assets; t_map	           map;
 	t_collectible_list collectibles;
 	int		           *player_pos;
 	int		           *exit_pos;
-	t_position			path[100];
+	t_position			path[1000];
 	int					path_length;
 	int					path_index;
 	t_bool				moving;
@@ -106,7 +104,6 @@ void	init_directions(t_position *directions);
 t_bool	is_valid(t_position position, int width, int height);
 t_bool	is_same(t_position a, t_position b);
 t_bool	get_path(t_position start, t_position end, char **map, t_bool **visited, int width, int height, t_position *path, int *path_length);
-void	reset_visited(t_bool **visited, int width, int height);
 void	move_to_collectible(t_data *data, t_collectible *collectible);
 void	move_player_path(t_data *data);
 void	get_player_pos(t_data *data);
@@ -117,6 +114,8 @@ int	is_on_exit(t_data *data);
 int	key_hook(int keycode, t_data *data);
 int	loop_hook(t_data *data);
 void add_collectible(t_data *data, t_position pos);
+
+void	free_all(t_data *data);
 
 
 #endif

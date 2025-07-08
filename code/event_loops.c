@@ -6,7 +6,7 @@
 /*   By: leberton <leberton@42vienna.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/30 14:44:56 by leberton          #+#    #+#             */
-/*   Updated: 2025/06/03 22:03:18 by leberton         ###   ########.fr       */
+/*   Updated: 2025/07/08 19:43:18 by leberton         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,10 @@
 int	key_hook(int keycode, t_data *data)
 {
 	if (keycode == 65307 || keycode == 53)
+	{
+		free_all(data);
 		exit(0);
+	}
 	if ((keycode == 119 || keycode == 13) && !is_next_tile_wall(data, 0, -1))
 		data->offset.y += TILE_SIZE;
 	else if ((keycode == 115 || keycode == 1) && !is_next_tile_wall(data, 0, 1))
@@ -32,6 +35,7 @@ int	key_hook(int keycode, t_data *data)
 			return (0);
 		}
 		printf("You reached the exit!\n");
+		free_all(data);
 		exit(0);
 	}
 	if (is_on_collectible(data))
