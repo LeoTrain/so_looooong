@@ -12,12 +12,24 @@
 
 #include "so_long.h"
 
+void	set_player_pos(t_data *data, t_position pos)
+{
+	data->player_position.x = pos.x;
+	data->player_position.y = pos.y;
+}
+
 void	get_player_pos(t_data *data)
 {
+	t_position	center;
+	t_position	start;
+
 	if (!data->player_position.x || !data->player_position.y)
-		data->player_position = (t_position){-1, -1};
-	int center_x = data->win_size / 2;
-	int center_y = data->win_size / 2;
-	data->player_position.x = ((center_x - data->offset.x) / TILE_SIZE) - 1;
-	data->player_position.y = ((center_y - data->offset.y) / TILE_SIZE) - 1;
+	{
+		start.x = -1;
+		start.y = -1;
+		set_player_pos(data, start);
+	}
+	center.x = (((data->win_size / 2) - data->offset.x) / TILE_SIZE) - 1;
+	center.y = (((data->win_size / 2) - data->offset.y) / TILE_SIZE) - 1;
+	set_player_pos(data, center);
 }

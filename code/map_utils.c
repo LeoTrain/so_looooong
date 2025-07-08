@@ -12,22 +12,21 @@
 
 #include "so_long.h"
 
-int get_map_measurements(t_data *data)
+static void	get_map_size(t_data *data)
 {
-	int fd;
-	char *line;
-	char *e;
-	int i = 0;
-	size_t max_len = 0;
+	int		fd;
+	int		len;
+	int		max_len;
+	char	*line;
 
+	max_len = 0;
 	fd = open(data->map.path, O_RDONLY);
 	if (fd < 0)
-		return (0);
-
+		ft_puterror("Error opening the map", data);
 	data->map.size.y = 0;
 	while ((line = get_next_line(fd)) != NULL)
 	{
-		size_t len = strlen(line);
+		len = strlen(line);
 		if (len > max_len)
 			max_len = len;
 		data->map.size.y++;
@@ -35,10 +34,40 @@ int get_map_measurements(t_data *data)
 	}
 	data->map.size.x = max_len * TILE_SIZE;
 	close(fd);
+}
 
+static	void	set_player(t_data *data, int y, char *line, char *e)
+{
+	t_position	player_pos;
+
+	player_pos.y = y * TILE_SIZE + 16;
+	player_pos.x = ((int)(e - line) * TILE_SIZE) + 16;
+	set_player_pos(data, player_pos);
+	data->offset.x = (data->win_size / 2) - player_pos.x;
+	data->offset.y = (data->win_size / 2) - player_pos.y;
+}
+
+static void	set_exit(t_data *data, int y, char *line, char *e)
+{
+	t_position	exit_pos;
+
+	exit_pos.x = (int)(e - line);
+	exit_pos.y = y;
+	data->exit_position = exit_pos;
+}
+
+int get_map_measurements(t_data *data)
+{
+	int		fd;
+	int		i;
+	char	*line;
+	char	*e;
+
+	get_map_size(data);
+	i = 0;
 	data->map.map = malloc(sizeof(char *) * (data->map.size.y + 1));
 	if (!data->map.map)
-		return (0);
+		ft_puterror("Error allocating the map.", data);
 	fd = open(data->map.path, O_RDONLY);
 	while ((line = get_next_line(fd)) != NULL)
 	{
@@ -46,26 +75,21 @@ int get_map_measurements(t_data *data)
 			return (0);
 		data->map.map[i] = ft_strdup(line);
 		if ((e = strchr(line, 'P')))
-		{
-			int player_pos_y = i * TILE_SIZE + 16;
-			int player_pos_x = ((int)(e - line) * TILE_SIZE) + 16;
-			data->offset.x = (data->win_size / 2) - player_pos_x;
-			data->offset.y = (data->win_size / 2) - player_pos_y;
-		}
+			set_player(data, i, line, e);
 		if ((e = strchr(line, 'E')))
-			data->exit_position = (t_position){(int)(e - line), i};
+			set_exit(data, i, line, e);
 		if ((e = strchr(line, 'C')))
 		{
-			char *pos = line;
-			while ((pos = strchr(pos, 'C')) != NULL)
+			e = line;
+			while ((e = strchr(e, 'C')) != NULL)
 			{
 				t_position *col = malloc(sizeof(t_position));
 				if (!col)
 					return (0);
-				col->x = (int)(pos - line);
+				col->x = (int)(e - line);
 				col->y = i;
 				add_collectible(data, *col);
-				pos++;
+				e++;
 				free(col);
 			}
 		}

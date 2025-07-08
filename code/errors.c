@@ -11,10 +11,12 @@
 /* ************************************************************************** */
 
 #include "so_long.h"
+#include <stdlib.h>
 
-int	ft_puterror(char *message, int error_code)
+int	ft_puterror(char *message, t_data *data)
 {
 	printf("%s\n", message);
-	return (error_code);
+	free_all(data);
+	exit(EXIT_FAILURE);
 }
 

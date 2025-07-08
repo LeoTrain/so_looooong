@@ -17,7 +17,7 @@ int main(int argc, char **argv)
 	t_data	data;
 
 	if (argc != 2)
-		return (ft_puterror("Error: correct use case ./program_name <map.file>.", 1));
+		ft_puterror("Error: correct use case ./program_name <map.file>.", &data);
 	if (!init_game(&data, argv[1]))
 		return (1);
 	mlx_key_hook(data.win, (int (*)(int, void *))key_hook, &data);
