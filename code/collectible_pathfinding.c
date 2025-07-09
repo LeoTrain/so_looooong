@@ -12,32 +12,37 @@
 
 #include "so_long.h"
 
-
-t_bool	get_path(t_position start, t_position end, char **map, t_bool **visited, int width, int height, t_position *path, int *path_length)
+static t_bool	get_path(t_position start, t_position end,
+						t_bool **visited, t_data *data)
 {
-	t_position directions[4];
+	t_position	directions[4];
 	t_position	next;
+	int			i;
+
 	init_directions(directions);
-	if (!is_valid(start, width, height) || visited[start.y][start.x] || map[start.y][start.x] == '1')
+	if (!is_valid(start, data->map.size.x / TILE_SIZE,
+			data->map.size.y / TILE_SIZE) || visited[start.y][start.x]
+			|| data->map.map[start.y][start.x] == '1')
 		return (false);
 	if (is_same(start, end))
 	{
-		path[*path_length] = start;
-		(*path_length)++;
+		data->path[data->path_length] = start;
+		data->path_length++;
 		return (true);
 	}
 	visited[start.y][start.x] = true;
-	path[*path_length] = start;
-	(*path_length)++;
-	int i = 0;
+	data->path[data->path_length] = start;
+	data->path_length++;
+	i = 0;
 	while (i < 4)
 	{
-		next = (t_position){start.x + directions[i].x, start.y + directions[i].y};
-		if (get_path(next, end, map, visited, width, height, path, path_length))
+		next.x = start.x + directions[i].x;
+		next.y = start.y + directions[i].y;
+		if (get_path(next, end, visited, data))
 			return (true);
 		i++;
 	}
-	(*path_length)--;
+	data->path_length--;
 	return (false);
 }
 
@@ -59,17 +64,31 @@ static void	reset_visited(t_bool **visited, int width, int height)
 	}
 }
 
+static void	take_action(t_data *data, t_bool **visited, t_collectible *collectible)
+{
+	if (is_all_collectibles_collected(data))
+	{
+		printf("All collectibles are collected! Checking for exit.\n");
+		reset_visited(visited, data->map.size.x / TILE_SIZE, data->map.size.y / TILE_SIZE);
+		get_path(data->player_position, data->exit_position, visited, data);
+	}
+	else
+		get_path(data->player_position, collectible->position, visited, data);
+	data->path_index = 1;
+	data->moving = true;
+}
+
 void move_to_collectible(t_data *data, t_collectible *collectible)
 {
-	int width = data->map.size.x / TILE_SIZE;
-	int height = data->map.size.y / TILE_SIZE;
-	t_bool	**visited = malloc(height * sizeof(t_bool *));
+	t_bool	**visited;
+
+	visited = malloc((data->map.size.y / TILE_SIZE) * sizeof(t_bool *));
 	if (!visited)
 		return ;
 	int i = 0;
-	while (i < height)
+	while (i < data->map.size.y / TILE_SIZE)
 	{
-		visited[i] = calloc(width, sizeof(t_bool));
+		visited[i] = calloc(data->map.size.x / TILE_SIZE, sizeof(t_bool));
 		if (!visited[i])
 		{
 			while (--i >= 0)
@@ -79,18 +98,9 @@ void move_to_collectible(t_data *data, t_collectible *collectible)
 		}
 		i++;
 	}
-	if (is_all_collectibles_collected(data))
-	{
-		printf("All collectibles are collected! Checking for exit.\n");
-		reset_visited(visited, width, height);
-		get_path(data->player_position, data->exit_position, data->map.map, visited, width, height, data->path, &data->path_length);
-	}
-	else
-		get_path(data->player_position, collectible->position, data->map.map, visited, width, height, data->path, &data->path_length);
-	data->path_index = 1;
-	data->moving = true;
+	take_action(data, visited, collectible);
 	i = 0;
-	while (i < height)
+	while (i < data->map.size.y / TILE_SIZE)
 		free(visited[i++]);
 	free(visited);
 }

@@ -101,7 +101,6 @@ int	is_on_collectible(t_data *data);
 void	init_directions(t_position *directions);
 t_bool	is_valid(t_position position, int width, int height);
 t_bool	is_same(t_position a, t_position b);
-t_bool	get_path(t_position start, t_position end, char **map, t_bool **visited, int width, int height, t_position *path, int *path_length);
 void	move_to_collectible(t_data *data, t_collectible *collectible);
 void	move_player_path(t_data *data);
 void	set_player_pos(t_data *data, t_position pos);

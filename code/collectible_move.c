@@ -12,6 +12,36 @@
 
 #include "so_long.h"
 
+static void	exec_from_player_pos(t_data *data)
+{
+	if (is_on_collectible(data))
+		printf("You are on a collectible.\n");
+	else if (is_on_exit(data))
+	{
+		printf("You are on the exit.\n");
+		free_all(data);
+		exit(0);
+	}
+}
+
+static void	set_offset(t_data *data, int x, int y)
+{
+	if (x == 1)
+		data->offset.x += TILE_SIZE;
+	else if (x == -1)
+		data->offset.x -= TILE_SIZE;
+	else
+	{
+		if (y <= 1 && y >= -1)
+		{
+			if (y == 1)
+				data->offset.y += TILE_SIZE;
+			else if (y == -1)
+				data->offset.y -= TILE_SIZE;
+		}
+	}
+}
+
 void	move_player_path(t_data *data)
 {
 	t_position	next;
@@ -26,25 +56,7 @@ void	move_player_path(t_data *data)
 	next = data->path[data->path_index];
 	x = data->player_position.x - next.x;
 	y = data->player_position.y - next.y;
-	if (x == 1)
-		data->offset.x += TILE_SIZE;
-	else if (x == -1)
-		data->offset.x -= TILE_SIZE;
-	else
-		if (y <= 1 && y >= -1)
-		{
-			if (y == 1)
-				data->offset.y += TILE_SIZE;
-			else if (y == -1)
-				data->offset.y -= TILE_SIZE;
-		}
-	if (is_on_collectible(data))
-		printf("You are on a collectible.\n");
-	else if (is_on_exit(data))
-	{
-		printf("You are on the exit.\n");
-		free_all(data);
-		exit(0);
-	}
+	set_offset(data, x, y);
+	exec_from_player_pos(data);
 	data->path_index++;
 }
