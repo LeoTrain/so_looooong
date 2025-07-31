@@ -33,8 +33,8 @@ void	draw(t_data *data)
 		}
 		y++;
 	}
-	int player_pos_y = (data->win_size / 2) - 16;
-	int player_pos_x = (data->win_size / 2) - 16;
+	int player_pos_y = (data->win_size / 2) - TILE_SIZE;
+	int player_pos_x = (data->win_size / 2) - TILE_SIZE;
 	mlx_put_image_to_window(data->mlx, data->win, data->assets.character.img, player_pos_x, player_pos_y);
 }
 

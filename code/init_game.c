@@ -20,7 +20,7 @@ static t_bool	init_mlx(t_data *data)
 		printf("Error: creating the mlx variable.\n");
 		return (false);
 	}
-	data->win_size = 50 * TILE_SIZE;
+	data->win_size = 20 * TILE_SIZE;
 	data->win = mlx_new_window(data->mlx, data->win_size, data->win_size, "Test1");
 	if (!data->win)
 	{
@@ -32,11 +32,11 @@ static t_bool	init_mlx(t_data *data)
 
 static t_bool	init_assets(t_data *data)
 {
-	data->assets.character.path = "assets/xpm/normal_amazed.xpm";
-	data->assets.grass.path = "assets/empty_space.xpm";
-	data->assets.wall.path = "assets/wall.xpm";
-	data->assets.collectible.path = "assets/collectible.xpm";
-	data->assets.exit.path = "assets/exit.xpm";
+	data->assets.character.path = "assets/xpm/64x/normal_amazed.xpm";
+	data->assets.grass.path = "assets/xpm/64x/empty_space.xpm";
+	data->assets.wall.path = "assets/xpm/64x/wall.xpm";
+	data->assets.collectible.path = "assets/xpm/64x/collectible.xpm";
+	data->assets.exit.path = "assets/xpm/64x/exit.xpm";
 	if (!load_image(data->mlx, (void **)&data->assets.character.img, data->assets.character.path, &data->map.tile_size.x, &data->map.tile_size.y)
 		|| !load_image(data->mlx, (void **)&data->assets.grass.img, data->assets.grass.path, &data->map.tile_size.x, &data->map.tile_size.y)
 		|| !load_image(data->mlx, (void **)&data->assets.wall.img, data->assets.wall.path, &data->map.tile_size.x, &data->map.tile_size.y)
@@ -65,7 +65,7 @@ static t_bool	init_collectibles(t_data *data)
 
 static t_bool	init_map(t_data *data, char *map_path)
 {
-	data->map.path = strdup(map_path); // Replace with ft_strdup
+	data->map.path = ft_strdup(map_path);
 	data->exit_position = (t_position){-1, -1};
 	data->collectibles.count = 0;
 	if (!init_collectibles(data))

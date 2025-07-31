@@ -11,7 +11,7 @@
 #include <sys/time.h>
 #include <fcntl.h>
 
-#define TILE_SIZE 16
+#define TILE_SIZE 64
 
 typedef enum e_bool
 {

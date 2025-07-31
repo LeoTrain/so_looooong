@@ -36,14 +36,12 @@ static void	get_map_size(t_data *data)
 	close(fd);
 }
 
-
-
 static	void	set_player(t_data *data, int y, char *line, char *e)
 {
 	t_position	player_pos;
 
-	player_pos.y = y * TILE_SIZE + 16;
-	player_pos.x = ((int)(e - line) * TILE_SIZE) + 16;
+	player_pos.y = y * TILE_SIZE + TILE_SIZE;
+	player_pos.x = ((int)(e - line) * TILE_SIZE) + TILE_SIZE;
 	set_player_pos(data, player_pos);
 	data->offset.x = (data->win_size / 2) - player_pos.x;
 	data->offset.y = (data->win_size / 2) - player_pos.y;
