@@ -12,6 +12,43 @@
 
 #include "so_long.h"
 
+t_bool	**create_visited(t_data *data)
+{
+	t_bool	**visited;
+	int		i;
+
+	visited = malloc((data->map.size.y / TILE_SIZE) * sizeof(t_bool *));
+	if (!visited)
+		ft_puterror("Error creating visited 1.", data);
+	i = 0;
+	while (i < data->map.size.y / TILE_SIZE)
+	{
+		visited[i] = ft_calloc(data->map.size.x / TILE_SIZE, sizeof(t_bool));
+		if (!visited[i])
+		{
+			while (--i >= 0)
+				free(visited[i]);
+			free(visited);
+			ft_puterror("Error creating visited 2.", data);
+		}
+		i++;
+	}
+	return (visited);
+}
+
+static void	reset_visited(t_bool **visited, int width, int height)
+{
+	while (height - 1 > 0)
+	{
+		while (width - 1>= 0)
+		{
+			visited[height - 1][width - 1] = false;
+			width--;
+		}
+		height--;
+	}
+}
+
 static t_bool	get_path(t_position start, t_position end,
 						t_bool **visited, t_data *data)
 {
@@ -44,19 +81,6 @@ static t_bool	get_path(t_position start, t_position end,
 	return (false);
 }
 
-static void	reset_visited(t_bool **visited, int width, int height)
-{
-	while (height - 1 > 0)
-	{
-		while (width - 1>= 0)
-		{
-			visited[height - 1][width - 1] = false;
-			width--;
-		}
-		height--;
-	}
-}
-
 static void	take_action(t_data *data, t_bool **visited, t_collectible *collectible)
 {
 	if (is_all_collectibles_collected(data))
@@ -69,30 +93,6 @@ static void	take_action(t_data *data, t_bool **visited, t_collectible *collectib
 		get_path(data->player_position, collectible->position, visited, data);
 	data->path_index = 1;
 	data->moving = true;
-}
-
-t_bool	**create_visited(t_data *data)
-{
-	t_bool	**visited;
-	int		i;
-
-	visited = malloc((data->map.size.y / TILE_SIZE) * sizeof(t_bool *));
-	if (!visited)
-		ft_puterror("Error creating visited 1.", data);
-	i = 0;
-	while (i < data->map.size.y / TILE_SIZE)
-	{
-		visited[i] = ft_calloc(data->map.size.x / TILE_SIZE, sizeof(t_bool));
-		if (!visited[i])
-		{
-			while (--i >= 0)
-				free(visited[i]);
-			free(visited);
-			ft_puterror("Error creating visited 2.", data);
-		}
-		i++;
-	}
-	return (visited);
 }
 
 void move_to_collectible(t_data *data, t_collectible *collectible)

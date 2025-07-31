@@ -55,10 +55,10 @@ int	loop_hook(t_data *data)
 	{
 		last_time = current_time;
 		draw(data);
-		if (!data->moving)
-			move_to_collectible(data, data->collectibles.collectibles);
-		else
-			move_player_path(data);
+		// if (!data->moving)
+		// 	move_to_collectible(data, data->collectibles.collectibles);
+		// else
+		// 	move_player_path(data);
 	}
 	return (0);
 }

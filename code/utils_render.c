@@ -12,31 +12,76 @@
 
 #include "so_long.h"
 
-void	draw(t_data *data)
+static	void	draw_asset(t_data *data, t_position current_pos, char *asset)
 {
-
-	mlx_clear_window(data->mlx, data->win);
-	int i = 0;
-	int y = 0;
-	while (data->map.map[y])
+	if (strcmp(asset, "wall") == 0)
 	{
-		for (i = 0; i < (int)strlen(data->map.map[y]); i++)
-		{
-			int pos_x = (TILE_SIZE * i) + data->offset.x;
-			int pos_y = (y * TILE_SIZE) + data->offset.y;
-			if (data->map.map[y][i] == '1')
-				mlx_put_image_to_window(data->mlx, data->win, data->assets.wall.img, pos_x, pos_y);
-			else if (data->map.map[y][i] == '0')
-				mlx_put_image_to_window(data->mlx, data->win, data->assets.grass.img, pos_x, pos_y);
-			else if (data->map.map[y][i] == 'C')
-				mlx_put_image_to_window(data->mlx, data->win, data->assets.collectible.img, pos_x, pos_y);
-			else if (data->map.map[y][i] == 'E')
-				mlx_put_image_to_window(data->mlx, data->win, data->assets.exit.img, pos_x, pos_y);
-		}
-		y++;
+		mlx_put_image_to_window(data->mlx, data->win, data->assets.wall.img, current_pos.x, current_pos.y);
+		return ;
 	}
-	int player_pos_y = (data->win_size / 2) - TILE_SIZE;
-	int player_pos_x = (data->win_size / 2) - TILE_SIZE;
-	mlx_put_image_to_window(data->mlx, data->win, data->assets.character.img, player_pos_x, player_pos_y);
+	if (strcmp(asset, "grass") == 0)
+	{
+		mlx_put_image_to_window(data->mlx, data->win, data->assets.grass.img, current_pos.x, current_pos.y);
+		return ;
+	}
+	if (strcmp(asset, "collectible") == 0)
+	{
+		mlx_put_image_to_window(data->mlx, data->win, data->assets.collectible.img, current_pos.x, current_pos.y);
+		return ;
+	}
+	if (strcmp(asset, "exit"))
+	{
+		mlx_put_image_to_window(data->mlx, data->win, data->assets.exit.img, current_pos.x, current_pos.y);
+		return ;
+	}
 }
 
+static t_bool	is_asset(t_data *data, t_position current_tile, char *asset)
+{
+	if (strcmp(asset, "wall") == 0)
+		return (data->map.map[current_tile.y][current_tile.x] == '1');
+	if (strcmp(asset, "grass") == 0)
+		return (data->map.map[current_tile.y][current_tile.x] == '0' ||
+				data->map.map[current_tile.y][current_tile.x] == 'P');
+	if (strcmp(asset, "collectible") == 0)
+		return (data->map.map[current_tile.y][current_tile.x] == 'C');
+	if (strcmp(asset, "exit") == 0)
+		return (data->map.map[current_tile.y][current_tile.x] == 'E');
+	return (false);
+}
+
+static void	draw_at_pos(t_data *data, t_position current_pos, t_position current_tile)
+{
+	if (is_asset(data, current_tile, "wall"))
+		draw_asset(data, current_pos, "wall");
+	else if (is_asset(data, current_tile, "grass"))
+		draw_asset(data, current_pos, "grass");
+	else if (is_asset(data, current_tile, "collectible"))
+		draw_asset(data, current_pos, "collectible");
+	else if (is_asset(data, current_tile, "exit"))
+		draw_asset(data, current_pos, "exit");
+}
+
+void	draw(t_data *data)
+{
+	int			half_win_size;
+	t_position	current_tile;
+	t_position	current_pos;
+
+	mlx_clear_window(data->mlx, data->win);
+	current_tile.y = 0;
+	while (data->map.map[current_tile.y])
+	{
+		current_tile.x = 0;
+		while (current_tile.x < (int)ft_strlen(data->map.map[current_tile.y]))
+		{
+			current_pos.x = (current_tile.x * TILE_SIZE) + data->offset.x;
+			current_pos.y = (current_tile.y * TILE_SIZE) + data->offset.y;
+			draw_at_pos(data, current_pos, current_tile);
+			current_tile.x++;
+		}
+		current_tile.y++;
+	}
+	half_win_size = (data->win_size / 2) - TILE_SIZE;
+	mlx_put_image_to_window(data->mlx, data->win, data->assets.character.img, half_win_size, half_win_size);
+}
