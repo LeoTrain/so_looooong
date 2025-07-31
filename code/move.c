@@ -12,41 +12,36 @@
 
 #include "so_long.h"
 
-static void	exec_from_player_pos(t_data *data)
+void	move(char *direction, t_data *data)
 {
-	if (is_on_collectible(data))
-		printf("You are on a collectible.\n");
-	else if (is_on_exit(data))
-	{
-		printf("You are on the exit.\n");
-		free_all(data);
-		exit(0);
-	}
+	if (strcmp(direction, "left") == 0)
+		data->offset.x += TILE_SIZE;
+	if (strcmp(direction, "right") == 0)
+		data->offset.x -= TILE_SIZE;
+	if (strcmp(direction, "down") == 0)
+		data->offset.y += TILE_SIZE;
+	if (strcmp(direction, "up") == 0)
+		data->offset.y -= TILE_SIZE;
 }
 
 static void	set_offset(t_data *data, int x, int y)
 {
-	if (x == 1)
-		data->offset.x += TILE_SIZE;
-	else if (x == -1)
-		data->offset.x -= TILE_SIZE;
+	if (x == right)
+		move("left", data);
+	else if (x == left)
+		move("right", data);
 	else
 	{
-		if (y <= 1 && y >= -1)
-		{
-			if (y == 1)
-				data->offset.y += TILE_SIZE;
-			else if (y == -1)
-				data->offset.y -= TILE_SIZE;
-		}
+		if (y == up)
+			move("down", data);
+		else if (y == down)
+			move("up", data);
 	}
 }
 
 void	move_player_path(t_data *data)
 {
 	t_position	next;
-	int			x;
-	int			y;
 
 	if (!data->moving || data->path_index >= data->path_length)
 	{
@@ -54,9 +49,8 @@ void	move_player_path(t_data *data)
 		return ;
 	}
 	next = data->path[data->path_index];
-	x = data->player_position.x - next.x;
-	y = data->player_position.y - next.y;
-	set_offset(data, x, y);
-	exec_from_player_pos(data);
+	next.x = data->map.player_position.x - next.x;
+	next.y = data->map.player_position.y - next.y;
+	set_offset(data, next.x, next.y);
 	data->path_index++;
 }

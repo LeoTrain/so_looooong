@@ -12,6 +12,19 @@
 
 #include "so_long.h"
 
+static void	exec_actions(t_data *data)
+{
+	if (is_on_collectible(data))
+		return ;
+	if (is_on_exit(data))
+	{
+		if (!is_all_collectibles_collected(data))
+			return ;
+		free_all(data);
+		exit(0);
+	}
+}
+
 int	key_hook(int keycode, t_data *data)
 {
 	if (keycode == 65307 || keycode == 53)
@@ -19,27 +32,15 @@ int	key_hook(int keycode, t_data *data)
 		free_all(data);
 		exit(0);
 	}
-	if ((keycode == 119 || keycode == 13) && !is_next_tile_wall(data, 0, -1))
-		data->offset.y += TILE_SIZE;
-	else if ((keycode == 115 || keycode == 1) && !is_next_tile_wall(data, 0, 1))
-		data->offset.y -= TILE_SIZE;
-	else if ((keycode == 97 || keycode == 0) && !is_next_tile_wall(data, -1, 0))
-		data->offset.x += TILE_SIZE;
-	else if ((keycode == 100 || keycode == 2) && !is_next_tile_wall(data, 1, 0))
-		data->offset.x -= TILE_SIZE;
-	if (is_on_exit(data))
-	{
-		if (!is_all_collectibles_collected(data))
-		{
-			printf("You need to collect all collectibles before exiting!\n");
-			return (0);
-		}
-		printf("You reached the exit!\n");
-		free_all(data);
-		exit(0);
-	}
-	if (is_on_collectible(data))
-		printf("You collected collectibles!\n");
+	if ((keycode == 119 || keycode == 13) && !is_next_tile_wall(data, stand, down))
+		move("down", data);
+	else if ((keycode == 115 || keycode == 1) && !is_next_tile_wall(data, stand, up))
+		move("up", data);
+	else if ((keycode == 97 || keycode == 0) && !is_next_tile_wall(data, left, stand))
+		move("left", data);
+	else if ((keycode == 100 || keycode == 2) && !is_next_tile_wall(data, right, stand))
+		move("right", data);
+	exec_actions(data);
 	return (0);
 }
 
@@ -51,14 +52,15 @@ int	loop_hook(t_data *data)
 	if (last_time == 0)
 		last_time = get_time_in_ms();
 	current_time = get_time_in_ms();
-	if (current_time - last_time >= 100)
+	if (current_time - last_time >= 200)
 	{
 		last_time = current_time;
+		exec_actions(data);
+		if (!data->moving)
+			move_to_collectible(data, data->collectibles.collectibles);
+		else
+			move_player_path(data);
 		draw(data);
-		// if (!data->moving)
-		// 	move_to_collectible(data, data->collectibles.collectibles);
-		// else
-		// 	move_player_path(data);
 	}
 	return (0);
 }

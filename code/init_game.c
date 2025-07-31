@@ -63,11 +63,35 @@ static t_bool	init_collectibles(t_data *data)
 	return (true);
 }
 
+static void	init_visited(t_data *data)
+{
+	t_position	map_tile_size;
+	int			i;
+
+	map_tile_size.y = data->map.size.y / TILE_SIZE;
+	data->map.visited = malloc(map_tile_size.y * sizeof(t_bool *));
+	if (!data->map.visited)
+		ft_puterror("Error creating visited 1.", data);
+	i = 0;
+	map_tile_size.x = data->map.size.x / TILE_SIZE;
+	while (i < map_tile_size.y)
+	{
+		data->map.visited[i] = ft_calloc(map_tile_size.x, sizeof(t_bool));
+		if (!data->map.visited[i])
+		{
+			while (--i >= 0)
+				free(data->map.visited[i]);
+			free(data->map.visited);
+			ft_puterror("Error creating visited 2.", data);
+		}
+		i++;
+	}
+}
+
 static t_bool	init_map(t_data *data, char *map_path)
 {
 	data->map.path = ft_strdup(map_path);
-	data->exit_position = (t_position){-1, -1};
-	data->collectibles.count = 0;
+	data->map.exit_position = (t_position){-1, -1};
 	if (!init_collectibles(data))
 		return (false);
 	if (!get_map_measurements(data))
@@ -75,6 +99,7 @@ static t_bool	init_map(t_data *data, char *map_path)
 		printf("Error: reading the map file.\n");
 		return (false);
 	}
+	init_visited(data);
 	get_player_pos(data);
 	return (true);
 }
@@ -90,4 +115,3 @@ t_bool	init_game(t_data *data, char *map_path)
 		return (false);
 	return (true);
 }
-

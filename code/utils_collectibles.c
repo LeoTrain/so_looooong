@@ -20,7 +20,6 @@ int count_coullectible(t_data *data)
 	int		i;
 
 	count = 0;
-	printf("MAP PATH: %s\n", data->map.path);
 	fd = open(data->map.path, O_RDONLY);
 	if (fd < 0)
 		return (0);
@@ -45,6 +44,8 @@ void add_collectible(t_data *data, t_position pos)
 
 	new_collectible.position = pos;
 	new_collectible.collected = false;
+	if (!data->collectibles.collectibles)
+		ft_puterror("No collectible initialized.", data);
 	data->collectibles.collectibles[data->collectibles.count] = new_collectible;
 	data->collectibles.count++;
 }
@@ -98,14 +99,13 @@ int	is_on_collectible(t_data *data)
 
 	get_player_pos(data);
 	i = 0;
-	if (data->map.map[data->player_position.y][data->player_position.x] == 'C')
+	if (data->map.map[data->map.player_position.y][data->map.player_position.x] == 'C')
 	{
 		while (i < data->collectibles.count)
 		{
-			if (data->collectibles.collectibles[i].position.x == data->player_position.x &&
-				data->collectibles.collectibles[i].position.y == data->player_position.y)
+			if (is_same(data->collectibles.collectibles[i].position, data->map.player_position))
 			{
-				data->map.map[data->player_position.y][data->player_position.x] = '0';
+				data->map.map[data->map.player_position.y][data->map.player_position.x] = '0';
 				data->collectibles.collectibles[i].collected = true;
 			}
 			i++;

@@ -53,23 +53,21 @@ static void	set_exit(t_data *data, int y, char *line, char *e)
 
 	exit_pos.x = (int)(e - line);
 	exit_pos.y = y;
-	data->exit_position = exit_pos;
+	data->map.exit_position = exit_pos;
 }
 
 static void	set_collectible(t_data *data, int y, char *line)
 {
-	t_position	*col;
+	t_position	col;
 	char		*e;
 
 	e = line;
 	while ((e = strchr(e, 'C')) != NULL)
 	{
-		col = malloc(sizeof(t_position));
-		col->x = (int)(e - line);
-		col->y = y;
-		add_collectible(data, *col);
+		col.x = (int)(e - line);
+		col.y = y;
+		add_collectible(data, col);
 		e++;
-		free(col);
 	}
 }
 

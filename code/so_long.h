@@ -19,6 +19,15 @@ typedef enum e_bool
 	true = 1
 }	t_bool;
 
+typedef enum e_simple_direction
+{
+	left = -1,
+	right = 1,
+	down = -1,
+	up = 1,
+	stand = 0
+}	t_simple_direction;
+
 typedef struct s_position
 {
 	int		x;
@@ -53,6 +62,7 @@ typedef struct s_map
 	char		*path;
 	t_position	size;
 	t_position	tile_size;
+	t_bool		**visited;
 	t_position	exit_position;
 	t_position	player_position;
 }				t_map; // Add collectibles to the map
@@ -77,8 +87,6 @@ typedef struct s_data
 	int					x;
 	int					y;
 	t_position			offset;
-	t_position			exit_position;
-	t_position			player_position;
 	t_assets			assets;
 	t_map				map;
 	t_collectible_list	collectibles;
@@ -92,17 +100,18 @@ int		ft_puterror(char *message, t_data *data);
 char	*ft_strdup(const char *s);
 
 t_bool	is_x_bigger(struct s_position a, struct s_position b);
+t_position add_positions(t_position a, t_position b);
 t_bool	init_game(t_data *data, char *map_path);
 void	init_directions(t_position *directions); // Change to t_bool
 t_bool	load_image(void *mlx, void **img, char *path, int *w, int *h);
 
-t_bool	is_valid_position(t_position pos, t_bool **visited, t_data *data);
+t_bool	is_valid_position(t_position pos, t_data *data);
 t_bool	is_same(t_position a, t_position b);
 int		is_all_collectibles_collected(t_data *data); // Change to t_bool
 int		is_on_collectible(t_data *data); // Change to t_bool
 t_bool	is_next_tile_wall(t_data *data, int x, int y);
 t_bool	is_on_exit(t_data *data);
-void	free_visited(t_bool **visited, t_data *data);
+void	free_visited(t_data *data);
 
 int		count_coullectible(t_data *data);
 void	sort_collectibles(t_data *data);
@@ -118,5 +127,7 @@ void	draw(t_data *data);
 int		key_hook(int keycode, t_data *data);
 int		loop_hook(t_data *data);
 void	free_all(t_data *data);
+
+void	move(char *direction, t_data *data);
 
 #endif

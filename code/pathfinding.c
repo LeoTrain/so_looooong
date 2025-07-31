@@ -12,52 +12,34 @@
 
 #include "so_long.h"
 
-t_bool	**create_visited(t_data *data)
+static void	reset_visited(t_data *data)
 {
-	t_bool	**visited;
-	int		i;
+	t_position	size;
+	t_position	pos;
 
-	visited = malloc((data->map.size.y / TILE_SIZE) * sizeof(t_bool *));
-	if (!visited)
-		ft_puterror("Error creating visited 1.", data);
-	i = 0;
-	while (i < data->map.size.y / TILE_SIZE)
+	size.x = data->map.size.y / TILE_SIZE;
+	size.y = data->map.size.x / TILE_SIZE;
+	while (size.y - 1 > 0)
 	{
-		visited[i] = ft_calloc(data->map.size.x / TILE_SIZE, sizeof(t_bool));
-		if (!visited[i])
+		while (size.x - 1 >= 0)
 		{
-			while (--i >= 0)
-				free(visited[i]);
-			free(visited);
-			ft_puterror("Error creating visited 2.", data);
+			pos.x = size.x - 1;
+			pos.y = size.y - 1;
+			if (is_valid_position(pos, data))
+				data->map.visited[pos.y][pos.x] = false;
+			size.x--;
 		}
-		i++;
-	}
-	return (visited);
-}
-
-static void	reset_visited(t_bool **visited, int width, int height)
-{
-	while (height - 1 > 0)
-	{
-		while (width - 1>= 0)
-		{
-			visited[height - 1][width - 1] = false;
-			width--;
-		}
-		height--;
+		size.y--;
 	}
 }
 
-static t_bool	get_path(t_position start, t_position end,
-						t_bool **visited, t_data *data)
+static t_bool	get_path(t_position start, t_position end, t_data *data)
 {
 	t_position	directions[4];
-	t_position	next;
 	int			i;
 
 	init_directions(directions);
-	if (!is_valid_position(start, visited, data))
+	if (!is_valid_position(start, data))
 		return (false);
 	if (is_same(start, end))
 	{
@@ -65,15 +47,13 @@ static t_bool	get_path(t_position start, t_position end,
 		data->path_length++;
 		return (true);
 	}
-	visited[start.y][start.x] = true;
+	data->map.visited[start.y][start.x] = true;
 	data->path[data->path_length] = start;
 	data->path_length++;
 	i = 0;
 	while (i < 4)
 	{
-		next.x = start.x + directions[i].x;
-		next.y = start.y + directions[i].y;
-		if (get_path(next, end, visited, data))
+		if (get_path(add_positions(start, directions[i]), end, data))
 			return (true);
 		i++;
 	}
@@ -81,25 +61,20 @@ static t_bool	get_path(t_position start, t_position end,
 	return (false);
 }
 
-static void	take_action(t_data *data, t_bool **visited, t_collectible *collectible)
+static void	take_action(t_data *data, t_collectible *collectible)
 {
 	if (is_all_collectibles_collected(data))
 	{
-		printf("All collectibles are collected! Checking for exit.\n");
-		reset_visited(visited, data->map.size.x / TILE_SIZE, data->map.size.y / TILE_SIZE);
-		get_path(data->player_position, data->exit_position, visited, data);
+		reset_visited(data);
+		get_path(data->map.player_position, data->map.exit_position, data);
 	}
 	else
-		get_path(data->player_position, collectible->position, visited, data);
+		get_path(data->map.player_position, collectible->position, data);
 	data->path_index = 1;
 	data->moving = true;
 }
 
 void move_to_collectible(t_data *data, t_collectible *collectible)
 {
-	t_bool	**visited;
-
-	visited = create_visited(data);
-	take_action(data, visited, collectible);
-	free_visited(visited, data);
+	take_action(data, collectible);
 }
