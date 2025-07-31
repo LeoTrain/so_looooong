@@ -30,6 +30,8 @@ void	draw(t_data *data)
 				mlx_put_image_to_window(data->mlx, data->win, data->assets.grass.img, pos_x, pos_y);
 			else if (data->map.map[y][i] == 'C')
 				mlx_put_image_to_window(data->mlx, data->win, data->assets.collectible.img, pos_x, pos_y);
+			else if (data->map.map[y][i] == 'E')
+				mlx_put_image_to_window(data->mlx, data->win, data->assets.exit.img, pos_x, pos_y);
 		}
 		y++;
 	}
