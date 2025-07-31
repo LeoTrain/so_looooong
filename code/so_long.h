@@ -21,8 +21,8 @@ typedef enum e_bool
 
 typedef struct s_position
 {
-	int	x;
-	int	y;
+	int		x;
+	int		y;
 }		t_position;
 
 // This I do not use
@@ -91,6 +91,7 @@ typedef struct s_data
 int		ft_puterror(char *message, t_data *data);
 char	*ft_strdup(const char *s);
 
+t_bool	is_x_bigger(struct s_position a, struct s_position b);
 t_bool	init_game(t_data *data, char *map_path);
 void	init_directions(t_position *directions); // Change to t_bool
 t_bool	load_image(void *mlx, void **img, char *path, int *w, int *h);

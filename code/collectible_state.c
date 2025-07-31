@@ -6,7 +6,7 @@
 /*   By: leberton <leberton@42vienna.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/03 21:44:55 by leberton          #+#    #+#             */
-/*   Updated: 2025/06/03 22:40:37 by leberton         ###   ########.fr       */
+/*   Updated: 2025/07/31 11:38:26 by leberton         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,25 +51,25 @@ void add_collectible(t_data *data, t_position pos)
 
 void	sort_collectibles(t_data *data)
 {
-	t_collectible	current;
-	t_collectible	next;
+	t_position		current_pos;
+	t_position		next_pos;
 	t_collectible	temp;
 	
 	if (!data->collectibles.collectibles)
 		return ;
-	current = data->collectibles.collectibles[0];
+	current_pos = data->collectibles.collectibles[0].position;
 	while (1)
 	{
 		int swapped = 0;
 		for (int i = 0; i < data->collectibles.count - 1; i++)
 		{
-			current = data->collectibles.collectibles[i];
-			next = data->collectibles.collectibles[i + 1];
-			if (current.position.y > next.position.y ||
-				(current.position.y == next.position.y && current.position.x > next.position.x))
+			current_pos = data->collectibles.collectibles[i].position;
+			next_pos = data->collectibles.collectibles[i + 1].position;
+			if (current_pos.y > next_pos.y ||
+				(current_pos.y == next_pos.y && current_pos.x > next_pos.x))
 			{
-				temp = current;
-				data->collectibles.collectibles[i] = next;
+				temp = data->collectibles.collectibles[i];
+				data->collectibles.collectibles[i] = data->collectibles.collectibles[i + 1];
 				data->collectibles.collectibles[i + 1] = temp;
 				swapped = 1;
 			}

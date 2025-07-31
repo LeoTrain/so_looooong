@@ -1,21 +1,22 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   image_loader.c                                     :+:      :+:    :+:   */
+/*   utils_errors.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: leberton <leberton@42vienna.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/05/30 14:37:50 by leberton          #+#    #+#             */
-/*   Updated: 2025/06/03 22:10:11 by leberton         ###   ########.fr       */
+/*   Created: 2025/06/03 22:16:42 by leberton          #+#    #+#             */
+/*   Updated: 2025/07/31 11:23:11 by leberton         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "so_long.h"
+#include <stdlib.h>
 
-t_bool	load_image(void *mlx, void **img, char *path, int *w, int *h)
+int	ft_puterror(char *message, t_data *data)
 {
-	*img = mlx_xpm_file_to_image(mlx, path, w, h);
-	if (!*img)
-		return (false);
-	return (true);
+	printf("%s\n", message);
+	free_all(data);
+	exit(EXIT_FAILURE);
 }
+
