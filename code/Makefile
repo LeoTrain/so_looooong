@@ -30,7 +30,7 @@ fclean: clean
 
 re: fclean all
 
-play: re
+play: all
 	./$(NAME) $(MAP_DIR)/$(MAP)
 
 val: re
