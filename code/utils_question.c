@@ -12,22 +12,40 @@
 
 #include "so_long.h"
 
-int	is_next_tile_wall(t_data *data, int x, int y)
+static t_bool	is_not_in_border(t_data *data, t_position next)
 {
-	get_player_pos(data);
-	int next_x = data->player_position.x + x;
-	int next_y = data->player_position.y + y;
-	if (next_x < 0 || next_x >= data->map.size.x / TILE_SIZE || next_y < 0 || next_y >= data->map.size.y / TILE_SIZE)
-		return (1);
-	if (data->map.map[next_y][next_x] == '1')
-		return (1);
-	return (0);
+	t_position	map_tile_size;
+
+	map_tile_size.x = data->map.size.x / TILE_SIZE;
+	map_tile_size.y = data->map.size.y / TILE_SIZE;
+	if (next.x < 0 || next.x >= map_tile_size.x)
+		return (true);
+	if (next.y < 0 || next.y >= map_tile_size.y)
+		return (true);
+	return (false);
 }
 
+static t_bool	is_wall(t_data *data, t_position pos)
+{
+	return (data->map.map[pos.y][pos.x] == '1');
+}
 
-int	is_on_exit(t_data *data)
+t_bool	is_next_tile_wall(t_data *data, int x, int y)
+{
+	t_position	next;
+
+	get_player_pos(data);
+	next.x = data->player_position.x + x;
+	next.y = data->player_position.y + y;
+	if (is_not_in_border(data, next))
+		return (true);
+	if (is_wall(data, next))
+		return (true);
+	return (false);
+}
+
+t_bool	is_on_exit(t_data *data)
 {
 	get_player_pos(data);
-	return (data->player_position.x == data->exit_position.x &&
-			data->player_position.y == data->exit_position.y);
+	return (is_same(data->player_position, data->exit_position));
 }
