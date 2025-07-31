@@ -4,7 +4,7 @@ MLX_LIB = $(MLX_DIR)/libmlx.a
 MLX_INC = -I$(MLX_DIR)
 MLX_FLAGS = -lX11 -lXext -lm
 
-CC = cc
+CC = cc -std=gnu11
 CFLAGS = -Wall -Wextra -Werror -g -fsanitize=address $(MLX_INC)
 LDFLAGS = $(MLX_FLAGS)
 LDFLAGS += -fsanitize=address

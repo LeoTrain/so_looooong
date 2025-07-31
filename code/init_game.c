@@ -20,7 +20,7 @@ static t_bool	init_mlx(t_data *data)
 		printf("Error: creating the mlx variable.\n");
 		return (false);
 	}
-	data->win_size = 20 * TILE_SIZE;
+	data->win_size = 50 * TILE_SIZE;
 	data->win = mlx_new_window(data->mlx, data->win_size, data->win_size, "Test1");
 	if (!data->win)
 	{
