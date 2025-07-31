@@ -21,10 +21,11 @@ typedef enum e_bool
 
 typedef struct s_position
 {
-	int x;
-	int y;
-}	t_position;
+	int	x;
+	int	y;
+}		t_position;
 
+// This I do not use
 typedef struct s_list
 {
 	void			*content;
@@ -33,87 +34,88 @@ typedef struct s_list
 
 typedef struct s_xpm_img
 {
-	char    *path;
+	char	*path;
 	void	*img;
-}	t_xpm_img;
+}			t_xpm_img;
 
 typedef struct s_assets
 {
-	t_xpm_img character;
-	t_xpm_img grass;
-	t_xpm_img wall;
-	t_xpm_img collectible;
-	t_xpm_img exit;
-}	t_assets;
+	t_xpm_img	character;
+	t_xpm_img	grass;
+	t_xpm_img	wall;
+	t_xpm_img	collectible;
+	t_xpm_img	exit;
+}				t_assets;
 
 typedef struct s_map
 {
-	char	  **map;
-	char	  *path;
-	t_position size;
-	t_position tile_size;
-	t_position exit_position;
-	t_position player_position;
-}	t_map;
+	char		**map;
+	char		*path;
+	t_position	size;
+	t_position	tile_size;
+	t_position	exit_position;
+	t_position	player_position;
+}				t_map; // Add collectibles to the map
 
 typedef struct s_collectible
 {
-	t_position position;
-	t_bool       collected;
-}	t_collectible;
+	t_position	position;
+	t_bool		collected;
+}				t_collectible;
 
 typedef struct s_collectible_list
 {
-	t_collectible *collectibles;
-	int           count;
-}	t_collectible_list;
+	t_collectible	*collectibles;
+	int				count;
+}					t_collectible_list;
 
 typedef struct s_data
 {
-	void	           *mlx;
-	void	           *win;
-	int		           win_size;
-	int		           x;
-	int		           y;
-	t_position	       offset;
-	t_position	       exit_position;
-	t_position	       player_position; t_assets	       assets; t_map	           map;
-	t_collectible_list collectibles;
-	int		           *player_pos;
-	int		           *exit_pos;
+	void				*mlx;
+	void				*win;
+	int					win_size;
+	int					x;
+	int					y;
+	t_position			offset;
+	t_position			exit_position;
+	t_position			player_position;
+	t_assets			assets;
+	t_map				map;
+	t_collectible_list	collectibles;
 	t_position			path[1000];
 	int					path_length;
 	int					path_index;
 	t_bool				moving;
-}			t_data;
+}						t_data;
 
 int		ft_puterror(char *message, t_data *data);
 char	*ft_strdup(const char *s);
-int		count_coullectible(t_data *data);
-int		get_map_measurements(t_data *data);
+
 t_bool	init_game(t_data *data, char *map_path);
-long	get_time_in_ms(void);
-void	sort_collectibles(t_data *data);
+void	init_directions(t_position *directions); // Change to t_bool
 t_bool	load_image(void *mlx, void **img, char *path, int *w, int *h);
-int is_all_collectibles_collected(t_data *data);
-int	is_on_collectible(t_data *data);
 
-void	init_directions(t_position *directions);
-t_bool	is_valid(t_position position, int width, int height);
+t_bool	is_valid_position(t_position pos, t_bool **visited, t_data *data);
 t_bool	is_same(t_position a, t_position b);
+int		is_all_collectibles_collected(t_data *data); // Change to t_bool
+int		is_on_collectible(t_data *data); // Change to t_bool
+int		is_next_tile_wall(t_data *data, int x, int y); // Change to t_bool
+int		is_on_exit(t_data *data); // Change to t_bool
+void	free_visited(t_bool **visited, t_data *data);
+
+int		count_coullectible(t_data *data);
+void	sort_collectibles(t_data *data);
 void	move_to_collectible(t_data *data, t_collectible *collectible);
-void	move_player_path(t_data *data);
-void	set_player_pos(t_data *data, t_position pos);
+void	add_collectible(t_data *data, t_position pos);
+int		get_map_measurements(t_data *data);
 void	get_player_pos(t_data *data);
+void	set_player_pos(t_data *data, t_position pos);
+void	move_player_path(t_data *data);
 
+long	get_time_in_ms(void);
 void	draw(t_data *data);
-int	is_next_tile_wall(t_data *data, int x, int y);
-int	is_on_exit(t_data *data);
-int	key_hook(int keycode, t_data *data);
-int	loop_hook(t_data *data);
-void add_collectible(t_data *data, t_position pos);
-
+int		key_hook(int keycode, t_data *data);
+int		loop_hook(t_data *data);
 void	free_all(t_data *data);
-
 
 #endif

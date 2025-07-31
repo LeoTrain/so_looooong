@@ -20,9 +20,7 @@ static t_bool	get_path(t_position start, t_position end,
 	int			i;
 
 	init_directions(directions);
-	if (!is_valid(start, data->map.size.x / TILE_SIZE,
-			data->map.size.y / TILE_SIZE) || visited[start.y][start.x]
-			|| data->map.map[start.y][start.x] == '1')
+	if (!is_valid_position(start, visited, data))
 		return (false);
 	if (is_same(start, end))
 	{
@@ -48,19 +46,14 @@ static t_bool	get_path(t_position start, t_position end,
 
 static void	reset_visited(t_bool **visited, int width, int height)
 {
-	int	i;
-	int	j;
-
-	i = 0;
-	while (i < height)
+	while (height - 1 > 0)
 	{
-		j = 0;
-		while (j < width)
+		while (width - 1>= 0)
 		{
-			visited[i][j] = false;
-			j++;
+			visited[height - 1][width - 1] = false;
+			width--;
 		}
-		i++;
+		height--;
 	}
 }
 
@@ -78,29 +71,35 @@ static void	take_action(t_data *data, t_bool **visited, t_collectible *collectib
 	data->moving = true;
 }
 
-void move_to_collectible(t_data *data, t_collectible *collectible)
+t_bool	**create_visited(t_data *data)
 {
 	t_bool	**visited;
+	int		i;
 
 	visited = malloc((data->map.size.y / TILE_SIZE) * sizeof(t_bool *));
 	if (!visited)
-		return ;
-	int i = 0;
+		ft_puterror("Error creating visited 1.", data);
+	i = 0;
 	while (i < data->map.size.y / TILE_SIZE)
 	{
-		visited[i] = calloc(data->map.size.x / TILE_SIZE, sizeof(t_bool));
+		visited[i] = ft_calloc(data->map.size.x / TILE_SIZE, sizeof(t_bool));
 		if (!visited[i])
 		{
 			while (--i >= 0)
 				free(visited[i]);
 			free(visited);
-			return ;
+			ft_puterror("Error creating visited 2.", data);
 		}
 		i++;
 	}
+	return (visited);
+}
+
+void move_to_collectible(t_data *data, t_collectible *collectible)
+{
+	t_bool	**visited;
+
+	visited = create_visited(data);
 	take_action(data, visited, collectible);
-	i = 0;
-	while (i < data->map.size.y / TILE_SIZE)
-		free(visited[i++]);
-	free(visited);
+	free_visited(visited, data);
 }
