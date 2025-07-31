@@ -29,7 +29,7 @@ static	void	draw_asset(t_data *data, t_position current_pos, char *asset)
 		mlx_put_image_to_window(data->mlx, data->win, data->assets.collectible.img, current_pos.x, current_pos.y);
 		return ;
 	}
-	if (strcmp(asset, "exit"))
+	if (strcmp(asset, "exit") == 0)
 	{
 		mlx_put_image_to_window(data->mlx, data->win, data->assets.exit.img, current_pos.x, current_pos.y);
 		return ;
