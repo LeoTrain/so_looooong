@@ -8,7 +8,7 @@ CC = cc -std=gnu11
 CFLAGS = -Wall -Wextra -Werror -g -fsanitize=address $(MLX_INC)
 LDFLAGS = $(MLX_FLAGS)
 LDFLAGS += -fsanitize=address
-SRCS = errors.c ft_strdup.c image_loader.c init_game.c collectible*.c render.c event_loops.c get_next_line/*.c *_utils.c free.c main.c
+SRCS = errors.c ft_strdup.c image_loader.c init_game.c collectible*.c render.c event_loops.c get_next_line/*.c utils_*.c free.c main.c
 
 NAME = test
 MAP_DIR = maps
