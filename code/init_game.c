@@ -6,7 +6,7 @@
 /*   By: leberton <leberton@42vienna.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/08 19:29:10 by leberton          #+#    #+#             */
-/*   Updated: 2025/08/03 18:54:47 by leberton         ###   ########.fr       */
+/*   Updated: 2025/08/03 19:14:52 by leberton         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ static t_bool	init_mlx(t_data *data)
 		printf("Error: creating the mlx variable.\n");
 		return (false);
 	}
-	data->win_size = 20 * TILE_SIZE;
+	data->win_size = 800; //20 * TILE_SIZE;
 	data->win = mlx_new_window(data->mlx, data->win_size, data->win_size, "Test1");
 	if (!data->win)
 	{
