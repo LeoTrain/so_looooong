@@ -37,11 +37,7 @@ t_bool	is_next_tile_wall(t_data *data, int x, int y)
 	get_player_pos(data);
 	next.x = data->map.player_position.x + x;
 	next.y = data->map.player_position.y + y;
-	if (is_not_in_border(data, next))
-		return (true);
-	if (is_wall(data, next))
-		return (true);
-	return (false);
+	return (is_not_in_border(data, next) && is_wall(data, next));
 }
 
 t_bool	is_on_exit(t_data *data)

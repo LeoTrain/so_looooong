@@ -86,7 +86,6 @@ static void	parse_map_line(t_data *data, char *line, int i)
 		set_collectible(data, i, line);
 }
 
-
 int	get_map_measurements(t_data *data)
 {
 	int		i;

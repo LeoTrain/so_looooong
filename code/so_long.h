@@ -99,7 +99,7 @@ int		ft_strcmp(char *s1, char *s2);
 
 t_bool	is_x_bigger(struct s_position a, struct s_position b);
 t_position add_positions(t_position a, t_position b);
-t_bool	init_game(t_data *data, char *map_path);
+void	init_game(t_data *data, char *map_path);
 void	init_directions(t_position *directions); // Change to t_bool
 t_bool	load_image(void *mlx, void **img, char *path, int *w, int *h);
 
@@ -127,6 +127,14 @@ int		loop_hook(t_data *data);
 void	free_all(t_data *data);
 
 void	move(char *direction, t_data *data);
-void	is_makeable(t_data *data, int x, int y);
+
+void	load_all_images(t_data *data);
+void	create_collectibles(t_data *data);
+void	free_current_visited(t_data *data, int i);
+void	allocate_visited_array_row(t_data *data, t_position map_tile_size);
+void	create_visited(t_data *data);
+
+void	check_is_makeable(t_data *data, int x, int y);
+void	is_makeable(t_data *data);
 
 #endif
