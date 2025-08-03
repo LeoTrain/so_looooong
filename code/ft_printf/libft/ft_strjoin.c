@@ -1,43 +1,27 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   utils_42.c                                         :+:      :+:    :+:   */
+/*   ft_strjoin.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: leberton <leberton@42vienna.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/07/31 11:23:03 by leberton          #+#    #+#             */
-/*   Updated: 2025/08/03 19:34:28 by leberton         ###   ########.fr       */
+/*   Created: 2025/04/23 10:37:15 by leberton          #+#    #+#             */
+/*   Updated: 2025/04/28 06:29:07 by leberton         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "so_long.h"
+#include "libft.h"
 
-int	ft_strcmp(char *s1, char *s2)
+char	*ft_strjoin(const char *s1, const char *s2)
 {
-	while (*s1)
-	{
-		if (*s1 != *s2)
-			return ((unsigned char)*s1 - (unsigned char)*s2);
-		s1++;
-		s2++;
-	}
-	return ((unsigned char)*s1 - (unsigned char)*s2);
-}
+	char	*new;
+	size_t	size;
 
-char	*ft_strdup(const char *s)
-{
-	size_t		i;
-	char		*dest;
-
-	i = 0;
-	dest = (char *)malloc(ft_strlen(s)+1);
-	if (dest == NULL)
+	size = (ft_strlen(s1) + ft_strlen(s2) + 1) * sizeof(char);
+	new = ft_calloc(size, sizeof(char));
+	if (!new)
 		return (NULL);
-	while (s[i])
-	{
-		dest[i] = s[i];
-		i++;
-	}
-	dest[i] = 0;
-	return (dest);
+	ft_strlcat(new, s1, size);
+	ft_strlcat(new + ft_strlen(s1), s2, size);
+	return (new);
 }

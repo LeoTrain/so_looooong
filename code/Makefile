@@ -1,14 +1,16 @@
-
 MLX_DIR = minilibx-linux
 MLX_LIB = $(MLX_DIR)/libmlx.a
 MLX_INC = -I$(MLX_DIR)
 MLX_FLAGS = -lX11 -lXext -lm
 
+FT_PRINTF_DIR = ft_printf
+FT_PRINTF = $(FT_PRINTF_DIR)/libftprintf.a
+
 CC = cc -std=gnu11
 CFLAGS = -Wall -Wextra -Werror -g -fsanitize=address $(MLX_INC)
 LDFLAGS = $(MLX_FLAGS)
 LDFLAGS += -fsanitize=address
-SRCS = is_makeable.c init_game.c pathfinding.c move.c event_loops.c get_next_line/*.c utils_*.c main.c
+SRCS = is_makeable.c init_game.c pathfinding.c move.c event_loops.c get_next_*.c utils_*.c main.c
 
 NAME = test
 MAP_DIR = maps
@@ -16,8 +18,11 @@ MAP ?= map.ber
 
 all: $(NAME)
 
-$(NAME): $(MLX_LIB)
+$(NAME): $(FT_PRINTF) $(MLX_LIB)
 	$(CC) $(CFLAGS) $(SRCS) $(MLX_LIB) -o $(NAME) $(LDFLAGS)
+
+$(FT_PRINTF):
+	@make -C $(FT_PRINTF_DIR)
 
 $(MLX_LIB):
 	@make -C $(MLX_DIR)

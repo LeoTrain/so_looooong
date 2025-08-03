@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   render.c                                           :+:      :+:    :+:   */
+/*   utils_render.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: leberton <leberton@42vienna.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/03 22:00:00 by leberton          #+#    #+#             */
-/*   Updated: 2025/06/03 22:02:41 by leberton         ###   ########.fr       */
+/*   Updated: 2025/08/03 19:35:44 by leberton         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,22 +14,22 @@
 
 static	void	draw_asset(t_data *data, t_position current_pos, char *asset)
 {
-	if (strcmp(asset, "wall") == 0)
+	if (ft_strcmp(asset, "wall") == 0)
 	{
 		mlx_put_image_to_window(data->mlx, data->win, data->assets.wall.img, current_pos.x, current_pos.y);
 		return ;
 	}
-	if (strcmp(asset, "grass") == 0)
+	if (ft_strcmp(asset, "grass") == 0)
 	{
 		mlx_put_image_to_window(data->mlx, data->win, data->assets.grass.img, current_pos.x, current_pos.y);
 		return ;
 	}
-	if (strcmp(asset, "collectible") == 0)
+	if (ft_strcmp(asset, "collectible") == 0)
 	{
 		mlx_put_image_to_window(data->mlx, data->win, data->assets.collectible.img, current_pos.x, current_pos.y);
 		return ;
 	}
-	if (strcmp(asset, "exit") == 0)
+	if (ft_strcmp(asset, "exit") == 0)
 	{
 		mlx_put_image_to_window(data->mlx, data->win, data->assets.exit.img, current_pos.x, current_pos.y);
 		return ;
@@ -38,14 +38,14 @@ static	void	draw_asset(t_data *data, t_position current_pos, char *asset)
 
 static t_bool	is_asset(t_data *data, t_position current_tile, char *asset)
 {
-	if (strcmp(asset, "wall") == 0)
+	if (ft_strcmp(asset, "wall") == 0)
 		return (data->map.map[current_tile.y][current_tile.x] == '1');
-	if (strcmp(asset, "grass") == 0)
+	if (ft_strcmp(asset, "grass") == 0)
 		return (data->map.map[current_tile.y][current_tile.x] == '0' ||
 				data->map.map[current_tile.y][current_tile.x] == 'P');
-	if (strcmp(asset, "collectible") == 0)
+	if (ft_strcmp(asset, "collectible") == 0)
 		return (data->map.map[current_tile.y][current_tile.x] == 'C');
-	if (strcmp(asset, "exit") == 0)
+	if (ft_strcmp(asset, "exit") == 0)
 		return (data->map.map[current_tile.y][current_tile.x] == 'E');
 	return (false);
 }

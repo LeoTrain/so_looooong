@@ -1,0 +1,5 @@
+main.c
+*.o
+.bonus_flag
+libft.a
+a.out

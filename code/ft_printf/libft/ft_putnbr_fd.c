@@ -1,43 +1,33 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   utils_42.c                                         :+:      :+:    :+:   */
+/*   ft_putnbr_fd.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: leberton <leberton@42vienna.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/07/31 11:23:03 by leberton          #+#    #+#             */
-/*   Updated: 2025/08/03 19:34:28 by leberton         ###   ########.fr       */
+/*   Created: 2025/04/27 21:42:29 by leberton          #+#    #+#             */
+/*   Updated: 2025/04/28 07:04:45 by leberton         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "so_long.h"
+#include "libft.h"
 
-int	ft_strcmp(char *s1, char *s2)
+void	ft_putnbr_fd(int n, int fd)
 {
-	while (*s1)
-	{
-		if (*s1 != *s2)
-			return ((unsigned char)*s1 - (unsigned char)*s2);
-		s1++;
-		s2++;
-	}
-	return ((unsigned char)*s1 - (unsigned char)*s2);
-}
+	char	c;
 
-char	*ft_strdup(const char *s)
-{
-	size_t		i;
-	char		*dest;
-
-	i = 0;
-	dest = (char *)malloc(ft_strlen(s)+1);
-	if (dest == NULL)
-		return (NULL);
-	while (s[i])
+	if (n == -2147483648)
 	{
-		dest[i] = s[i];
-		i++;
+		ft_putstr_fd("-2147483648", fd);
+		return ;
 	}
-	dest[i] = 0;
-	return (dest);
+	if (n < 0)
+	{
+		n = -n;
+		ft_putchar_fd('-', fd);
+	}
+	if (n > 9)
+		ft_putnbr_fd(n / 10, fd);
+	c = (n % 10) + 48;
+	ft_putchar_fd(c, fd);
 }

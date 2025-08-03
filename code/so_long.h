@@ -2,7 +2,9 @@
 #define SO_LONG_H
 
 #include "minilibx-linux/mlx.h"
-#include "get_next_line/get_next_line.h"
+#include "get_next_line.h"
+#include "ft_printf/headers/ft_printf.h"
+#include "ft_printf/headers/libft.h"
 
 #include <string.h>
 #include <stdio.h>
@@ -33,13 +35,6 @@ typedef struct s_position
 	int		x;
 	int		y;
 }		t_position;
-
-// This I do not use
-typedef struct s_list
-{
-	void			*content;
-	struct s_list	*next;
-}					t_list;
 
 typedef struct s_xpm_img
 {
@@ -100,7 +95,7 @@ typedef struct s_data
 }						t_data;
 
 int		ft_puterror(char *message, t_data *data);
-char	*ft_strdup(const char *s);
+int		ft_strcmp(char *s1, char *s2);
 
 t_bool	is_x_bigger(struct s_position a, struct s_position b);
 t_position add_positions(t_position a, t_position b);

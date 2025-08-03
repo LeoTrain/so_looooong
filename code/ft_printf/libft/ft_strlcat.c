@@ -1,43 +1,35 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   utils_42.c                                         :+:      :+:    :+:   */
+/*   ft_strlcat.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: leberton <leberton@42vienna.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/07/31 11:23:03 by leberton          #+#    #+#             */
-/*   Updated: 2025/08/03 19:34:28 by leberton         ###   ########.fr       */
+/*   Created: 2025/04/22 20:19:24 by leberton          #+#    #+#             */
+/*   Updated: 2025/04/27 21:57:06 by leberton         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "so_long.h"
+#include "libft.h"
 
-int	ft_strcmp(char *s1, char *s2)
+size_t	ft_strlcat(char *dst, const char *src, size_t size)
 {
-	while (*s1)
-	{
-		if (*s1 != *s2)
-			return ((unsigned char)*s1 - (unsigned char)*s2);
-		s1++;
-		s2++;
-	}
-	return ((unsigned char)*s1 - (unsigned char)*s2);
-}
+	size_t	i;
+	size_t	dst_len;
+	size_t	src_len;
 
-char	*ft_strdup(const char *s)
-{
-	size_t		i;
-	char		*dest;
-
+	if (!dst && !src)
+		return (0);
+	dst_len = ft_strlen(dst);
+	src_len = ft_strlen(src);
+	if (size <= dst_len)
+		return (src_len + size);
 	i = 0;
-	dest = (char *)malloc(ft_strlen(s)+1);
-	if (dest == NULL)
-		return (NULL);
-	while (s[i])
+	while (src[i] && (dst_len + i) < size - 1)
 	{
-		dest[i] = s[i];
+		dst[dst_len + i] = src[i];
 		i++;
 	}
-	dest[i] = 0;
-	return (dest);
+	dst[dst_len + i] = '\0';
+	return (dst_len + src_len);
 }

@@ -1,43 +1,36 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   utils_42.c                                         :+:      :+:    :+:   */
+/*   ft_substr.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: leberton <leberton@42vienna.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/07/31 11:23:03 by leberton          #+#    #+#             */
-/*   Updated: 2025/08/03 19:34:28 by leberton         ###   ########.fr       */
+/*   Created: 2025/04/23 10:06:45 by leberton          #+#    #+#             */
+/*   Updated: 2025/04/28 06:21:39 by leberton         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "so_long.h"
+#include "libft.h"
 
-int	ft_strcmp(char *s1, char *s2)
+char	*ft_substr(const char *s, unsigned int start, size_t len)
 {
-	while (*s1)
-	{
-		if (*s1 != *s2)
-			return ((unsigned char)*s1 - (unsigned char)*s2);
-		s1++;
-		s2++;
-	}
-	return ((unsigned char)*s1 - (unsigned char)*s2);
-}
-
-char	*ft_strdup(const char *s)
-{
-	size_t		i;
-	char		*dest;
-
-	i = 0;
-	dest = (char *)malloc(ft_strlen(s)+1);
-	if (dest == NULL)
+	char	*substr;
+	size_t	i;
+	if (!s)
 		return (NULL);
-	while (s[i])
+	if (start >= ft_strlen(s))
+		return (ft_strdup(""));
+	if (len > ft_strlen(s) - start)
+		len = ft_strlen(s) - start;
+	substr = (char *)ft_calloc(len + 1, sizeof(char));
+	if (!substr)
+		return (NULL);
+	i = 0;
+	while (i < len)
 	{
-		dest[i] = s[i];
+		substr[i] = s[start + i];
 		i++;
 	}
-	dest[i] = 0;
-	return (dest);
+	substr[i] = '\0';
+	return (substr);
 }

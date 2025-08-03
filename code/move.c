@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   collectible_move.c                                 :+:      :+:    :+:   */
+/*   move.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: leberton <leberton@42vienna.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/03 21:51:43 by leberton          #+#    #+#             */
-/*   Updated: 2025/06/03 21:51:53 by leberton         ###   ########.fr       */
+/*   Updated: 2025/08/03 19:35:07 by leberton         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,13 +14,13 @@
 
 void	move(char *direction, t_data *data)
 {
-	if (strcmp(direction, "left") == 0)
+	if (ft_strcmp(direction, "left") == 0)
 		data->offset.x += TILE_SIZE;
-	if (strcmp(direction, "right") == 0)
+	if (ft_strcmp(direction, "right") == 0)
 		data->offset.x -= TILE_SIZE;
-	if (strcmp(direction, "down") == 0)
+	if (ft_strcmp(direction, "down") == 0)
 		data->offset.y += TILE_SIZE;
-	if (strcmp(direction, "up") == 0)
+	if (ft_strcmp(direction, "up") == 0)
 		data->offset.y -= TILE_SIZE;
 }
 

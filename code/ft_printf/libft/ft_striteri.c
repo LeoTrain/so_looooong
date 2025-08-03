@@ -1,43 +1,27 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   utils_42.c                                         :+:      :+:    :+:   */
+/*   ft_striteri.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: leberton <leberton@42vienna.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/07/31 11:23:03 by leberton          #+#    #+#             */
-/*   Updated: 2025/08/03 19:34:28 by leberton         ###   ########.fr       */
+/*   Created: 2025/04/27 21:53:40 by leberton          #+#    #+#             */
+/*   Updated: 2025/04/28 07:06:08 by leberton         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "so_long.h"
+#include "libft.h"
 
-int	ft_strcmp(char *s1, char *s2)
+void	ft_striteri(char *s, void (*f)(unsigned int, char *))
 {
-	while (*s1)
-	{
-		if (*s1 != *s2)
-			return ((unsigned char)*s1 - (unsigned char)*s2);
-		s1++;
-		s2++;
-	}
-	return ((unsigned char)*s1 - (unsigned char)*s2);
-}
-
-char	*ft_strdup(const char *s)
-{
-	size_t		i;
-	char		*dest;
+	size_t	i;
+	size_t	s_len;
 
 	i = 0;
-	dest = (char *)malloc(ft_strlen(s)+1);
-	if (dest == NULL)
-		return (NULL);
-	while (s[i])
+	s_len = ft_strlen(s);
+	while (i < s_len)
 	{
-		dest[i] = s[i];
+		f(i, &s[i]);
 		i++;
 	}
-	dest[i] = 0;
-	return (dest);
 }

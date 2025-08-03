@@ -1,43 +1,25 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   utils_42.c                                         :+:      :+:    :+:   */
+/*   ft_strncmp.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: leberton <leberton@42vienna.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/07/31 11:23:03 by leberton          #+#    #+#             */
-/*   Updated: 2025/08/03 19:34:28 by leberton         ###   ########.fr       */
+/*   Created: 2025/04/28 10:50:06 by leberton          #+#    #+#             */
+/*   Updated: 2025/04/28 10:51:15 by leberton         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "so_long.h"
+#include "libft.h"
 
-int	ft_strcmp(char *s1, char *s2)
+int	ft_strncmp(const char *s1, const char *s2, size_t n)
 {
-	while (*s1)
-	{
-		if (*s1 != *s2)
-			return ((unsigned char)*s1 - (unsigned char)*s2);
-		s1++;
-		s2++;
-	}
-	return ((unsigned char)*s1 - (unsigned char)*s2);
-}
+	size_t	i;
 
-char	*ft_strdup(const char *s)
-{
-	size_t		i;
-	char		*dest;
-
+	if (n == 0)
+		return (0);
 	i = 0;
-	dest = (char *)malloc(ft_strlen(s)+1);
-	if (dest == NULL)
-		return (NULL);
-	while (s[i])
-	{
-		dest[i] = s[i];
+	while (i < n - 1 && s1[i] && s2[i] && s1[i] == s2[i])
 		i++;
-	}
-	dest[i] = 0;
-	return (dest);
+	return ((unsigned char)s1[i] - (unsigned char)s2[i]);
 }

@@ -1,43 +1,31 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   utils_42.c                                         :+:      :+:    :+:   */
+/*   ft_strlcpy.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: leberton <leberton@42vienna.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/07/31 11:23:03 by leberton          #+#    #+#             */
-/*   Updated: 2025/08/03 19:34:28 by leberton         ###   ########.fr       */
+/*   Created: 2025/04/27 21:57:31 by leberton          #+#    #+#             */
+/*   Updated: 2025/04/27 21:59:23 by leberton         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "so_long.h"
+#include "libft.h"
 
-int	ft_strcmp(char *s1, char *s2)
+size_t	ft_strlcpy(char *dest, const char *src, size_t dstsize)
 {
-	while (*s1)
-	{
-		if (*s1 != *s2)
-			return ((unsigned char)*s1 - (unsigned char)*s2);
-		s1++;
-		s2++;
-	}
-	return ((unsigned char)*s1 - (unsigned char)*s2);
-}
+	size_t	i;
 
-char	*ft_strdup(const char *s)
-{
-	size_t		i;
-	char		*dest;
-
+	if (!dest || !src)
+		return (0);
+	if (dstsize == 0)
+		return (ft_strlen(src));
 	i = 0;
-	dest = (char *)malloc(ft_strlen(s)+1);
-	if (dest == NULL)
-		return (NULL);
-	while (s[i])
+	while (src[i] && i < dstsize - 1)
 	{
-		dest[i] = s[i];
+		dest[i] = src[i];
 		i++;
 	}
-	dest[i] = 0;
-	return (dest);
+	dest[i] = '\0';
+	return (ft_strlen(src));
 }

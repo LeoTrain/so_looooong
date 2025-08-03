@@ -1,43 +1,31 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   utils_42.c                                         :+:      :+:    :+:   */
+/*   ft_memcmp.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: leberton <leberton@42vienna.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/07/31 11:23:03 by leberton          #+#    #+#             */
-/*   Updated: 2025/08/03 19:34:28 by leberton         ###   ########.fr       */
+/*   Created: 2025/04/23 08:16:49 by leberton          #+#    #+#             */
+/*   Updated: 2025/04/27 21:39:39 by leberton         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "so_long.h"
+#include "libft.h"
 
-int	ft_strcmp(char *s1, char *s2)
+int	ft_memcmp(const void *s1, const void *s2, size_t n)
 {
-	while (*s1)
-	{
-		if (*s1 != *s2)
-			return ((unsigned char)*s1 - (unsigned char)*s2);
-		s1++;
-		s2++;
-	}
-	return ((unsigned char)*s1 - (unsigned char)*s2);
-}
-
-char	*ft_strdup(const char *s)
-{
-	size_t		i;
-	char		*dest;
+	size_t			i;
+	unsigned char	*ptr_s1;
+	unsigned char	*ptr_s2;
 
 	i = 0;
-	dest = (char *)malloc(ft_strlen(s)+1);
-	if (dest == NULL)
-		return (NULL);
-	while (s[i])
+	ptr_s1 = (unsigned char *)s1;
+	ptr_s2 = (unsigned char *)s2;
+	while (i < n)
 	{
-		dest[i] = s[i];
+		if (ptr_s1[i] != ptr_s2[i])
+			return (ptr_s1[i] - ptr_s2[i]);
 		i++;
 	}
-	dest[i] = 0;
-	return (dest);
+	return (0);
 }

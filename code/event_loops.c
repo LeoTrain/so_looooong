@@ -6,7 +6,7 @@
 /*   By: leberton <leberton@42vienna.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/30 14:44:56 by leberton          #+#    #+#             */
-/*   Updated: 2025/07/08 19:43:18 by leberton         ###   ########.fr       */
+/*   Updated: 2025/08/03 19:28:56 by leberton         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,8 +20,7 @@ static void	exec_actions(t_data *data)
 	{
 		if (!is_all_collectibles_collected(data))
 			return ;
-		free_all(data);
-		exit(0);
+		ft_puterror("Exiting game..", data);
 	}
 }
 
@@ -56,10 +55,10 @@ int	loop_hook(t_data *data)
 	{
 		last_time = current_time;
 		exec_actions(data);
-		if (!data->moving)
-			move_to_collectible(data, data->collectibles.collectibles);
-		else
-			move_player_path(data);
+		// if (!data->moving)
+		// 	move_to_collectible(data, data->collectibles.collectibles);
+		// else
+		// 	move_player_path(data);
 		draw(data);
 	}
 	return (0);

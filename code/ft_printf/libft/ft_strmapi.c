@@ -1,43 +1,33 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   utils_42.c                                         :+:      :+:    :+:   */
+/*   ft_strmapi.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: leberton <leberton@42vienna.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/07/31 11:23:03 by leberton          #+#    #+#             */
-/*   Updated: 2025/08/03 19:34:28 by leberton         ###   ########.fr       */
+/*   Created: 2025/04/27 21:59:40 by leberton          #+#    #+#             */
+/*   Updated: 2025/04/27 22:01:30 by leberton         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "so_long.h"
+#include "libft.h"
 
-int	ft_strcmp(char *s1, char *s2)
+char	*ft_strmapi(const char *s, char (*f)(unsigned int, char))
 {
-	while (*s1)
-	{
-		if (*s1 != *s2)
-			return ((unsigned char)*s1 - (unsigned char)*s2);
-		s1++;
-		s2++;
-	}
-	return ((unsigned char)*s1 - (unsigned char)*s2);
-}
+	char	*result;
+	size_t	i;
 
-char	*ft_strdup(const char *s)
-{
-	size_t		i;
-	char		*dest;
-
-	i = 0;
-	dest = (char *)malloc(ft_strlen(s)+1);
-	if (dest == NULL)
+	if (!s || !f)
 		return (NULL);
+	result = (char *)ft_calloc(ft_strlen(s) + 1, sizeof(char));
+	if (!result)
+		return (NULL);
+	i = 0;
 	while (s[i])
 	{
-		dest[i] = s[i];
+		result[i] = f(i, s[i]);
 		i++;
 	}
-	dest[i] = 0;
-	return (dest);
+	result[i] = '\0';
+	return (result);
 }
