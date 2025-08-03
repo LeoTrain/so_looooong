@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   collectible_pathfinding.c                          :+:      :+:    :+:   */
+/*   pathfinding.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: leberton <leberton@42vienna.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/03 21:44:40 by leberton          #+#    #+#             */
-/*   Updated: 2025/07/08 20:31:15 by leberton         ###   ########.fr       */
+/*   Updated: 2025/08/03 20:53:17 by leberton         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,15 @@ static void	reset_visited(t_data *data)
 		}
 		size.y--;
 	}
+}
+
+t_position	add_positions(t_position a, t_position b)
+{
+	t_position	c;
+
+	c.x = a.x + b.x;
+	c.y = a.y + b.y;
+	return (c);
 }
 
 static t_bool	get_path(t_position start, t_position end, t_data *data)

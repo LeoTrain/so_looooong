@@ -6,7 +6,7 @@
 /*   By: leberton <leberton@42vienna.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/30 14:44:56 by leberton          #+#    #+#             */
-/*   Updated: 2025/08/03 19:28:56 by leberton         ###   ########.fr       */
+/*   Updated: 2025/08/03 21:10:18 by leberton         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,19 +18,16 @@ static void	exec_actions(t_data *data)
 		return ;
 	if (is_on_exit(data))
 	{
-		if (!is_all_collectibles_collected(data))
+		if (is_all_collectibles_collected(data) == 0)
 			return ;
-		ft_puterror("Exiting game..", data);
+		exit_success("Player is on exit, quitting...", data);
 	}
 }
 
-int	key_hook(int keycode, t_data *data)
+static void	react_uppon_keycode(t_data *data, int keycode)
 {
 	if (keycode == 65307 || keycode == 53)
-	{
-		free_all(data);
-		exit(0);
-	}
+		exit_success("Player pressed ESC, quitting...", data);
 	if ((keycode == 119 || keycode == 13) && !is_next_tile_wall(data, stand, down))
 		move("down", data);
 	else if ((keycode == 115 || keycode == 1) && !is_next_tile_wall(data, stand, up))
@@ -39,6 +36,11 @@ int	key_hook(int keycode, t_data *data)
 		move("left", data);
 	else if ((keycode == 100 || keycode == 2) && !is_next_tile_wall(data, right, stand))
 		move("right", data);
+}
+
+int	key_hook(int keycode, t_data *data)
+{
+	react_uppon_keycode(data, keycode);
 	exec_actions(data);
 	return (0);
 }

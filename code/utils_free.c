@@ -31,24 +31,23 @@ void	free_map(t_data *data)
 {
 	int	i;
 
-	i = 0;
-	if (!data->map.map)
-		return ;
-	while (data->map.map[i])
-		free(data->map.map[i++]);
-	free(data->map.map);
-	i = 0;
-	while (i < data->map.size.y / TILE_SIZE)
-		free(data->map.visited[i++]);
-	free(data->map.visited);
+	if (data->map.map && data->map.visited)
+	{
+		i = 0;
+		while (data->map.map[i])
+		{
+			free(data->map.map[i]);
+			free(data->map.visited[i++]);
+		}
+		free(data->map.map);
+		free(data->map.visited);
+	}
 	if (data->map.path)
 		free(data->map.path);
 }
 
-void	free_all(t_data *data)
+static void	free_mlx(t_data *data)
 {
-	free_images(data);
-	free_map(data);
 	if (data->win)
 		mlx_destroy_window(data->mlx, data->win);
 	if (data->mlx)
@@ -56,5 +55,12 @@ void	free_all(t_data *data)
 		mlx_destroy_display(data->mlx);
 		free(data->mlx);
 	}
+}
+
+void	free_all(t_data *data)
+{
+	free_images(data);
+	free_map(data);
+	free_mlx(data);
 	free(data->collectibles.collectibles);
 }

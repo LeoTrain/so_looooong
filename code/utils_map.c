@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   map_utils.c                                        :+:      :+:    :+:   */
+/*   utils_map.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: leberton <leberton@42vienna.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/30 14:34:31 by leberton          #+#    #+#             */
-/*   Updated: 2025/07/08 19:56:21 by leberton         ###   ########.fr       */
+/*   Updated: 2025/08/03 21:17:42 by leberton         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ static void	get_map_size(t_data *data)
 	max_len = 0;
 	fd = open(data->map.path, O_RDONLY);
 	if (fd < 0)
-		ft_puterror("Error opening the map", data);
+		exit_error("Error opening the map", data);
 	data->map.size.y = 0;
 	while ((line = get_next_line(fd)) != NULL)
 	{
@@ -77,7 +77,7 @@ static void	parse_map_line(t_data *data, char *line, int i)
 
 	data->map.map[i] = ft_strdup(line);
 	if (!data->map.map[i])
-		ft_puterror("Error duplicating map line.", data);
+		exit_error("Error duplicating map line.", data);
 	if ((e = ft_strchr(line, 'P')))
 		set_player(data, i, line, e);
 	if ((e = ft_strchr(line, 'E')))
@@ -86,19 +86,16 @@ static void	parse_map_line(t_data *data, char *line, int i)
 		set_collectible(data, i, line);
 }
 
-int	get_map_measurements(t_data *data)
+void	set_map(t_data	*data)
 {
 	int		i;
 	int		fd;
 	char	*line;
 
-	get_map_size(data);
-	data->map.map = malloc(sizeof(char *) * (data->map.size.y + 1));
-	if (!data->map.map)
-		ft_puterror("Error allocating map.", data);
+	data->collectibles.count = 0;
 	fd = open(data->map.path, O_RDONLY);
 	if (fd < 0)
-		ft_puterror("Error opening map file.", data);
+		exit_error("Error opening map file.", data);
 	i = 0;
 	while ((line = get_next_line(fd)) != NULL)
 	{
@@ -106,7 +103,18 @@ int	get_map_measurements(t_data *data)
 		free(line);
 	}
 	data->map.map[i] = NULL;
-	data->map.size.y *= TILE_SIZE;
 	close(fd);
+
+}
+
+int	get_map_measurements(t_data *data)
+{
+
+	get_map_size(data);
+	data->map.map = malloc(sizeof(char *) * (data->map.size.y + 1));
+	if (!data->map.map)
+		exit_error("Error allocating map.", data);
+	set_map(data);
+	data->map.size.y *= TILE_SIZE;
 	return (1);
 }

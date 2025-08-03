@@ -19,7 +19,7 @@ MAP ?= map.ber
 all: $(NAME)
 
 $(NAME): $(FT_PRINTF) $(MLX_LIB)
-	$(CC) $(CFLAGS) $(SRCS) $(MLX_LIB) -o $(NAME) $(LDFLAGS)
+	$(CC) $(CFLAGS) $(SRCS) $(MLX_LIB) $(FT_PRINTF) -o $(NAME) $(LDFLAGS)
 
 $(FT_PRINTF):
 	@make -C $(FT_PRINTF_DIR)

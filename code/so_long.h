@@ -94,7 +94,8 @@ typedef struct s_data
 	int					found_exit;
 }						t_data;
 
-int		ft_puterror(char *message, t_data *data);
+int		exit_error(char *message, t_data *data);
+int		exit_success(char *message, t_data *data);
 int		ft_strcmp(char *s1, char *s2);
 
 t_bool	is_x_bigger(struct s_position a, struct s_position b);
@@ -115,6 +116,7 @@ int		count_coullectible(t_data *data);
 void	sort_collectibles(t_data *data);
 void	move_to_collectible(t_data *data, t_collectible *collectible);
 void	add_collectible(t_data *data, t_position pos);
+void	set_map(t_data	*data);
 int		get_map_measurements(t_data *data);
 void	get_player_pos(t_data *data);
 void	set_player_pos(t_data *data, t_position pos);

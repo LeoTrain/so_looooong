@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   collectible_state.c                                :+:      :+:    :+:   */
+/*   utils_collectibles.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: leberton <leberton@42vienna.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/03 21:44:55 by leberton          #+#    #+#             */
-/*   Updated: 2025/07/31 11:38:26 by leberton         ###   ########.fr       */
+/*   Updated: 2025/08/03 21:14:54 by leberton         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ void add_collectible(t_data *data, t_position pos)
 	new_collectible.position = pos;
 	new_collectible.collected = false;
 	if (!data->collectibles.collectibles)
-		ft_puterror("No collectible initialized.", data);
+		exit_error("No collectible initialized.", data);
 	data->collectibles.collectibles[data->collectibles.count] = new_collectible;
 	data->collectibles.count++;
 }

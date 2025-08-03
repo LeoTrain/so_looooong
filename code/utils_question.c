@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   question_utils.c                                   :+:      :+:    :+:   */
+/*   utils_question.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: leberton <leberton@42vienna.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/30 14:40:38 by leberton          #+#    #+#             */
-/*   Updated: 2025/05/30 17:05:59 by leberton         ###   ########.fr       */
+/*   Updated: 2025/08/03 20:58:52 by leberton         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ t_bool	is_next_tile_wall(t_data *data, int x, int y)
 	get_player_pos(data);
 	next.x = data->map.player_position.x + x;
 	next.y = data->map.player_position.y + y;
-	return (is_not_in_border(data, next) && is_wall(data, next));
+	return (is_not_in_border(data, next) || is_wall(data, next));
 }
 
 t_bool	is_on_exit(t_data *data)

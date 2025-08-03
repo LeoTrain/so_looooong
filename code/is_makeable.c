@@ -6,7 +6,7 @@
 /*   By: leberton <leberton@42vienna.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/03 18:06:50 by leberton          #+#    #+#             */
-/*   Updated: 2025/08/03 20:41:36 by leberton         ###   ########.fr       */
+/*   Updated: 2025/08/03 21:18:26 by leberton         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,5 +38,6 @@ void	is_makeable(t_data *data)
 {
 	check_is_makeable(data, data->map.player_position.x, data->map.player_position.y);
 	if (data->found_collectible != data->collectibles.count || data->found_exit != 1)
-		ft_puterror("Error\neither not found all collectibles or no exit.", data);
+		exit_error("Error\neither not found all collectibles or no exit.", data);
+	set_map(data);
 }
