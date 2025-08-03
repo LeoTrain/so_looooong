@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   free.c                                             :+:      :+:    :+:   */
+/*   utils_free.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: leberton <leberton@42vienna.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/08 19:34:07 by leberton          #+#    #+#             */
-/*   Updated: 2025/07/08 19:53:31 by leberton         ###   ########.fr       */
+/*   Updated: 2025/08/03 18:51:44 by leberton         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,10 @@ void	free_map(t_data *data)
 	while (data->map.map[i])
 		free(data->map.map[i++]);
 	free(data->map.map);
+	i = 0;
+	while (i < data->map.size.y / TILE_SIZE)
+		free(data->map.visited[i++]);
+	free(data->map.visited);
 	if (data->map.path)
 		free(data->map.path);
 }

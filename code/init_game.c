@@ -6,7 +6,7 @@
 /*   By: leberton <leberton@42vienna.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/08 19:29:10 by leberton          #+#    #+#             */
-/*   Updated: 2025/07/31 12:53:42 by leberton         ###   ########.fr       */
+/*   Updated: 2025/08/03 18:54:47 by leberton         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,10 +108,13 @@ static t_bool	init_map(t_data *data, char *map_path)
 t_bool	init_game(t_data *data, char *map_path)
 {
 	if (!init_mlx(data))
-		return (false);
+		return (1004);
 	if (!init_assets(data))
-		return (false);
+		return (1003);
 	if (!init_map(data, map_path))
-		return (false);
-	return (true);
+		return (1002);
+	is_makeable(data, data->map.player_position.x, data->map.player_position.y);
+	if (data->found_collectible == data->collectibles.count && data->found_exit == 1)
+		return (0);
+	return (1);
 }

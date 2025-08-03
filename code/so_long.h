@@ -59,6 +59,7 @@ typedef struct s_assets
 typedef struct s_map
 {
 	char		**map;
+	char		**map2;
 	char		*path;
 	t_position	size;
 	t_position	tile_size;
@@ -94,6 +95,8 @@ typedef struct s_data
 	int					path_length;
 	int					path_index;
 	t_bool				moving;
+	int					found_collectible;
+	int					found_exit;
 }						t_data;
 
 int		ft_puterror(char *message, t_data *data);
@@ -129,5 +132,6 @@ int		loop_hook(t_data *data);
 void	free_all(t_data *data);
 
 void	move(char *direction, t_data *data);
+void	is_makeable(t_data *data, int x, int y);
 
 #endif
