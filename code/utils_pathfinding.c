@@ -38,16 +38,6 @@ static t_bool	is_valid(t_position position, t_data *data)
 	return (position.x > 0 && position.x < map_tile_size.x && position.y > 0 && position.y < map_tile_size.y);
 }
 
-void	free_visited(t_data *data)
-{
-	int		i;
-
-	i = 0;
-	while (i < data->map.size.y / TILE_SIZE)
-		free(data->map.visited[i++]);
-	free(data->map.visited);
-}
-
 t_bool	is_valid_position(t_position pos, t_data *data)
 {
 	if (!is_valid(pos, data))

@@ -9,7 +9,7 @@ FT_PRINTF = $(FT_PRINTF_DIR)/libftprintf.a
 CC = cc -std=gnu11
 CFLAGS = -Wall -Wextra -Werror -g -fsanitize=address $(MLX_INC)
 LDFLAGS = $(MLX_FLAGS)
-LDFLAGS += -fsanitize=address
+LDFLAGS += -g #-fsanitize=address
 SRCS = is_makeable.c init_game.c pathfinding.c move.c event_loops.c get_next_*.c utils_*.c main.c
 
 NAME = test

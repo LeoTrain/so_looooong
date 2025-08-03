@@ -1,7 +1,6 @@
 /* ************************************************************************** */
 /*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   utils_free.c                                       :+:      :+:    :+:   */
+/*                                                        :::      ::::::::   */ /*   utils_free.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: leberton <leberton@42vienna.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -27,22 +26,20 @@ void	free_images(t_data *data)
 		mlx_destroy_image(data->mlx, data->assets.exit.img);
 }
 
-void	free_map(t_data *data)
+void	free_map(t_data *data, int and_map)
 {
 	int	i;
 
-	if (data->map.map && data->map.visited)
-	{
-		i = 0;
-		while (data->map.map[i])
-		{
-			free(data->map.map[i]);
-			free(data->map.visited[i++]);
-		}
-		free(data->map.map);
-		free(data->map.visited);
-	}
-	if (data->map.path)
+	i = 0;
+	while (data->map.visited && i < data->map.size.y / TILE_SIZE && and_map)
+		free(data->map.visited[i++]);
+	free(data->map.visited);
+	i = 0;
+	printf("Freeing map\n");
+	while (data->map.map && i < (data->map.size.y / TILE_SIZE) + 1)
+		free(data->map.map[i++]);
+	free(data->map.map);
+	if (data->map.path && and_map)
 		free(data->map.path);
 }
 
@@ -60,7 +57,7 @@ static void	free_mlx(t_data *data)
 void	free_all(t_data *data)
 {
 	free_images(data);
-	free_map(data);
+	free_map(data, 1);
 	free_mlx(data);
 	free(data->collectibles.collectibles);
 }

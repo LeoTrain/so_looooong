@@ -86,6 +86,19 @@ static void	parse_map_line(t_data *data, char *line, int i)
 		set_collectible(data, i, line);
 }
 
+void	clear_map_data(t_data *data)
+{
+	int	i;
+
+	i = 0;
+	if (data->map.map)
+	{
+		while (i < data->map.size.y / TILE_SIZE)
+			data->map.map[i++] = NULL;
+		data->map.map = NULL;
+	}
+}
+
 void	set_map(t_data	*data)
 {
 	int		i;
@@ -97,6 +110,7 @@ void	set_map(t_data	*data)
 	if (fd < 0)
 		exit_error("Error opening map file.", data);
 	i = 0;
+	clear_map_data(data);
 	while ((line = get_next_line(fd)) != NULL)
 	{
 		parse_map_line(data, line, i++);

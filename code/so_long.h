@@ -54,7 +54,6 @@ typedef struct s_assets
 typedef struct s_map
 {
 	char		**map;
-	char		**map2;
 	char		*path;
 	t_position	size;
 	t_position	tile_size;
@@ -110,7 +109,6 @@ int		is_all_collectibles_collected(t_data *data); // Change to t_bool
 int		is_on_collectible(t_data *data); // Change to t_bool
 t_bool	is_next_tile_wall(t_data *data, int x, int y);
 t_bool	is_on_exit(t_data *data);
-void	free_visited(t_data *data);
 
 int		count_coullectible(t_data *data);
 void	sort_collectibles(t_data *data);
@@ -138,5 +136,6 @@ void	create_visited(t_data *data);
 
 void	check_is_makeable(t_data *data, int x, int y);
 void	is_makeable(t_data *data);
+void	free_map(t_data *data, int and_map);
 
 #endif
