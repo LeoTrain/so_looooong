@@ -14,13 +14,13 @@
 
 static int	check_map_at_pos(t_data *data, int x, int y)
 {
-	if (data->map.map[y][x] == '1' || data->map.map[y][x] == 'V')
+	if (data->map.map_is_makeable[y][x] == '1' || data->map.map_is_makeable[y][x] == 'V')
 		return (-1);
-	if (data->map.map[y][x] == 'C')
+	if (data->map.map_is_makeable[y][x] == 'C')
 		data->found_collectible++;
-	if (data->map.map[y][x] == 'E')
+	if (data->map.map_is_makeable[y][x] == 'E')
 		data->found_exit = 1;
-	data->map.map[y][x] = 'V';
+	data->map.map_is_makeable[y][x] = 'V';
 	return (1);
 }
 
@@ -39,5 +39,4 @@ void	is_makeable(t_data *data)
 	check_is_makeable(data, data->map.player_position.x, data->map.player_position.y);
 	if (data->found_collectible != data->collectibles.count || data->found_exit != 1)
 		exit_error("Error\neither not found all collectibles or no exit.", data);
-	set_map(data);
 }

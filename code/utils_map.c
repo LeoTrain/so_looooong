@@ -76,27 +76,17 @@ static void	parse_map_line(t_data *data, char *line, int i)
 	char	*e;
 
 	data->map.map[i] = ft_strdup(line);
+	data->map.map_is_makeable[i] = ft_strdup(line);
 	if (!data->map.map[i])
 		exit_error("Error duplicating map line.", data);
+	if (!data->map.map_is_makeable[i])
+		exit_error("Error duplicating map is makeable line.", data);
 	if ((e = ft_strchr(line, 'P')))
 		set_player(data, i, line, e);
 	if ((e = ft_strchr(line, 'E')))
 		set_exit(data, i, line, e);
 	if ((e = ft_strchr(line, 'C')))
 		set_collectible(data, i, line);
-}
-
-void	clear_map_data(t_data *data)
-{
-	int	i;
-
-	i = 0;
-	if (data->map.map)
-	{
-		while (i < data->map.size.y / TILE_SIZE)
-			data->map.map[i++] = NULL;
-		data->map.map = NULL;
-	}
 }
 
 void	set_map(t_data	*data)
@@ -110,13 +100,13 @@ void	set_map(t_data	*data)
 	if (fd < 0)
 		exit_error("Error opening map file.", data);
 	i = 0;
-	clear_map_data(data);
 	while ((line = get_next_line(fd)) != NULL)
 	{
 		parse_map_line(data, line, i++);
 		free(line);
 	}
 	data->map.map[i] = NULL;
+	data->map.map_is_makeable[i] = NULL;
 	close(fd);
 
 }
@@ -126,8 +116,11 @@ int	get_map_measurements(t_data *data)
 
 	get_map_size(data);
 	data->map.map = malloc(sizeof(char *) * (data->map.size.y + 1));
+	data->map.map_is_makeable = malloc(sizeof(char *) * (data->map.size.y + 1));
 	if (!data->map.map)
 		exit_error("Error allocating map.", data);
+	if (!data->map.map_is_makeable)
+		exit_error("Error allocating map for is_makeable.", data);
 	set_map(data);
 	data->map.size.y *= TILE_SIZE;
 	return (1);

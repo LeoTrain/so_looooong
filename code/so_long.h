@@ -54,6 +54,7 @@ typedef struct s_assets
 typedef struct s_map
 {
 	char		**map;
+	char		**map_is_makeable;
 	char		*path;
 	t_position	size;
 	t_position	tile_size;
