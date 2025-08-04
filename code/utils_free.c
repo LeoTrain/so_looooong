@@ -35,11 +35,11 @@ void	free_map(t_data *data, int and_map)
 		free(data->map.visited[i++]);
 	free(data->map.visited);
 	i = 0;
-	while (i < (data->map.size.y / TILE_SIZE) + 1)
+	while (data->map.map_is_makeable && i < (data->map.size.y / TILE_SIZE) + 1)
 		free(data->map.map_is_makeable[i++]);
 	free(data->map.map_is_makeable);
 	i = 0;
-	while (i < (data->map.size.y / TILE_SIZE) + 1)
+	while (data->map.map && i < (data->map.size.y / TILE_SIZE) + 1)
 		free(data->map.map[i++]);
 	free(data->map.map);
 	if (data->map.path && and_map)
