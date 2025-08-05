@@ -12,25 +12,25 @@
 
 #include "so_long.h"
 
-static t_bool	is_not_in_border(t_data *data, t_position next)
+static int	is_not_in_border(t_data *data, t_position next)
 {
 	t_position	map_tile_size;
 
 	map_tile_size.x = data->map.size.x / TILE_SIZE;
 	map_tile_size.y = data->map.size.y / TILE_SIZE;
 	if (next.x < 0 || next.x >= map_tile_size.x)
-		return (true);
+		return (1);
 	if (next.y < 0 || next.y >= map_tile_size.y)
-		return (true);
-	return (false);
+		return (1);
+	return (0);
 }
 
-static t_bool	is_wall(t_data *data, t_position pos)
+static int	is_wall(t_data *data, t_position pos)
 {
 	return (data->map.map[pos.y][pos.x] == '1');
 }
 
-t_bool	is_next_tile_wall(t_data *data, int x, int y)
+int	is_next_tile_wall(t_data *data, int x, int y)
 {
 	t_position	next;
 
@@ -40,7 +40,7 @@ t_bool	is_next_tile_wall(t_data *data, int x, int y)
 	return (is_not_in_border(data, next) || is_wall(data, next));
 }
 
-t_bool	is_on_exit(t_data *data)
+int	is_on_exit(t_data *data)
 {
 	get_player_pos(data);
 	return (is_same(data->map.player_position, data->map.exit_position));

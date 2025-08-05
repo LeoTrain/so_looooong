@@ -16,11 +16,11 @@ static void	init_mlx(t_data *data)
 {
 	data->mlx = mlx_init();
 	if (!data->mlx)
-		exit_error("Error\ncreating the mlx variable.\n", data);
+		exit_error("Error\ncreating the mlx variable.", data);
 	data->win_size = 800; //20 * TILE_SIZE;
 	data->win = mlx_new_window(data->mlx, data->win_size, data->win_size, "Test1");
 	if (!data->win)
-		exit_error("Error\ncreating the window.\n", data);
+		exit_error("Error\ncreating the window.", data);
 }
 
 static void	init_assets(t_data *data)
@@ -36,11 +36,11 @@ static void	init_assets(t_data *data)
 static void	init_map(t_data *data, char *map_path)
 {
 	data->map.path = ft_strdup(map_path);
-	data->map.exit_position = (t_position){-1, -1};
+	data->map.exit_position.x = -1;
+	data->map.exit_position.y = -1;
 	create_collectibles(data);
 	if (!get_map_measurements(data))
-		exit_error("Error\nreading the map file.\n", data);
-	create_visited(data);
+		exit_error("Error\nreading the map file.", data);
 	get_player_pos(data);
 }
 
@@ -57,3 +57,9 @@ void	init_game(t_data *data, char *map_path)
 	init_map(data, map_path);
 	is_makeable(data);
 }
+
+// SHOULD DO:
+// - init data variables
+// - init mlx
+// - init assets
+// - init map --> check map

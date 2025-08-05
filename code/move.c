@@ -27,34 +27,3 @@ void	move(char *direction, t_data *data)
 		data->offset.y -= TILE_SIZE;
 	ft_printf("Current Moves: %d\n", data->current_moves);
 }
-
-static void	set_offset(t_data *data, int x, int y)
-{
-	if (x == right)
-		move("left", data);
-	else if (x == left)
-		move("right", data);
-	else
-	{
-		if (y == up)
-			move("down", data);
-		else if (y == down)
-			move("up", data);
-	}
-}
-
-void	move_player_path(t_data *data)
-{
-	t_position	next;
-
-	if (!data->moving || data->path_index >= data->path_length)
-	{
-		data->moving = false;
-		return ;
-	}
-	next = data->path[data->path_index];
-	next.x = data->map.player_position.x - next.x;
-	next.y = data->map.player_position.y - next.y;
-	set_offset(data, next.x, next.y);
-	data->path_index++;
-}

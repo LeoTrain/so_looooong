@@ -9,7 +9,6 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minilibx-linux/mlx.h"
 #include "so_long.h"
 
 void	free_images(t_data *data)
@@ -30,10 +29,6 @@ void	free_map(t_data *data, int and_map)
 {
 	int	i;
 
-	i = 0;
-	while (data->map.visited && i < data->map.size.y / TILE_SIZE && and_map)
-		free(data->map.visited[i++]);
-	free(data->map.visited);
 	i = 0;
 	while (data->map.map_is_makeable && i < (data->map.size.y / TILE_SIZE) + 1)
 		free(data->map.map_is_makeable[i++]);
@@ -68,5 +63,4 @@ void	free_all(t_data *data)
 		close(data->current_fd);
 		data->current_fd = 0;
 	}
-	printf("%d\n", data->current_fd);
 }

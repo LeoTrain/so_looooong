@@ -72,7 +72,7 @@ static	void	set_player(t_data *data, int y, char *line, char *e)
 	if (data->is_player_set || is_another_on_line('P', line))
 	{
 		free_current_map(data, y);
-		exit_error("Error\ntoo many player starting positions.\n", data);
+		exit_error("Error\ntoo many player starting positions.", data);
 	}
 	player_pos.y = y * TILE_SIZE + TILE_SIZE;
 	player_pos.x = ((int)(e - line) * TILE_SIZE) + TILE_SIZE;
@@ -88,7 +88,7 @@ static void	set_exit(t_data *data, int y, char *line, char *e)
 	if (data->found_exit || is_another_on_line('E', line))
 	{
 		free_current_map(data, y);
-		exit_error("Error\ntoo many exit positions.\n", data);
+		exit_error("Error\ntoo many exit positions.", data);
 	}
 	data->found_exit = 1;
 	exit_pos.x = (int)(e - line);
@@ -129,7 +129,7 @@ static void	parse_map_line(t_data *data, char *line, int i)
 		set_collectible(data, i, line);
 }
 
-void	set_map(t_data	*data)
+static void	set_map(t_data	*data)
 {
 	int		i;
 	char	*line;
@@ -151,57 +151,45 @@ void	set_map(t_data	*data)
 
 }
 
-static int	check_width(char **map)
-{
-	size_t	last_length;
-
-	last_length = 0;
-	while (*map)
-	{
-		if (!last_length)
-			last_length = ft_strlen(*map);
-		else if (ft_strlen(*map) != last_length)
-			return (0);
-		map++;
-	}
-	return (1);
-}
-
 static int	is_rectangular(t_data *data)
 {
 	char	**p_map;
+	size_t	last_length;
 
+	last_length = 0;
 	p_map = data->map.map;
-	if (!check_width(p_map))
-		exit_error("Error\nMap not rectangular.\n", data);
+	while (*p_map)
+	{
+		if (!last_length)
+			last_length = ft_strlen(*p_map);
+		else if (ft_strlen(*p_map) != last_length)
+			exit_error("Error\nMap not rectangular.\n", data);
+		p_map++;
+	}
 	return (1);
 }
 static int	is_surrounded_by_wall(t_data *data)
 {
 	int	x;
 	int	y;
-	int	max_x;
-	int	max_y;
 
 	is_rectangular(data);
 	x = 0;
 	y = 0;
-	max_x = (data->map.size.x / TILE_SIZE) - 2;
-	max_y = (data->map.size.y / TILE_SIZE) - 1;
 	if (data->map.map)
 	{
-		while (y < max_y)
+		while (y < data->map.size.y)
 		{
-			if (data->map.map[y][0] != '1' || data->map.map[y][max_x] != '1')
+			if (data->map.map[y][0] != '1' || data->map.map[y][data->map.size.x] != '1')
 			{
 				ft_printf("Wall at y == %d = %c or %c\n", y, data->map.map[y][0], data->map.map[y][max_x]);
 				exit_error("Error\nmap is not surrounded by walls.\n", data);
 			}
 			y++;
 		}
-		while (x < max_x)
+		while (x < data->map.size.x)
 		{
-			if (data->map.map[0][x] != '1' || data->map.map[max_y][x] != '1')
+			if (data->map.map[0][x] != '1' || data->map.map[data->map.size.y][x] != '1')
 				exit_error("Error\nmap is not surrounded by walls.\n", data);
 			x++;
 		}
@@ -211,8 +199,8 @@ static int	is_surrounded_by_wall(t_data *data)
 
 int	get_map_measurements(t_data *data)
 {
-
 	get_map_size(data);
+	printf("%d\n", data->map.size.y);
 	data->map.map = malloc(sizeof(char *) * (data->map.size.y + 1));
 	data->map.map_is_makeable = malloc(sizeof(char *) * (data->map.size.y + 1));
 	if (!data->map.map)

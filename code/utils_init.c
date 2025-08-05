@@ -40,37 +40,3 @@ void	create_collectibles(t_data *data)
 		exit_error("Error\ncalloc for collectibles failed.", data);
 	data->collectibles.count = 0;
 }
-
-void	free_current_visited(t_data *data, int i)
-{
-	while (--i >= 0)
-		free(data->map.visited[i]);
-	free(data->map.visited);
-	exit_error("Error\ncreating visited row.", data);
-}
-
-void	allocate_visited_array_row(t_data *data, t_position map_tile_size)
-{
-	int	i;
-
-	i = 0;
-	while (i < map_tile_size.y)
-	{
-		data->map.visited[i] = ft_calloc(map_tile_size.x, sizeof(t_bool));
-		if (!data->map.visited[i])
-			free_current_visited(data, i);
-		i++;
-	}
-}
-
-void	create_visited(t_data *data)
-{
-	t_position	map_tile_size;
-
-	map_tile_size.y = data->map.size.y / TILE_SIZE;
-	data->map.visited = malloc(map_tile_size.y * sizeof(t_bool *));
-	if (!data->map.visited)
-		exit_error("Error\ncreating visited 1.", data);
-	map_tile_size.x = data->map.size.x / TILE_SIZE;
-	allocate_visited_array_row(data, map_tile_size);
-}
