@@ -72,9 +72,7 @@ typedef struct s_collectible
 typedef struct s_collectible_list
 {
 	t_collectible	*collectibles;
-	int				count;
-}					t_collectible_list;
-
+	int				count; }					t_collectible_list;
 typedef struct s_data
 {
 	void				*mlx;
@@ -92,6 +90,7 @@ typedef struct s_data
 	t_bool				moving;
 	int					found_collectible;
 	int					found_exit;
+	int					current_moves;
 }						t_data;
 
 int		exit_error(char *message, t_data *data);

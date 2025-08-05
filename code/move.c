@@ -14,6 +14,9 @@
 
 void	move(char *direction, t_data *data)
 {
+	if (!data->current_moves)
+		data->current_moves = 0;
+	data->current_moves++;
 	if (ft_strcmp(direction, "left") == 0)
 		data->offset.x += TILE_SIZE;
 	if (ft_strcmp(direction, "right") == 0)
@@ -22,6 +25,7 @@ void	move(char *direction, t_data *data)
 		data->offset.y += TILE_SIZE;
 	if (ft_strcmp(direction, "up") == 0)
 		data->offset.y -= TILE_SIZE;
+	ft_printf("Current Moves: %d\n", data->current_moves);
 }
 
 static void	set_offset(t_data *data, int x, int y)
