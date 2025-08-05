@@ -83,6 +83,12 @@ static void	set_exit(t_data *data, int y, char *line, char *e)
 {
 	t_position	exit_pos;
 
+	if (data->found_exit || is_another_on_line('C', line))
+	{
+		free_current_map(data, y);
+		exit_error("Error\ntoo many exit positions.\n", data);
+	}
+	data->found_exit = 1;
 	exit_pos.x = (int)(e - line);
 	exit_pos.y = y;
 	data->map.exit_position = exit_pos;
