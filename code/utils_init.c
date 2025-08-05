@@ -44,7 +44,7 @@ void	free_current_visited(t_data *data, int i)
 	while (--i >= 0)
 		free(data->map.visited[i]);
 	free(data->map.visited);
-	exit_error("Error creating visited row.", data);
+	exit_error("Error\ncreating visited row.", data);
 }
 
 void	allocate_visited_array_row(t_data *data, t_position map_tile_size)
@@ -68,7 +68,7 @@ void	create_visited(t_data *data)
 	map_tile_size.y = data->map.size.y / TILE_SIZE;
 	data->map.visited = malloc(map_tile_size.y * sizeof(t_bool *));
 	if (!data->map.visited)
-		exit_error("Error creating visited 1.", data);
+		exit_error("Error\ncreating visited 1.", data);
 	map_tile_size.x = data->map.size.x / TILE_SIZE;
 	allocate_visited_array_row(data, map_tile_size);
 }

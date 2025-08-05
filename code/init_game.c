@@ -16,11 +16,11 @@ static void	init_mlx(t_data *data)
 {
 	data->mlx = mlx_init();
 	if (!data->mlx)
-		exit_error("Error: creating the mlx variable.\n", data);
+		exit_error("Error\ncreating the mlx variable.\n", data);
 	data->win_size = 800; //20 * TILE_SIZE;
 	data->win = mlx_new_window(data->mlx, data->win_size, data->win_size, "Test1");
 	if (!data->win)
-		exit_error("Error: creating the window.\n", data);
+		exit_error("Error\ncreating the window.\n", data);
 }
 
 static void	init_assets(t_data *data)
