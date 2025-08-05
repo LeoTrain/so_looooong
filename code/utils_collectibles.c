@@ -15,15 +15,14 @@
 int count_coullectible(t_data *data)
 {
 	int		count;
-	int		fd;
 	char	*line;
 	int		i;
 
 	count = 0;
-	fd = open(data->map.path, O_RDONLY);
-	if (fd < 0)
+	data->current_fd = open(data->map.path, O_RDONLY);
+	if (data->current_fd < 0)
 		return (2001);
-	while ((line = get_next_line(fd)) != NULL)
+	while ((line = get_next_line(data->current_fd)) != NULL)
 	{
 		i = 0;
 		while (line[i])
@@ -34,7 +33,8 @@ int count_coullectible(t_data *data)
 		}
 		free(line);
 	}
-	close(fd);
+	close(data->current_fd);
+	data->current_fd = 0;
 	return (count);
 }
 

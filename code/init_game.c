@@ -46,6 +46,12 @@ static void	init_map(t_data *data, char *map_path)
 
 void	init_game(t_data *data, char *map_path)
 {
+	data->found_collectible = 0;
+	data->found_exit = 0;
+	data->current_moves = 0;
+	data->is_player_set = 0;
+	data->is_exit_set = 0;
+	data->current_fd = 0;
 	init_mlx(data);
 	init_assets(data);
 	init_map(data, map_path);

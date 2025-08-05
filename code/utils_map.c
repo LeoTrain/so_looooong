@@ -14,26 +14,26 @@
 
 static void	get_map_size(t_data *data)
 {
-	int		fd;
 	int		len;
 	int		max_len;
 	char	*line;
 
 	max_len = 0;
-	fd = open(data->map.path, O_RDONLY);
-	if (fd < 0)
+	data->current_fd = open(data->map.path, O_RDONLY);
+	if (data->current_fd < 0)
 		exit_error("Error\nopening the map", data);
 	data->map.size.y = 0;
-	while ((line = get_next_line(fd)) != NULL)
+	while ((line = get_next_line(data->current_fd)) != NULL)
 	{
-		len = strlen(line);
+		len = ft_strlen(line);
 		if (len > max_len)
 			max_len = len;
 		data->map.size.y++;
 		free(line);
 	}
 	data->map.size.x = max_len * TILE_SIZE;
-	close(fd);
+	close(data->current_fd);
+	data->current_fd = 0;
 }
 
 static void	free_current_map(t_data *data, int i)
@@ -51,14 +51,16 @@ static void	free_current_map(t_data *data, int i)
 
 static int	is_another_on_line(char c, char *line)
 {
-	int	found;
+	int		found;
+	char	*p_line;
 
 	found = 0;
-	while (*line)
+	p_line = line;
+	while (*p_line)
 	{
-		if (*line == c)
+		if (*p_line == c)
 			found++;
-		line++;
+		p_line++;
 	}
 	return (found != 1);
 }
@@ -83,7 +85,7 @@ static void	set_exit(t_data *data, int y, char *line, char *e)
 {
 	t_position	exit_pos;
 
-	if (data->found_exit || is_another_on_line('C', line))
+	if (data->found_exit || is_another_on_line('E', line))
 	{
 		free_current_map(data, y);
 		exit_error("Error\ntoo many exit positions.\n", data);
@@ -130,25 +132,50 @@ static void	parse_map_line(t_data *data, char *line, int i)
 void	set_map(t_data	*data)
 {
 	int		i;
-	int		fd;
 	char	*line;
 
 	data->collectibles.count = 0;
-	fd = open(data->map.path, O_RDONLY);
-	if (fd < 0)
+	data->current_fd = open(data->map.path, O_RDONLY);
+	if (data->current_fd < 0)
 		exit_error("Error\nopening map file.", data);
 	i = 0;
-	while ((line = get_next_line(fd)) != NULL)
+	while ((line = get_next_line(data->current_fd)) != NULL)
 	{
 		parse_map_line(data, line, i++);
 		free(line);
 	}
 	data->map.map[i] = NULL;
 	data->map.map_is_makeable[i] = NULL;
-	close(fd);
+	close(data->current_fd);
+	data->current_fd = 0;
 
 }
 
+static int	check_width(char **map)
+{
+	size_t	last_length;
+
+	last_length = 0;
+	while (*map)
+	{
+		if (!last_length)
+			last_length = ft_strlen(*map);
+		else if (ft_strlen(*map) != last_length)
+			return (0);
+		map++;
+	}
+	return (1);
+}
+
+static int	is_rectangular(t_data *data)
+{
+	char	**p_map;
+
+	p_map = data->map.map;
+	if (!check_width(p_map))
+		exit_error("Error\nMap not rectangular.\n", data);
+	return (1);
+}
 static int	is_surrounded_by_wall(t_data *data)
 {
 	int	x;
@@ -156,6 +183,7 @@ static int	is_surrounded_by_wall(t_data *data)
 	int	max_x;
 	int	max_y;
 
+	is_rectangular(data);
 	x = 0;
 	y = 0;
 	max_x = (data->map.size.x / TILE_SIZE) - 2;

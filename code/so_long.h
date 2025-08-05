@@ -93,6 +93,7 @@ typedef struct s_data
 	int					current_moves;
 	int					is_player_set;
 	int					is_exit_set;
+	int					current_fd;
 }						t_data;
 
 int		exit_error(char *message, t_data *data);

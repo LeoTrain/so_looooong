@@ -63,4 +63,10 @@ void	free_all(t_data *data)
 	free_map(data, 1);
 	free_mlx(data);
 	free(data->collectibles.collectibles);
+	if (data->current_fd != 0)
+	{
+		close(data->current_fd);
+		data->current_fd = 0;
+	}
+	printf("%d\n", data->current_fd);
 }
