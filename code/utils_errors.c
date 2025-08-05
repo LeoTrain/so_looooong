@@ -25,3 +25,12 @@ int	exit_success(char *message, t_data *data)
 	free_all(data);
 	exit(EXIT_SUCCESS);
 }
+
+int	pressed_on_x(void *data)
+{
+	t_data	*d;
+
+	d = (t_data *)data;
+	exit_success("Pressed on 'X', exiting...", d);
+	return (1);
+}

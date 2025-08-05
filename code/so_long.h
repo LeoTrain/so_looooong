@@ -98,6 +98,7 @@ typedef struct s_data
 
 int		exit_error(char *message, t_data *data);
 int		exit_success(char *message, t_data *data);
+int		pressed_on_x(void *data);
 int		ft_strcmp(char *s1, char *s2);
 
 t_bool	is_x_bigger(struct s_position a, struct s_position b);

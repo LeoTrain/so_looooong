@@ -20,6 +20,7 @@ int main(int argc, char **argv)
 		exit_error("Error\ncorrect use case ./program_name <map.file>.", &data);
 	init_game(&data, argv[1]);
 	mlx_key_hook(data.win, (int (*)(int, void *))key_hook, &data);
+	mlx_hook(data.win, 17, 0, pressed_on_x, &data);
 	mlx_loop_hook(data.mlx, (int (*)(void *))loop_hook, &data);
 	mlx_loop(data.mlx);
 	free_all(&data);
