@@ -91,6 +91,7 @@ typedef struct s_data
 	int					found_collectible;
 	int					found_exit;
 	int					current_moves;
+	int					is_player_set;
 }						t_data;
 
 int		exit_error(char *message, t_data *data);

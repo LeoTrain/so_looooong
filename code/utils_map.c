@@ -36,10 +36,42 @@ static void	get_map_size(t_data *data)
 	close(fd);
 }
 
+static void	free_current_map(t_data *data, int i)
+{
+	while (--i >= 0)
+	{
+		free(data->map.map_is_makeable[i]);
+		free(data->map.map[i]);
+	}
+	free(data->map.map_is_makeable);
+	data->map.map_is_makeable = NULL;
+	free(data->map.map);
+	data->map.map = NULL;
+}
+
+static int	is_another_on_line(char c, char *line)
+{
+	int	found;
+
+	found = 0;
+	while (*line)
+	{
+		if (*line == c)
+			found++;
+		line++;
+	}
+	return (found != 1);
+}
+
 static	void	set_player(t_data *data, int y, char *line, char *e)
 {
 	t_position	player_pos;
 
+	if (data->is_player_set || is_another_on_line('P', line))
+	{
+		free_current_map(data, y);
+		exit_error("Error\ntoo many player starting positions.\n", data);
+	}
 	player_pos.y = y * TILE_SIZE + TILE_SIZE;
 	player_pos.x = ((int)(e - line) * TILE_SIZE) + TILE_SIZE;
 	set_player_pos(data, player_pos);

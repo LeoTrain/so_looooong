@@ -32,6 +32,7 @@ static t_position	get_center_tile(t_data *data)
 
 void	set_player_pos(t_data *data, t_position pos)
 {
+	data->is_player_set = 1;
 	data->map.player_position.x = pos.x;
 	data->map.player_position.y = pos.y;
 }
