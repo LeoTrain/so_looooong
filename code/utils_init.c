@@ -31,7 +31,9 @@ void	create_collectibles(t_data *data)
 	int collectible_amount;
 
 	collectible_amount = count_coullectible(data);
-	if (collectible_amount <= 0)
+	if (collectible_amount == 2001)
+		exit_error("Error\nopening the map. Does the file exist ?", data);
+	if (collectible_amount == 0)
 		exit_error("Error\nno collectibles found or count failed.", data);
 	data->collectibles.collectibles = calloc(collectible_amount, sizeof(t_collectible));
 	if (!data->collectibles.collectibles)

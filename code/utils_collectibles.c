@@ -22,7 +22,7 @@ int count_coullectible(t_data *data)
 	count = 0;
 	fd = open(data->map.path, O_RDONLY);
 	if (fd < 0)
-		return (0);
+		return (2001);
 	while ((line = get_next_line(fd)) != NULL)
 	{
 		i = 0;

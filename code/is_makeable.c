@@ -37,6 +37,9 @@ void	check_is_makeable(t_data *data, int x, int y)
 void	is_makeable(t_data *data)
 {
 	check_is_makeable(data, data->map.player_position.x, data->map.player_position.y);
-	if (data->found_collectible != data->collectibles.count || data->found_exit != 1)
-		exit_error("Error\neither not found all collectibles or no exit.", data);
+	if (data->found_collectible != data->collectibles.count)
+		exit_error("Error\nnot found all collectibles.\n", data);
+
+	if (data->found_exit != 1)
+		exit_error("Error\nnot found the exit.\n", data);
 }

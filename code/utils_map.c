@@ -111,6 +111,38 @@ void	set_map(t_data	*data)
 
 }
 
+static int	is_surrounded_by_wall(t_data *data)
+{
+	int	x;
+	int	y;
+	int	max_x;
+	int	max_y;
+
+	x = 0;
+	y = 0;
+	max_x = (data->map.size.x / TILE_SIZE) - 2;
+	max_y = (data->map.size.y / TILE_SIZE) - 1;
+	if (data->map.map)
+	{
+		while (y < max_y)
+		{
+			if (data->map.map[y][0] != '1' || data->map.map[y][max_x] != '1')
+			{
+				ft_printf("Wall at y == %d = %c or %c\n", y, data->map.map[y][0], data->map.map[y][max_x]);
+				exit_error("Error\nmap is not surrounded by walls.\n", data);
+			}
+			y++;
+		}
+		while (x < max_x)
+		{
+			if (data->map.map[0][x] != '1' || data->map.map[max_y][x] != '1')
+				exit_error("Error\nmap is not surrounded by walls.\n", data);
+			x++;
+		}
+	}
+	return (1);
+}
+
 int	get_map_measurements(t_data *data)
 {
 
@@ -123,5 +155,6 @@ int	get_map_measurements(t_data *data)
 		exit_error("Error\nallocating map for is_makeable.", data);
 	set_map(data);
 	data->map.size.y *= TILE_SIZE;
+	is_surrounded_by_wall(data);
 	return (1);
 }
