@@ -62,6 +62,17 @@ static void	draw_at_pos(t_data *data, t_position current_pos, t_position current
 		draw_asset(data, current_pos, "exit");
 }
 
+static void	draw_moves(t_data *data)
+{
+	char *moves_str;
+
+	moves_str = ft_itoa(data->current_moves);
+	if (!moves_str)
+		return ;
+	mlx_string_put(data->mlx, data->win, 10, 10, 0xFFFFFF, moves_str);
+	free(moves_str);
+}
+
 void	draw(t_data *data)
 {
 	int			half_win_size;
@@ -84,4 +95,5 @@ void	draw(t_data *data)
 	}
 	half_win_size = (data->win_size / 2) - TILE_SIZE;
 	mlx_put_image_to_window(data->mlx, data->win, data->assets.character.img, half_win_size, half_win_size);
+	draw_moves(data);
 }
