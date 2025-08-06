@@ -12,16 +12,16 @@
 
 #include "so_long.h"
 
-int count_coullectible(t_data *data)
+static int count_collectible(t_data *data)
 {
-	int		count;
 	char	*line;
 	int		i;
+	int		count;
 
-	count = 0;
 	data->current_fd = open(data->map.path, O_RDONLY);
 	if (data->current_fd < 0)
 		return (2001);
+	count = 0;
 	while ((line = get_next_line(data->current_fd)) != NULL)
 	{
 		i = 0;
@@ -52,13 +52,20 @@ void add_collectible(t_data *data, t_position pos)
 
 int is_all_collectibles_collected(t_data *data)
 {
-	for (int i = 0; i < data->map.size.y / TILE_SIZE; i++)
+	int	y;
+	int	x;
+
+	y = 0;
+	while (y < data->map.tile_size.y)
 	{
-		for (int j = 0; j < data->map.size.x / TILE_SIZE; j++)
+		x = 0;
+		while (x < data->map.tile_size.x)
 		{
-			if (data->map.map[i][j] == 'C')
+			if (data->map.map[y][x] == 'C')
 				return (0);
+			x++;
 		}
+		y++;
 	}
 	return (1);
 }
@@ -67,7 +74,6 @@ int	is_on_collectible(t_data *data)
 {
 	int	i;
 
-	get_player_pos(data);
 	i = 0;
 	if (data->map.map[data->map.player_position.y][data->map.player_position.x] == 'C')
 	{
@@ -85,3 +91,17 @@ int	is_on_collectible(t_data *data)
 	return (0);
 }
 
+void	create_collectibles(t_data *data)
+{
+	int collectible_amount;
+
+	collectible_amount = count_collectible(data);
+	if (collectible_amount == 2001)
+		exit_error("Error\nopening the map. Does the file exist ?", data);
+	if (collectible_amount == 0)
+		exit_error("Error\nno collectibles found or count failed.", data);
+	data->collectibles.collectibles = calloc(collectible_amount, sizeof(t_collectible));
+	if (!data->collectibles.collectibles)
+		exit_error("Error\ncalloc for collectibles failed.", data);
+	data->collectibles.count = 0;
+}

@@ -39,27 +39,24 @@ static void	init_map(t_data *data, char *map_path)
 	data->map.exit_position.x = -1;
 	data->map.exit_position.y = -1;
 	create_collectibles(data);
-	if (!get_map_measurements(data))
-		exit_error("Error\nreading the map file.", data);
-	get_player_pos(data);
+	get_map_measurements(data);
+}
+
+static void	init_data(t_data *data, char *map_path)
+{
+	data->found_collectible = -1;
+	data->found_exit = -1;
+	data->current_moves = -1;
+	data->is_player_set = -1;
+	data->is_exit_set = -1;
+	data->current_fd = -1;
+	init_mlx(data);
+	init_assets(data);
+	init_map(data, map_path);
 }
 
 void	init_game(t_data *data, char *map_path)
 {
-	data->found_collectible = 0;
-	data->found_exit = 0;
-	data->current_moves = 0;
-	data->is_player_set = 0;
-	data->is_exit_set = 0;
-	data->current_fd = 0;
-	init_mlx(data);
-	init_assets(data);
-	init_map(data, map_path);
+	init_data(data, map_path);
 	is_makeable(data);
 }
-
-// SHOULD DO:
-// - init data variables
-// - init mlx
-// - init assets
-// - init map --> check map

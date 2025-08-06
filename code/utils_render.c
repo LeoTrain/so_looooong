@@ -12,8 +12,17 @@
 
 #include "so_long.h"
 
+int	load_image(void *mlx, void **img, char *path, int *w, int *h)
+{
+	*img = mlx_xpm_file_to_image(mlx, path, w, h);
+	if (!*img)
+		return (0);
+	return (1);
+}
+
 static void	draw_at_pos(t_data *data, t_position current_pos, t_position current_tile)
 {
+	printf("%c\n", data->map.map[current_tile.y][current_tile.x]);
 	if (data->map.map[current_tile.y][current_tile.x] == '1')
 		mlx_put_image_to_window(data->mlx, data->win, data->assets.wall.img, current_pos.x, current_pos.y);
 	else if (data->map.map[current_tile.y][current_tile.x] == '0' ||
@@ -61,10 +70,3 @@ void	draw(t_data *data)
 	draw_moves(data);
 }
 
-int	load_image(void *mlx, void **img, char *path, int *w, int *h)
-{
-	*img = mlx_xpm_file_to_image(mlx, path, w, h);
-	if (!*img)
-		return (0);
-	return (1);
-}

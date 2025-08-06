@@ -54,6 +54,7 @@ typedef struct s_map
 	t_position	tile_size;
 	t_position	exit_position;
 	t_position	player_position;
+	t_position	player_tile_position;
 }				t_map;
 
 typedef struct s_collectible
@@ -77,7 +78,6 @@ typedef struct s_data
 	t_assets			assets;
 	t_map				map;
 	t_collectible_list	collectibles;
-	int					moving;
 	int					found_collectible;
 	int					found_exit;
 	int					current_moves;
@@ -101,11 +101,16 @@ int		is_on_collectible(t_data *data); // Change to t_bool
 int		is_next_tile_wall(t_data *data, int x, int y);
 int		is_on_exit(t_data *data);
 
-int		count_coullectible(t_data *data);
 void	create_collectibles(t_data *data);
 void	add_collectible(t_data *data, t_position pos);
-int		get_map_measurements(t_data *data);
-void	get_player_pos(t_data *data);
+void	get_map_size(t_data *data);
+void	set_map(t_data	*data);
+void	set_collectible(t_data *data, int y, char *line);
+void	set_exit(t_data *data, int y, char *line, char *e);
+void	set_player(t_data *data, int y, char *line, char *e);
+void	parse_map(t_data *data);
+void	allocate_for_map(t_data	*data);
+void	get_map_measurements(t_data *data);
 void	set_player_pos(t_data *data, t_position pos);
 
 long	get_time_in_ms(void);

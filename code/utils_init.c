@@ -25,18 +25,3 @@ void	load_all_images(t_data *data)
 	if (!load_image(data->mlx, (void **)&data->assets.exit.img, data->assets.exit.path, &data->map.tile_size.x, &data->map.tile_size.y))
 		exit_error("Error\nloading the exit image.", data);
 }
-
-void	create_collectibles(t_data *data)
-{
-	int collectible_amount;
-
-	collectible_amount = count_coullectible(data);
-	if (collectible_amount == 2001)
-		exit_error("Error\nopening the map. Does the file exist ?", data);
-	if (collectible_amount == 0)
-		exit_error("Error\nno collectibles found or count failed.", data);
-	data->collectibles.collectibles = calloc(collectible_amount, sizeof(t_collectible));
-	if (!data->collectibles.collectibles)
-		exit_error("Error\ncalloc for collectibles failed.", data);
-	data->collectibles.count = 0;
-}
