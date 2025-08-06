@@ -1,4 +1,14 @@
-//HEADER
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   utils_map_parse.c                                  :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: leberton <leberton@42vienna.com>           +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/08/06 21:03:24 by leberton          #+#    #+#             */
+/*   Updated: 2025/08/06 21:05:11 by leberton         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
 #include "so_long.h"
 
@@ -45,6 +55,7 @@ void	set_player(t_data *data, int y, char *line, char *e)
 	set_player_pos(data, player_pos);
 	data->offset.x = (data->win_width / 2) - data->map.player_position.x;
 	data->offset.y = (data->win_height / 2) - data->map.player_position.y;
+	data->is_player_set = 1;
 }
 
 void	set_exit(t_data *data, int y, char *line, char *e)

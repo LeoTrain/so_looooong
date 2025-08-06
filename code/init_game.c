@@ -6,7 +6,7 @@
 /*   By: leberton <leberton@42vienna.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/08 19:29:10 by leberton          #+#    #+#             */
-/*   Updated: 2025/08/06 20:12:24 by leberton         ###   ########.fr       */
+/*   Updated: 2025/08/06 21:06:07 by leberton         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,10 +47,10 @@ static void	init_data(t_data *data, char *map_path)
 {
 	data->found_collectible = -1;
 	data->found_exit = -1;
-	data->current_moves = -1;
 	data->is_player_set = -1;
 	data->is_exit_set = -1;
 	data->current_fd = -1;
+	data->current_moves = 0;
 	init_mlx(data);
 	init_assets(data);
 	init_map(data, map_path);

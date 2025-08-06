@@ -12,7 +12,7 @@ LDFLAGS = $(MLX_FLAGS)
 LDFLAGS += -g -fsanitize=address
 SRCS = get_next_*.c utils_*.c init_game.c event_loops.c main.c
 
-NAME = test
+NAME = so_long
 MAP_DIR = maps
 MAP ?= map.ber
 
