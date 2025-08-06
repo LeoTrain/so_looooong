@@ -22,7 +22,6 @@ int	load_image(void *mlx, void **img, char *path, int *w, int *h)
 
 static void	draw_at_pos(t_data *data, t_position current_pos, t_position current_tile)
 {
-	printf("%c\n", data->map.map[current_tile.y][current_tile.x]);
 	if (data->map.map[current_tile.y][current_tile.x] == '1')
 		mlx_put_image_to_window(data->mlx, data->win, data->assets.wall.img, current_pos.x, current_pos.y);
 	else if (data->map.map[current_tile.y][current_tile.x] == '0' ||
@@ -53,10 +52,10 @@ void	draw(t_data *data)
 
 	mlx_clear_window(data->mlx, data->win);
 	current_tile.y = 0;
-	while (data->map.map[current_tile.y])
+	while (current_tile.y < data->map.tile_size.y)
 	{
 		current_tile.x = 0;
-		while (current_tile.x < (int)ft_strlen(data->map.map[current_tile.y]))
+		while (current_tile.x < data->map.tile_size.x)
 		{
 			current_pos.x = (current_tile.x * TILE_SIZE) + data->offset.x;
 			current_pos.y = (current_tile.y * TILE_SIZE) + data->offset.y;

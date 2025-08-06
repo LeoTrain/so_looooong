@@ -30,12 +30,12 @@ int	is_next_tile_wall(t_data *data, int x, int y)
 {
 	t_position	next;
 
-	next.x = data->map.player_position.x + x;
-	next.y = data->map.player_position.y + y;
+	next.x = data->map.player_tile_position.x + x;
+	next.y = data->map.player_tile_position.y + y;
 	return (is_not_in_border(data, next) || is_wall(data, next));
 }
 
 int	is_on_exit(t_data *data)
 {
-	return (is_same(data->map.player_position, data->map.exit_position));
+	return (is_same(data->map.player_tile_position, data->map.exit_position));
 }

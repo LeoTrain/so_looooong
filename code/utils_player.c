@@ -16,6 +16,6 @@ void	set_player_pos(t_data *data, t_position pos)
 {
 	data->map.player_tile_position.x = pos.x;
 	data->map.player_tile_position.y = pos.y;
-	data->map.player_position.x = pos.x * TILE_SIZE * TILE_SIZE + TILE_SIZE;
+	data->map.player_position.x = pos.x * TILE_SIZE + TILE_SIZE;
 	data->map.player_position.y = (pos.y * TILE_SIZE) + TILE_SIZE;
 }

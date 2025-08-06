@@ -75,13 +75,13 @@ int	is_on_collectible(t_data *data)
 	int	i;
 
 	i = 0;
-	if (data->map.map[data->map.player_position.y][data->map.player_position.x] == 'C')
+	if (data->map.map[data->map.player_tile_position.y][data->map.player_tile_position.x] == 'C')
 	{
 		while (i < data->collectibles.count)
 		{
-			if (is_same(data->collectibles.collectibles[i].position, data->map.player_position))
+			if (is_same(data->collectibles.collectibles[i].position, data->map.player_tile_position))
 			{
-				data->map.map[data->map.player_position.y][data->map.player_position.x] = '0';
+				data->map.map[data->map.player_tile_position.y][data->map.player_tile_position.x] = '0';
 				data->collectibles.collectibles[i].collected = 1;
 			}
 			i++;

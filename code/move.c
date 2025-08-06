@@ -14,16 +14,30 @@
 
 void	move(char *direction, t_data *data)
 {
-	if (!data->current_moves)
-		data->current_moves = 0;
-	data->current_moves++;
 	if (ft_strcmp(direction, "left") == 0)
+	{
 		data->offset.x += TILE_SIZE;
+		data->map.player_tile_position.x--;
+		data->map.player_position.x -= TILE_SIZE;
+	}
 	if (ft_strcmp(direction, "right") == 0)
+	{
 		data->offset.x -= TILE_SIZE;
+		data->map.player_tile_position.x++;
+		data->map.player_position.x += TILE_SIZE;
+	}
 	if (ft_strcmp(direction, "down") == 0)
+	{
 		data->offset.y += TILE_SIZE;
+		data->map.player_tile_position.y--;
+		data->map.player_position.y -= TILE_SIZE;
+	}
 	if (ft_strcmp(direction, "up") == 0)
+	{
 		data->offset.y -= TILE_SIZE;
+		data->map.player_tile_position.y++;
+		data->map.player_position.y += TILE_SIZE;
+	}
+	data->current_moves++;
 	ft_printf("Current Moves: %d\n", data->current_moves);
 }
