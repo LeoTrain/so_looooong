@@ -24,7 +24,7 @@ static int	check_map_at_pos(t_data *data, int x, int y)
 	return (1);
 }
 
-void	check_is_makeable(t_data *data, int x, int y)
+static void	check_is_makeable(t_data *data, int x, int y)
 {
 	if (check_map_at_pos(data, x, y) == -1)
 		return ;

@@ -6,13 +6,13 @@
 /*   By: leberton <leberton@42vienna.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/03 21:44:55 by leberton          #+#    #+#             */
-/*   Updated: 2025/08/03 21:14:54 by leberton         ###   ########.fr       */
+/*   Updated: 2025/08/06 20:19:06 by leberton         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "so_long.h"
 
-static int count_collectible(t_data *data)
+static int count_collectibles(t_data *data)
 {
 	char	*line;
 	int		i;
@@ -52,20 +52,14 @@ void add_collectible(t_data *data, t_position pos)
 
 int is_all_collectibles_collected(t_data *data)
 {
-	int	y;
-	int	x;
+	int	i;
 
-	y = 0;
-	while (y < data->map.tile_size.y)
+	i = 0;
+	while (i < data->collectibles.count)
 	{
-		x = 0;
-		while (x < data->map.tile_size.x)
-		{
-			if (data->map.map[y][x] == 'C')
-				return (0);
-			x++;
-		}
-		y++;
+		if (data->collectibles.collectibles[i].collected == 0)
+			return (0);
+		i++;
 	}
 	return (1);
 }
@@ -93,14 +87,14 @@ int	is_on_collectible(t_data *data)
 
 void	create_collectibles(t_data *data)
 {
-	int collectible_amount;
+	int count;
 
-	collectible_amount = count_collectible(data);
-	if (collectible_amount == 2001)
+	count = count_collectibles(data);
+	if (count == 2001)
 		exit_error("Error\nopening the map. Does the file exist ?", data);
-	if (collectible_amount == 0)
+	if (count == 0)
 		exit_error("Error\nno collectibles found or count failed.", data);
-	data->collectibles.collectibles = calloc(collectible_amount, sizeof(t_collectible));
+	data->collectibles.collectibles = calloc(count, sizeof(t_collectible));
 	if (!data->collectibles.collectibles)
 		exit_error("Error\ncalloc for collectibles failed.", data);
 	data->collectibles.count = 0;

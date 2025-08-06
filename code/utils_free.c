@@ -11,7 +11,7 @@
 
 #include "so_long.h"
 
-void	free_images(t_data *data)
+static void	free_images(t_data *data)
 {
 	if (data->assets.character.img)
 		mlx_destroy_image(data->mlx, data->assets.character.img);
@@ -25,7 +25,7 @@ void	free_images(t_data *data)
 		mlx_destroy_image(data->mlx, data->assets.exit.img);
 }
 
-void	free_map(t_data *data, int and_map)
+static void	free_map(t_data *data, int and_map)
 {
 	int	i;
 

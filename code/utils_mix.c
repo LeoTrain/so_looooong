@@ -1,16 +1,36 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   utils_init.c                                       :+:      :+:    :+:   */
+/*   utils_mix.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: leberton <leberton@42vienna.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/08/03 20:35:02 by leberton          #+#    #+#             */
-/*   Updated: 2025/08/03 21:06:58 by leberton         ###   ########.fr       */
+/*   Created: 2025/08/06 19:59:18 by leberton          #+#    #+#             */
+/*   Updated: 2025/08/06 20:07:46 by leberton         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "so_long.h"
+
+long	get_time_in_ms(void)
+{
+	struct	timeval	timev;
+	gettimeofday(&timev, NULL);
+	return (timev.tv_sec * 1000 + timev.tv_usec / 1000);
+}
+
+int	is_same(t_position a, t_position b)
+{
+	return (a.x == b.x && a.y == b.y);
+}
+
+void	set_player_pos(t_data *data, t_position pos)
+{
+	data->map.player_tile_position.x = pos.x;
+	data->map.player_tile_position.y = pos.y;
+	data->map.player_position.x = pos.x * TILE_SIZE + TILE_SIZE;
+	data->map.player_position.y = (pos.y * TILE_SIZE) + TILE_SIZE;
+}
 
 void	load_all_images(t_data *data)
 {
@@ -24,4 +44,34 @@ void	load_all_images(t_data *data)
 		exit_error("Error\nloading the collectible image.", data);
 	if (!load_image(data->mlx, (void **)&data->assets.exit.img, data->assets.exit.path, &data->map.tile_size.x, &data->map.tile_size.y))
 		exit_error("Error\nloading the exit image.", data);
+}
+
+void	move(char *direction, t_data *data)
+{
+	if (ft_strcmp(direction, "left") == 0)
+	{
+		data->offset.x += TILE_SIZE;
+		data->map.player_tile_position.x--;
+		data->map.player_position.x -= TILE_SIZE;
+	}
+	if (ft_strcmp(direction, "right") == 0)
+	{
+		data->offset.x -= TILE_SIZE;
+		data->map.player_tile_position.x++;
+		data->map.player_position.x += TILE_SIZE;
+	}
+	if (ft_strcmp(direction, "down") == 0)
+	{
+		data->offset.y += TILE_SIZE;
+		data->map.player_tile_position.y--;
+		data->map.player_position.y -= TILE_SIZE;
+	}
+	if (ft_strcmp(direction, "up") == 0)
+	{
+		data->offset.y -= TILE_SIZE;
+		data->map.player_tile_position.y++;
+		data->map.player_position.y += TILE_SIZE;
+	}
+	data->current_moves++;
+	ft_printf("Current Moves: %d\n", data->current_moves);
 }

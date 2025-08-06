@@ -6,7 +6,7 @@
 /*   By: leberton <leberton@42vienna.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/03 22:00:00 by leberton          #+#    #+#             */
-/*   Updated: 2025/08/03 19:35:44 by leberton         ###   ########.fr       */
+/*   Updated: 2025/08/06 20:13:37 by leberton         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ static void	draw_moves(t_data *data)
 
 void	draw(t_data *data)
 {
-	int			half_win_size;
+	t_position	half_win_size;
 	t_position	current_tile;
 	t_position	current_pos;
 
@@ -64,8 +64,9 @@ void	draw(t_data *data)
 		}
 		current_tile.y++;
 	}
-	half_win_size = (data->win_size / 2) - TILE_SIZE;
-	mlx_put_image_to_window(data->mlx, data->win, data->assets.character.img, half_win_size, half_win_size);
+	half_win_size.x = (data->win_width / 2) - TILE_SIZE;
+	half_win_size.y = (data->win_height / 2) - TILE_SIZE;
+	mlx_put_image_to_window(data->mlx, data->win, data->assets.character.img, half_win_size.x, half_win_size.y);
 	draw_moves(data);
 }
 

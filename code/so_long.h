@@ -73,7 +73,8 @@ typedef struct s_data
 {
 	void				*mlx;
 	void				*win;
-	int					win_size;
+	int					win_width;
+	int					win_height;
 	t_position			offset;
 	t_assets			assets;
 	t_map				map;
@@ -117,12 +118,10 @@ long	get_time_in_ms(void);
 void	draw(t_data *data);
 int		key_hook(int keycode, t_data *data);
 int		loop_hook(t_data *data);
-void	free_map(t_data *data, int and_map);
 void	free_all(t_data *data);
 
 void	move(char *direction, t_data *data);
 
-void	check_is_makeable(t_data *data, int x, int y);
 void	is_makeable(t_data *data);
 
 #endif

@@ -1,4 +1,14 @@
-//HEADER
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   utils_map_set.c                                    :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: leberton <leberton@42vienna.com>           +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/08/06 20:24:13 by leberton          #+#    #+#             */
+/*   Updated: 2025/08/06 20:24:51 by leberton         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
 #include "so_long.h"
 
@@ -49,4 +59,3 @@ void	allocate_for_map(t_data *data)
 	if (!data->map.map_is_makeable)
 		exit_error("Error\nallocating for is_makeable.", data);
 }
-

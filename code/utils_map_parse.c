@@ -43,8 +43,8 @@ void	set_player(t_data *data, int y, char *line, char *e)
 	player_pos.y = y;
 	player_pos.x = (int)(e - line);
 	set_player_pos(data, player_pos);
-	data->offset.x = (data->win_size / 2) - data->map.player_position.x;
-	data->offset.y = (data->win_size / 2) - data->map.player_position.y;
+	data->offset.x = (data->win_width / 2) - data->map.player_position.x;
+	data->offset.y = (data->win_height / 2) - data->map.player_position.y;
 }
 
 void	set_exit(t_data *data, int y, char *line, char *e)

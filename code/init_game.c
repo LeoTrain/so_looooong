@@ -6,7 +6,7 @@
 /*   By: leberton <leberton@42vienna.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/08 19:29:10 by leberton          #+#    #+#             */
-/*   Updated: 2025/08/03 21:18:14 by leberton         ###   ########.fr       */
+/*   Updated: 2025/08/06 20:12:24 by leberton         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,8 +17,9 @@ static void	init_mlx(t_data *data)
 	data->mlx = mlx_init();
 	if (!data->mlx)
 		exit_error("Error\ncreating the mlx variable.", data);
-	data->win_size = 800; //20 * TILE_SIZE;
-	data->win = mlx_new_window(data->mlx, data->win_size, data->win_size, "Test1");
+	data->win_width = 640;
+	data->win_height = 360;
+	data->win = mlx_new_window(data->mlx, data->win_width, data->win_height, "Test1");
 	if (!data->win)
 		exit_error("Error\ncreating the window.", data);
 }

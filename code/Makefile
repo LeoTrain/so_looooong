@@ -10,7 +10,7 @@ CC = cc -std=gnu11
 CFLAGS = -Wall -Wextra -Werror -g -fsanitize=address $(MLX_INC)
 LDFLAGS = $(MLX_FLAGS)
 LDFLAGS += -g -fsanitize=address
-SRCS = is_makeable.c init_game.c move.c event_loops.c get_next_*.c utils_*.c main.c
+SRCS = get_next_*.c utils_*.c init_game.c event_loops.c main.c
 
 NAME = test
 MAP_DIR = maps
