@@ -12,7 +12,7 @@
 
 #include "so_long.h"
 
-static int count_collectibles(t_data *data)
+static int	count_collectibles(t_data *data)
 {
 	char	*line;
 	int		i;
@@ -22,7 +22,8 @@ static int count_collectibles(t_data *data)
 	if (data->current_fd < 0)
 		return (2001);
 	count = 0;
-	while ((line = get_next_line(data->current_fd)) != NULL)
+	line = get_next_line(data->current_fd);
+	while (line != NULL)
 	{
 		i = 0;
 		while (line[i])
@@ -32,25 +33,31 @@ static int count_collectibles(t_data *data)
 			i++;
 		}
 		free(line);
+		line = get_next_line(data->current_fd);
 	}
 	close(data->current_fd);
 	data->current_fd = 0;
+	printf("→ Total collectibles counted: %d\n", count);
 	return (count);
 }
 
-void add_collectible(t_data *data, t_position pos)
+void	add_collectible(t_data *data, t_position pos)
 {
-	t_collectible new_collectible;
+	t_collectible	new_collectible;
 
-	new_collectible.position = pos;
-	new_collectible.collected = 0;
 	if (!data->collectibles.collectibles)
 		exit_error("No collectible initialized.", data);
+	printf("Count: %d\n", data->collectibles.count);
+	printf("Capacity: %d\n", data->collectibles.capacity);
+	if (data->collectibles.count >= data->collectibles.capacity)
+		exit_error("Too many collectibles.", data);
+	new_collectible.position = pos;
+	new_collectible.collected = 0;
 	data->collectibles.collectibles[data->collectibles.count] = new_collectible;
 	data->collectibles.count++;
 }
 
-int is_all_collectibles_collected(t_data *data)
+int	is_all_collectibles_collected(t_data *data)
 {
 	int	i;
 
@@ -66,16 +73,20 @@ int is_all_collectibles_collected(t_data *data)
 
 int	is_on_collectible(t_data *data)
 {
-	int	i;
+	int			i;
+	t_position	pos;
 
 	i = 0;
-	if (data->map.map[data->map.player_tile_position.y][data->map.player_tile_position.x] == 'C')
+	pos.x = data->map.player_tile_position.x;
+	pos.y = data->map.player_tile_position.y;
+	if (data->map.map[pos.y][pos.x] == 'C')
 	{
 		while (i < data->collectibles.count)
 		{
-			if (is_same(data->collectibles.collectibles[i].position, data->map.player_tile_position))
+			if (is_same(data->collectibles.collectibles[i].position,
+					data->map.player_tile_position))
 			{
-				data->map.map[data->map.player_tile_position.y][data->map.player_tile_position.x] = '0';
+				data->map.map[pos.y][pos.x] = '0';
 				data->collectibles.collectibles[i].collected = 1;
 			}
 			i++;
@@ -87,7 +98,7 @@ int	is_on_collectible(t_data *data)
 
 void	create_collectibles(t_data *data)
 {
-	int count;
+	int	count;
 
 	count = count_collectibles(data);
 	if (count == 2001)
@@ -97,5 +108,6 @@ void	create_collectibles(t_data *data)
 	data->collectibles.collectibles = calloc(count, sizeof(t_collectible));
 	if (!data->collectibles.collectibles)
 		exit_error("Error\ncalloc for collectibles failed.", data);
+	data->collectibles.capacity = count;
 	data->collectibles.count = 0;
 }

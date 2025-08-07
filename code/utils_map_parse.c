@@ -6,7 +6,7 @@
 /*   By: leberton <leberton@42vienna.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/06 21:03:24 by leberton          #+#    #+#             */
-/*   Updated: 2025/08/06 21:05:11 by leberton         ###   ########.fr       */
+/*   Updated: 2025/08/07 11:43:44 by leberton         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,11 +79,13 @@ void	set_collectible(t_data *data, int y, char *line)
 	char		*e;
 
 	e = line;
-	while ((e = strchr(e, 'C')) != NULL)
+	e = ft_strchr(e, 'C');
+	while (e != NULL)
 	{
 		col.x = (int)(e - line);
 		col.y = y;
 		add_collectible(data, col);
 		e++;
+		e = ft_strchr(e, 'C');
 	}
 }

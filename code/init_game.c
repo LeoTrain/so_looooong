@@ -19,7 +19,8 @@ static void	init_mlx(t_data *data)
 		exit_error("Error\ncreating the mlx variable.", data);
 	data->win_width = 640;
 	data->win_height = 360;
-	data->win = mlx_new_window(data->mlx, data->win_width, data->win_height, "Test1");
+	data->win = mlx_new_window(data->mlx, data->win_width, data->win_height,
+			"idk");
 	if (!data->win)
 		exit_error("Error\ncreating the window.", data);
 }

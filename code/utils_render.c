@@ -12,30 +12,34 @@
 
 #include "so_long.h"
 
-int	load_image(void *mlx, void **img, char *path, int *w, int *h)
+int	load_image(void *mlx, void **img, char *path, t_position size)
 {
-	*img = mlx_xpm_file_to_image(mlx, path, w, h);
+	*img = mlx_xpm_file_to_image(mlx, path, &size.x, &size.y);
 	if (!*img)
 		return (0);
 	return (1);
 }
 
-static void	draw_at_pos(t_data *data, t_position current_pos, t_position current_tile)
+static void	draw_at_pos(t_data *data, t_position curr_pos, t_position curr_tile)
 {
-	if (data->map.map[current_tile.y][current_tile.x] == '1')
-		mlx_put_image_to_window(data->mlx, data->win, data->assets.wall.img, current_pos.x, current_pos.y);
-	else if (data->map.map[current_tile.y][current_tile.x] == '0' ||
-			 data->map.map[current_tile.y][current_tile.x] == 'P')
-		mlx_put_image_to_window(data->mlx, data->win, data->assets.grass.img, current_pos.x, current_pos.y);
-	else if (data->map.map[current_tile.y][current_tile.x] == 'C')
-		mlx_put_image_to_window(data->mlx, data->win, data->assets.collectible.img, current_pos.x, current_pos.y);
-	else if (data->map.map[current_tile.y][current_tile.x] == 'E')
-		mlx_put_image_to_window(data->mlx, data->win, data->assets.exit.img, current_pos.x, current_pos.y);
+	if (data->map.map[curr_tile.y][curr_tile.x] == '1')
+		mlx_put_image_to_window(data->mlx, data->win, data->assets.wall.img,
+			curr_pos.x, curr_pos.y);
+	else if (data->map.map[curr_tile.y][curr_tile.x] == '0' ||
+			data->map.map[curr_tile.y][curr_tile.x] == 'P')
+		mlx_put_image_to_window(data->mlx, data->win, data->assets.grass.img,
+			curr_pos.x, curr_pos.y);
+	else if (data->map.map[curr_tile.y][curr_tile.x] == 'C')
+		mlx_put_image_to_window(data->mlx, data->win,
+			data->assets.collectible.img, curr_pos.x, curr_pos.y);
+	else if (data->map.map[curr_tile.y][curr_tile.x] == 'E')
+		mlx_put_image_to_window(data->mlx, data->win, data->assets.exit.img,
+			curr_pos.x, curr_pos.y);
 }
 
 static void	draw_moves(t_data *data)
 {
-	char *moves_str;
+	char	*moves_str;
 
 	moves_str = ft_itoa(data->current_moves);
 	if (!moves_str)
@@ -66,7 +70,7 @@ void	draw(t_data *data)
 	}
 	half_win_size.x = (data->win_width / 2) - TILE_SIZE;
 	half_win_size.y = (data->win_height / 2) - TILE_SIZE;
-	mlx_put_image_to_window(data->mlx, data->win, data->assets.character.img, half_win_size.x, half_win_size.y);
+	mlx_put_image_to_window(data->mlx, data->win, data->assets.character.img,
+		half_win_size.x, half_win_size.y);
 	draw_moves(data);
 }
-

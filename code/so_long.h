@@ -24,6 +24,8 @@ typedef enum e_simple_direction
 	stand = 0
 }	t_simple_direction;
 
+typedef int (*key_hook_t)(int, void *);
+
 typedef struct s_position
 {
 	int		x;
@@ -67,6 +69,7 @@ typedef struct s_collectible_list
 {
 	t_collectible	*collectibles;
 	int				count;
+	int				capacity;
 }					t_collectible_list;
 
 typedef struct s_data
@@ -93,7 +96,7 @@ int		pressed_on_x(void *data);
 int		ft_strcmp(char *s1, char *s2);
 
 void	init_game(t_data *data, char *map_path);
-int		load_image(void *mlx, void **img, char *path, int *w, int *h);
+int		load_image(void *mlx, void **img, char *path, t_position size);
 void	load_all_images(t_data *data);
 
 int		is_same(t_position a, t_position b);

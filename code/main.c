@@ -12,14 +12,14 @@
 
 #include "so_long.h"
 
-int main(int argc, char **argv)
+int	main(int argc, char **argv)
 {
 	t_data	data;
 
 	if (argc != 2)
 		exit_error("Error\ncorrect use case ./program_name <map.file>.", &data);
 	init_game(&data, argv[1]);
-	mlx_key_hook(data.win, (int (*)(int, void *))key_hook, &data);
+	mlx_key_hook(data.win, (key_hook_t) key_hook, &data);
 	mlx_hook(data.win, 17, 0, pressed_on_x, &data);
 	mlx_loop_hook(data.mlx, (int (*)(void *))loop_hook, &data);
 	mlx_loop(data.mlx);

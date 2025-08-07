@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   is_makeable.c                                      :+:      :+:    :+:   */
+/*   utils_validity.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: leberton <leberton@42vienna.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/03 18:06:50 by leberton          #+#    #+#             */
-/*   Updated: 2025/08/03 21:18:26 by leberton         ###   ########.fr       */
+/*   Updated: 2025/08/07 11:35:55 by leberton         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,8 @@
 
 static int	check_map_at_pos(t_data *data, int x, int y)
 {
-	if (data->map.map_is_makeable[y][x] == '1' || data->map.map_is_makeable[y][x] == 'V')
+	if (data->map.map_is_makeable[y][x] == '1'
+		|| data->map.map_is_makeable[y][x] == 'V')
 		return (-1);
 	if (data->map.map_is_makeable[y][x] == 'C')
 		data->found_collectible++;
@@ -36,10 +37,13 @@ static void	check_is_makeable(t_data *data, int x, int y)
 
 void	is_makeable(t_data *data)
 {
+	int	x;
+	int	y;
+
 	data->found_collectible = 0;
-	check_is_makeable(data, data->map.player_tile_position.x , data->map.player_tile_position.y);
-	printf("Found: %d\n", data->found_collectible);
-	printf("Existing: %d\n", data->collectibles.count);
+	x = data->map.player_tile_position.x;
+	y = data->map.player_tile_position.y;
+	check_is_makeable(data, x, y);
 	if (data->found_collectible != data->collectibles.count)
 		exit_error("Error\nnot found all collectibles.\n", data);
 	if (data->found_exit != 1)

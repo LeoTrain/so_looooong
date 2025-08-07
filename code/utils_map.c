@@ -33,23 +33,24 @@ static void	is_surrounded_by_wall(t_data *data)
 {
 	int	x;
 	int	y;
+	int	max_x;
+	int	max_y;
 
 	x = 0;
 	y = 0;
+	max_x = data->map.tile_size.x - 1;
+	max_y = data->map.tile_size.y - 1;
 	if (data->map.map)
 	{
 		while (y < data->map.tile_size.y)
 		{
-			if (data->map.map[y][0] != '1' || data->map.map[y][data->map.tile_size.x - 1] != '1')
-			{
-				ft_printf("Wall at y == %d = %c or %c\n", y, data->map.map[y][0], data->map.map[y][data->map.tile_size.x - 1]);
+			if (data->map.map[y][0] != '1' || data->map.map[y][max_x] != '1')
 				exit_error("Error\nmap is not surrounded by walls.\n", data);
-			}
 			y++;
 		}
 		while (x < data->map.tile_size.x)
 		{
-			if (data->map.map[0][x] != '1' || data->map.map[data->map.tile_size.y - 1][x] != '1')
+			if (data->map.map[0][x] != '1' || data->map.map[max_y][x] != '1')
 				exit_error("Error\nmap is not surrounded by walls.\n", data);
 			x++;
 		}

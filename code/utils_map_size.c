@@ -6,7 +6,7 @@
 /*   By: leberton <leberton@42vienna.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/06 20:24:57 by leberton          #+#    #+#             */
-/*   Updated: 2025/08/06 20:24:58 by leberton         ###   ########.fr       */
+/*   Updated: 2025/08/07 11:39:29 by leberton         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,10 +21,12 @@ static int	get_map_height(t_data *data)
 	data->current_fd = open(data->map.path, O_RDONLY);
 	if (data->current_fd < 0)
 		exit_error("Error\nopening the map", data);
-	while ((line = get_next_line(data->current_fd)) != NULL)
+	line = get_next_line(data->current_fd);
+	while (line != NULL)
 	{
 		height++;
 		free(line);
+		line = get_next_line(data->current_fd);
 	}
 	close(data->current_fd);
 	data->current_fd = 0;
@@ -42,12 +44,14 @@ static int	get_map_width(t_data *data)
 	data->current_fd = open(data->map.path, O_RDONLY);
 	if (data->current_fd < 0)
 		exit_error("Error\nopening the map", data);
-	while ((line = get_next_line(data->current_fd)) != NULL)
+	line = get_next_line(data->current_fd);
+	while (line != NULL)
 	{
 		current_width = ft_strlen(line);
 		if (current_width > max_width)
 			max_width = current_width;
 		free(line);
+		line = get_next_line(data->current_fd);
 	}
 	close(data->current_fd);
 	data->current_fd = 0;

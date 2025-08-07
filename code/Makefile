@@ -35,12 +35,5 @@ fclean: clean
 
 re: fclean all
 
-play: re
-	./$(NAME) $(MAP_DIR)/$(MAP)
-
-val: re
-	valgrind --leak-check=full --track-origins=yes ./$(NAME) $(MAP_DIR)/$(MAP)
-
-fun: re
-	funcheck -ac ./$(NAME) $(MAP_DIR)/$(MAP)
-
+bear:
+	bear -- make re

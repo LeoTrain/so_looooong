@@ -14,7 +14,8 @@
 
 long	get_time_in_ms(void)
 {
-	struct	timeval	timev;
+	struct timeval	timev;
+
 	gettimeofday(&timev, NULL);
 	return (timev.tv_sec * 1000 + timev.tv_usec / 1000);
 }
@@ -34,44 +35,19 @@ void	set_player_pos(t_data *data, t_position pos)
 
 void	load_all_images(t_data *data)
 {
-	if (!load_image(data->mlx, (void **)&data->assets.character.img, data->assets.character.path, &data->map.tile_size.x, &data->map.tile_size.y))
+	if (!load_image(data->mlx, (void **)&data->assets.character.img,
+			data->assets.character.path, data->map.tile_size))
 		exit_error("Error\nloading the character image.", data);
-	if (!load_image(data->mlx, (void **)&data->assets.grass.img, data->assets.grass.path, &data->map.tile_size.x, &data->map.tile_size.y))
+	if (!load_image(data->mlx, (void **)&data->assets.grass.img,
+			data->assets.grass.path, data->map.tile_size))
 		exit_error("Error\nloading the grass image.", data);
-	if (!load_image(data->mlx, (void **)&data->assets.wall.img, data->assets.wall.path, &data->map.tile_size.x, &data->map.tile_size.y))
+	if (!load_image(data->mlx, (void **)&data->assets.wall.img,
+			data->assets.wall.path, data->map.tile_size))
 		exit_error("Error\nloading the wall image.", data);
-	if (!load_image(data->mlx, (void **)&data->assets.collectible.img, data->assets.collectible.path, &data->map.tile_size.x, &data->map.tile_size.y))
+	if (!load_image(data->mlx, (void **)&data->assets.collectible.img,
+			data->assets.collectible.path, data->map.tile_size))
 		exit_error("Error\nloading the collectible image.", data);
-	if (!load_image(data->mlx, (void **)&data->assets.exit.img, data->assets.exit.path, &data->map.tile_size.x, &data->map.tile_size.y))
+	if (!load_image(data->mlx, (void **)&data->assets.exit.img,
+			data->assets.exit.path, data->map.tile_size))
 		exit_error("Error\nloading the exit image.", data);
-}
-
-void	move(char *direction, t_data *data)
-{
-	if (ft_strcmp(direction, "left") == 0)
-	{
-		data->offset.x += TILE_SIZE;
-		data->map.player_tile_position.x--;
-		data->map.player_position.x -= TILE_SIZE;
-	}
-	if (ft_strcmp(direction, "right") == 0)
-	{
-		data->offset.x -= TILE_SIZE;
-		data->map.player_tile_position.x++;
-		data->map.player_position.x += TILE_SIZE;
-	}
-	if (ft_strcmp(direction, "down") == 0)
-	{
-		data->offset.y += TILE_SIZE;
-		data->map.player_tile_position.y--;
-		data->map.player_position.y -= TILE_SIZE;
-	}
-	if (ft_strcmp(direction, "up") == 0)
-	{
-		data->offset.y -= TILE_SIZE;
-		data->map.player_tile_position.y++;
-		data->map.player_position.y += TILE_SIZE;
-	}
-	data->current_moves++;
-	ft_printf("Current Moves: %d\n", data->current_moves);
 }

@@ -16,13 +16,13 @@ static void	react_uppon_keycode(t_data *data, int keycode)
 {
 	if (keycode == 65307 || keycode == 53)
 		exit_success("Player pressed ESC, quitting...", data);
-	if ((keycode == 119 || keycode == 13) && !is_next_tile_wall(data, stand, down))
+	if ((keycode == 119) && !is_next_tile_wall(data, stand, down))
 		move("down", data);
-	else if ((keycode == 115 || keycode == 1) && !is_next_tile_wall(data, stand, up))
+	else if ((keycode == 115) && !is_next_tile_wall(data, stand, up))
 		move("up", data);
-	else if ((keycode == 97 || keycode == 0) && !is_next_tile_wall(data, left, stand))
+	else if ((keycode == 97) && !is_next_tile_wall(data, left, stand))
 		move("left", data);
-	else if ((keycode == 100 || keycode == 2) && !is_next_tile_wall(data, right, stand))
+	else if ((keycode == 100) && !is_next_tile_wall(data, right, stand))
 		move("right", data);
 }
 
