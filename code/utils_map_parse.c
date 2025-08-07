@@ -6,13 +6,13 @@
 /*   By: leberton <leberton@42vienna.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/06 21:03:24 by leberton          #+#    #+#             */
-/*   Updated: 2025/08/07 11:43:44 by leberton         ###   ########.fr       */
+/*   Updated: 2025/08/07 17:30:20 by leberton         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "so_long.h"
 
-static void	free_current_map(t_data *data, int i)
+void	free_current_map(t_data *data, int i)
 {
 	while (--i >= 0)
 	{
@@ -25,7 +25,7 @@ static void	free_current_map(t_data *data, int i)
 	data->map.map = NULL;
 }
 
-static int	is_another_on_line(char c, char *line)
+int	is_another_on_line(char c, char *line)
 {
 	int		found;
 	char	*p_line;

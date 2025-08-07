@@ -6,7 +6,7 @@
 /*   By: leberton <leberton@42vienna.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/03 22:00:00 by leberton          #+#    #+#             */
-/*   Updated: 2025/08/06 20:13:37 by leberton         ###   ########.fr       */
+/*   Updated: 2025/08/07 17:26:53 by leberton         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,8 @@ static void	draw_at_pos(t_data *data, t_position curr_pos, t_position curr_tile)
 		mlx_put_image_to_window(data->mlx, data->win, data->assets.wall.img,
 			curr_pos.x, curr_pos.y);
 	else if (data->map.map[curr_tile.y][curr_tile.x] == '0' ||
-			data->map.map[curr_tile.y][curr_tile.x] == 'P')
+			data->map.map[curr_tile.y][curr_tile.x] == 'P' ||
+			data->map.map[curr_tile.y][curr_tile.x] == 'X')
 		mlx_put_image_to_window(data->mlx, data->win, data->assets.grass.img,
 			curr_pos.x, curr_pos.y);
 	else if (data->map.map[curr_tile.y][curr_tile.x] == 'C')
@@ -37,24 +38,11 @@ static void	draw_at_pos(t_data *data, t_position curr_pos, t_position curr_tile)
 			curr_pos.x, curr_pos.y);
 }
 
-static void	draw_moves(t_data *data)
+static void	draw_map(t_data *data)
 {
-	char	*moves_str;
-
-	moves_str = ft_itoa(data->current_moves);
-	if (!moves_str)
-		return ;
-	mlx_string_put(data->mlx, data->win, 10, 10, 0xFFFFFF, moves_str);
-	free(moves_str);
-}
-
-void	draw(t_data *data)
-{
-	t_position	half_win_size;
 	t_position	current_tile;
 	t_position	current_pos;
 
-	mlx_clear_window(data->mlx, data->win);
 	current_tile.y = 0;
 	while (current_tile.y < data->map.tile_size.y)
 	{
@@ -68,9 +56,33 @@ void	draw(t_data *data)
 		}
 		current_tile.y++;
 	}
+}
+
+static void	draw_characters(t_data *data)
+{
+	t_position	half_win_size;
+
 	half_win_size.x = (data->win_width / 2) - TILE_SIZE;
 	half_win_size.y = (data->win_height / 2) - TILE_SIZE;
-	mlx_put_image_to_window(data->mlx, data->win, data->assets.character.img,
-		half_win_size.x, half_win_size.y);
-	draw_moves(data);
+	mlx_put_image_to_window(data->mlx, data->win,
+		data->assets.character.img, half_win_size.x, half_win_size.y);
+	if (data->is_enemy_set)
+	{
+		draw_enemy(data);
+		draw_caught_message(data);
+	}
+}
+
+void	draw(t_data *data)
+{
+	char	*moves_str;
+
+	mlx_clear_window(data->mlx, data->win);
+	draw_map(data);
+	draw_characters(data);
+	moves_str = ft_itoa(data->current_moves);
+	if (!moves_str)
+		return ;
+	mlx_string_put(data->mlx, data->win, 10, 10, 0xFFFFFF, moves_str);
+	free(moves_str);
 }

@@ -28,6 +28,7 @@ static void	init_mlx(t_data *data)
 static void	init_assets(t_data *data)
 {
 	data->assets.character.path = "assets/xpm/64x/normal_amazed.xpm";
+	data->assets.enemy.path = "assets/xpm/64x/enemy.xpm";
 	data->assets.grass.path = "assets/xpm/64x/empty_space.xpm";
 	data->assets.wall.path = "assets/xpm/64x/wall.xpm";
 	data->assets.collectible.path = "assets/xpm/64x/collectible.xpm";
@@ -48,6 +49,7 @@ static void	init_data(t_data *data, char *map_path)
 {
 	data->found_collectible = -1;
 	data->found_exit = -1;
+	data->is_enemy_set = -1;
 	data->is_player_set = -1;
 	data->is_exit_set = -1;
 	data->current_fd = -1;

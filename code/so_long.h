@@ -41,6 +41,7 @@ typedef struct s_xpm_img
 typedef struct s_assets
 {
 	t_xpm_img	character;
+	t_xpm_img	enemy;
 	t_xpm_img	grass;
 	t_xpm_img	wall;
 	t_xpm_img	collectible;
@@ -57,6 +58,8 @@ typedef struct s_map
 	t_position	exit_position;
 	t_position	player_position;
 	t_position	player_tile_position;
+	t_position	enemy_position;
+	t_position	enemy_tile_position;
 }				t_map;
 
 typedef struct s_collectible
@@ -86,7 +89,9 @@ typedef struct s_data
 	int					found_exit;
 	int					current_moves;
 	int					is_player_set;
+	int					is_enemy_set;
 	int					is_exit_set;
+	int					is_player_caught;
 	int					current_fd;
 }						t_data;
 
@@ -109,9 +114,12 @@ void	create_collectibles(t_data *data);
 void	add_collectible(t_data *data, t_position pos);
 void	get_map_size(t_data *data);
 void	set_map(t_data	*data);
+int		is_another_on_line(char c, char *line);
+void	free_current_map(t_data *data, int i);
 void	set_collectible(t_data *data, int y, char *line);
 void	set_exit(t_data *data, int y, char *line, char *e);
 void	set_player(t_data *data, int y, char *line, char *e);
+void	set_enemy(t_data *data, int y, char *line, char *e);
 void	parse_map(t_data *data);
 void	allocate_for_map(t_data	*data);
 void	get_map_measurements(t_data *data);
@@ -124,7 +132,11 @@ int		loop_hook(t_data *data);
 void	free_all(t_data *data);
 
 void	move(char *direction, t_data *data);
+void	move_enemy(char *direction, t_data *data);
 
 void	is_makeable(t_data *data);
+void	track_player(t_data *data);
+void	draw_caught_message(t_data *data);
+void	draw_enemy(t_data *data);
 
 #endif

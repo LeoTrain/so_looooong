@@ -6,7 +6,7 @@
 /*   By: leberton <leberton@42vienna.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/07 11:33:15 by leberton          #+#    #+#             */
-/*   Updated: 2025/08/07 11:35:18 by leberton         ###   ########.fr       */
+/*   Updated: 2025/08/07 17:27:05 by leberton         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@ static void	move_left(t_data *data)
 	data->offset.x += TILE_SIZE;
 	data->map.player_tile_position.x--;
 	data->map.player_position.x -= TILE_SIZE;
+	track_player(data);
 }
 
 static void	move_right(t_data *data)
@@ -24,6 +25,7 @@ static void	move_right(t_data *data)
 	data->offset.x -= TILE_SIZE;
 	data->map.player_tile_position.x++;
 	data->map.player_position.x += TILE_SIZE;
+	track_player(data);
 }
 
 static void	move_down(t_data *data)
@@ -31,6 +33,7 @@ static void	move_down(t_data *data)
 	data->offset.y += TILE_SIZE;
 	data->map.player_tile_position.y--;
 	data->map.player_position.y -= TILE_SIZE;
+	track_player(data);
 }
 
 static void	move_up(t_data *data)
@@ -38,6 +41,7 @@ static void	move_up(t_data *data)
 	data->offset.y -= TILE_SIZE;
 	data->map.player_tile_position.y++;
 	data->map.player_position.y += TILE_SIZE;
+	track_player(data);
 }
 
 void	move(char *direction, t_data *data)

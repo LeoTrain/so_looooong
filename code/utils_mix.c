@@ -38,6 +38,9 @@ void	load_all_images(t_data *data)
 	if (!load_image(data->mlx, (void **)&data->assets.character.img,
 			data->assets.character.path, data->map.tile_size))
 		exit_error("Error\nloading the character image.", data);
+	if (!load_image(data->mlx, (void **)&data->assets.enemy.img,
+			data->assets.enemy.path, data->map.tile_size))
+		exit_error("Error\nloading the character image.", data);
 	if (!load_image(data->mlx, (void **)&data->assets.grass.img,
 			data->assets.grass.path, data->map.tile_size))
 		exit_error("Error\nloading the grass image.", data);

@@ -6,7 +6,7 @@
 /*   By: leberton <leberton@42vienna.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/30 14:44:56 by leberton          #+#    #+#             */
-/*   Updated: 2025/08/03 21:10:18 by leberton         ###   ########.fr       */
+/*   Updated: 2025/08/07 17:31:10 by leberton         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,8 @@ static void	react_uppon_keycode(t_data *data, int keycode)
 {
 	if (keycode == 65307 || keycode == 53)
 		exit_success("Player pressed ESC, quitting...", data);
+	if (data->is_player_caught)
+		return ;
 	if ((keycode == 119) && !is_next_tile_wall(data, stand, down))
 		move("down", data);
 	else if ((keycode == 115) && !is_next_tile_wall(data, stand, up))
@@ -52,6 +54,10 @@ int	loop_hook(t_data *data)
 	{
 		last_time = current_time;
 		draw(data);
+		if (data->is_enemy_set)
+			if (is_same(data->map.player_tile_position,
+					data->map.enemy_tile_position))
+				data->is_player_caught = 1;
 	}
 	return (0);
 }

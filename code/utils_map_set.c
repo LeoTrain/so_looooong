@@ -25,6 +25,9 @@ static void	parse_map_line(t_data *data, char *line, int i)
 	e = ft_strchr(line, 'P');
 	if (e)
 		set_player(data, i, line, e);
+	e = ft_strchr(line, 'X');
+	if (e)
+		set_enemy(data, i, line, e);
 	e = ft_strchr(line, 'E');
 	if (e)
 		set_exit(data, i, line, e);

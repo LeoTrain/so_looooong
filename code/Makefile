@@ -11,6 +11,7 @@ CFLAGS = -Wall -Wextra -Werror -g -fsanitize=address $(MLX_INC)
 LDFLAGS = $(MLX_FLAGS)
 LDFLAGS += -g -fsanitize=address
 SRCS = get_next_*.c utils_*.c init_game.c event_loops.c main.c
+OBJS = $(SRCS:.c=.o)
 
 NAME = so_long
 MAP_DIR = maps
@@ -18,8 +19,11 @@ MAP ?= map.ber
 
 all: $(NAME)
 
-$(NAME): $(FT_PRINTF) $(MLX_LIB)
-	$(CC) $(CFLAGS) $(SRCS) $(MLX_LIB) $(FT_PRINTF) -o $(NAME) $(LDFLAGS)
+$(NAME): $(FT_PRINTF) $(MLX_LIB) $(OBJS)
+	$(CC) $(OBJS) $(MLX_LIB) $(FT_PRINTF) -o $(NAME) $(LDFLAGS)
+
+%.o: %.c
+	$(CC) $(CFLAGS) -c $< -o $@
 
 $(FT_PRINTF):
 	@make -C $(FT_PRINTF_DIR)
@@ -29,11 +33,12 @@ $(MLX_LIB):
 
 clean:
 	@make clean -C $(MLX_DIR)
+	rm -f $(OBJS)
 
 fclean: clean
 	rm -f $(NAME)
 
 re: fclean all
 
-bear:
-	bear -- make re
+bear: all
+	bear -- make
