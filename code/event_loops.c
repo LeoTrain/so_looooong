@@ -48,7 +48,7 @@ int	loop_hook(t_data *data)
 	if (last_time == 0)
 		last_time = get_time_in_ms();
 	current_time = get_time_in_ms();
-	if (current_time - last_time >= 200)
+	if (current_time - last_time >= 16)
 	{
 		last_time = current_time;
 		draw(data);
