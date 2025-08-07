@@ -33,4 +33,6 @@ test_map wrong/two_exit.ber 1
 test_map wrong/two_exit_same_line.ber 1
 test_map wrong/two_player_spawn.ber 1
 test_map wrong/two_player_spawn_same_line.ber 1
+test_map wrong/closed_labyrinth.ber 1
 test_map map.ber 0
+test_map labyrinth_correct.ber 0

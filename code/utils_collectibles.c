@@ -37,7 +37,6 @@ static int	count_collectibles(t_data *data)
 	}
 	close(data->current_fd);
 	data->current_fd = 0;
-	printf("→ Total collectibles counted: %d\n", count);
 	return (count);
 }
 
@@ -47,8 +46,6 @@ void	add_collectible(t_data *data, t_position pos)
 
 	if (!data->collectibles.collectibles)
 		exit_error("No collectible initialized.", data);
-	printf("Count: %d\n", data->collectibles.count);
-	printf("Capacity: %d\n", data->collectibles.capacity);
 	if (data->collectibles.count >= data->collectibles.capacity)
 		exit_error("Too many collectibles.", data);
 	new_collectible.position = pos;

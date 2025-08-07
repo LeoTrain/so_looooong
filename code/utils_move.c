@@ -51,5 +51,4 @@ void	move(char *direction, t_data *data)
 	if (ft_strcmp(direction, "up") == 0)
 		move_up(data);
 	data->current_moves++;
-	ft_printf("Current Moves: %d\n", data->current_moves);
 }
