@@ -27,12 +27,12 @@ static void	init_mlx(t_data *data)
 
 static void	init_assets(t_data *data)
 {
-	data->assets.character.path = "assets/xpm/64x/normal_amazed.xpm";
-	data->assets.enemy.path = "assets/xpm/64x/enemy.xpm";
-	data->assets.grass.path = "assets/xpm/64x/empty_space.xpm";
-	data->assets.wall.path = "assets/xpm/64x/wall.xpm";
-	data->assets.collectible.path = "assets/xpm/64x/collectible.xpm";
-	data->assets.exit.path = "assets/xpm/64x/exit.xpm";
+	data->assets.character.path = "textures/xpm/64x/normal_amazed.xpm";
+	data->assets.enemy.path = "textures/xpm/64x/enemy.xpm";
+	data->assets.grass.path = "textures/xpm/64x/empty_space.xpm";
+	data->assets.wall.path = "textures/xpm/64x/wall.xpm";
+	data->assets.collectible.path = "textures/xpm/64x/collectible.xpm";
+	data->assets.exit.path = "textures/xpm/64x/exit.xpm";
 	load_all_images(data);
 }
 
