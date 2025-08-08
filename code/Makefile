@@ -10,7 +10,11 @@ CC = cc -std=gnu11
 CFLAGS = -Wall -Wextra -Werror -g -fsanitize=address $(MLX_INC)
 LDFLAGS = $(MLX_FLAGS)
 LDFLAGS += -g -fsanitize=address
-SRCS = get_next_*.c utils_*.c init_game.c event_loops.c main.c
+SRCS = get_next_line_utils.c get_next_line.c \
+	   	init_game.c event_loops.c main.c free.c question.c\
+		map.c utils_map_parse.c utils_map_set.c utils_map_size.c \
+		move.c render.c validity.c enemy.c collectibles.c \
+	   	errors.c utils_strings.c utils_enemy.c utils_mix.c
 OBJS = $(SRCS:.c=.o)
 
 NAME = so_long

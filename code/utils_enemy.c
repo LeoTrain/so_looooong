@@ -1,83 +1,50 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   utils_enemy.c                                      :+:      :+:    :+:   */
+/*   utils_enemy_2.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: leberton <leberton@42vienna.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/08/07 16:57:53 by leberton          #+#    #+#             */
-/*   Updated: 2025/08/07 17:29:29 by leberton         ###   ########.fr       */
+/*   Created: 2025/08/07 17:27:35 by leberton          #+#    #+#             */
+/*   Updated: 2025/08/07 17:32:03 by leberton         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "so_long.h"
 
-static int	is_not_in_border(t_data *data, t_position next)
+void	draw_enemy(t_data *data)
 {
-	if (next.x < 0 || next.x >= data->map.tile_size.x)
-		return (1);
-	if (next.y < 0 || next.y >= data->map.tile_size.y)
-		return (1);
-	return (0);
-}
-
-int	is_tile_free(t_data *data, int x, int y)
-{
+	t_position	pixel_pos;
 	t_position	pos;
 
-	pos.x = x;
-	pos.y = y;
-	if (is_not_in_border(data, pos))
-		return (0);
-	if (data->map.map[y][x] == '1')
-		return (0);
-	return (1);
+	pos = data->map.enemy_tile_position;
+	pixel_pos.x = (pos.x * TILE_SIZE) + data->offset.x;
+	pixel_pos.y = (pos.y * TILE_SIZE) + data->offset.y;
+	mlx_put_image_to_window(data->mlx, data->win, data->assets.enemy.img,
+		pixel_pos.x, pixel_pos.y);
 }
 
-static void	try_move_enemy(t_data *data, t_position *enemy, int dx, int dy)
+void	draw_caught_message(t_data *data)
 {
-	int	new_x;
-	int	new_y;
-
-	new_y = enemy->y + dy;
-	new_x = enemy->x + dx;
-	if (is_tile_free(data, new_x, new_y))
-	{
-		enemy->x = new_x;
-		enemy->y = new_y;
-	}
+	if (data->is_player_caught)
+		mlx_string_put(data->mlx, data->win,
+			data->win_width / 2 - 100,
+			data->win_height / 2,
+			0xFFFFFF, "The enemy caught you! Press <ESC> to exit.");
 }
 
-static void	try_move(t_data *data, t_position *enem, t_position s_enem,
-	t_position dir)
+void	set_enemy(t_data *data, int y, char *line, char *e)
 {
-	if (abs(dir.x) > abs(dir.y))
-	{
-		try_move_enemy(data, enem, (dir.x > 0) - (dir.x < 0), 0);
-		if (enem->x == s_enem.x)
-			try_move_enemy(data, enem, 0, (dir.y > 0) - (dir.y < 0));
-	}
-	else
-	{
-		try_move_enemy(data, enem, 0, (dir.y > 0) - (dir.y < 0));
-		if (enem->y == s_enem.y)
-			try_move_enemy(data, enem, (dir.x > 0) - (dir.x < 0), 0);
-	}
-}
+	t_position	enemy_pos;
 
-void	track_player(t_data *data)
-{
-	t_position	start_enemy;
-	t_position	*enemy;
-	t_position	player;
-	t_position	d;
-
-	start_enemy = data->map.enemy_tile_position;
-	enemy = &data->map.enemy_tile_position;
-	player = data->map.player_tile_position;
-	d.x = player.x - enemy->x;
-	d.y = player.y - enemy->y;
-	if (!data->is_enemy_set)
-		return ;
-	try_move(data, enemy, start_enemy, d);
+	if (data->is_enemy_set == 1 || is_another_on_line('X', line))
+	{
+		free_current_map(data, y);
+		exit_error("Error\ntoo many enemy positions.", data);
+	}
+	data->found_exit = 1;
+	enemy_pos.x = (int)(e - line);
+	enemy_pos.y = y;
+	data->is_enemy_set = 1;
+	data->map.enemy_tile_position = enemy_pos;
 }
